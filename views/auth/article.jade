@@ -1,0 +1,93 @@
+extends layout
+
+block headertags
+	script(src="/javascripts/knockout.js")
+	script(src="/javascripts/modernizr-custom-2.6.2.js")
+
+
+block content
+	div.container.index_wrapper
+		div.row
+			div.col-lg-4
+				div#properties_div.bottom_space
+					div.form-horizontal
+						div.form-group
+							label.control-label.col-lg-5 Title
+							div.controls.col-lg-7
+								input.form-control.col-lg-2(type="text",data-bind="value: article.title")
+						div.form-group
+							label.control-label.col-lg-5 Url
+							div.controls.col-lg-7
+								input.form-control(type="text",data-bind="value: article.url")
+						div.form-group
+							label.control-label.col-lg-5 Save Destination
+							div.controls.col-lg-7
+								select(data-bind="value: article.selectedDestination")
+									option(name="articles") Articles
+									option(name="drafts") Drafts
+						div.form-group
+							label.control-label.col-lg-5 Tags
+							div.controls.col-lg-7(data-bind="foreach: article.tags")
+								span.label.label-info.label-trash(data-bind="text:name, click:$root.deleteTag")
+						div.form-group
+							label.control-label.col-lg-5 New Tag
+							div.controls.col-lg-7
+								form.short-form(data-bind="submit:addTag")
+									div.input-group
+										input.form-control(type="text",data-bind="value:newTag")
+										span.input-group-btn
+											button.btn.btn-search(type="submit",data-bind="click: addTag") &#43;
+						div.form-group
+							label.control-label.col-lg-5 Category
+							div.controls.col-lg-7(data-bind="foreach: possbileCategories")
+								span.label.label-info.label-trash(data-bind="text:name, click:$root.selectCat")
+						div.form-group
+							label.control-label.col-lg-5 New Category
+							div.controls.col-lg-7
+								form.short-form(data-bind="submit:addCat")
+									div.input-group
+										input.form-control(type="text",data=bind="value:newCat")
+										span.input-group-btn
+											button.btn.btn-search(type="button",data-bind="click: addTag") &#43;
+						div.form-group
+							label.control-label.col-lg-5 Preview Text
+							div.controls.col-lg-7
+								textarea.form-control(data-bind="value: article.previewtext")
+						div.form-group
+							label.control-label.col-lg-5 Header Tags
+							div.controls.col-lg-7
+								textarea.form-control(data-bind="value: article.headerTags")
+						div.form-group
+							label.control-label.col-lg-5 Publish Date
+							div.controls.col-lg-7
+								input(type="date",data-bind="value: article.publishDate")
+			div#draftcolumn.col-lg-8
+				div(data-bind="foreach: alert")
+					div.col-lg-7(data-bind="css: {'alert-error': type == 'error','alert-success': type == 'success'}")
+						button.alert.close(data-bind="click: $root.dismiss") x
+						strong(data-bind-"text:title")
+						span(data-bind="text:message")
+				div#articledraft(data-bind="foreach: article.content")
+					div.itemholder
+						textarea.col-lg-7.center.item.inline.form-control(data-bind="value: text,css: { 'code-edit-p': type() == 'pre', 'code-edit-html': type() == 'HTML','text-edit-p': type() == 'p', 'text-edit-h2': type() == 'h2'}")
+					button.btn.btn-primary(type="button",data-bind="click: $root.pop") Pop
+					button.btn.btn-primary(type="button",data-bind="click: $root.clone") Clone
+
+			div#controlsdiv
+				button.newitem.btn.btn-info(type="button",data-bind="click:newParagraph")
+					span.glyphicon.glyphicon-pencil 
+					|  Paragragh
+				button.newitem.btn.btn-info(type="button",data-bind="click:newCode")
+					span.glyphicon.glyphicon-list-alt 
+					|  Code Section
+				button.newitem.btn.btn-info(type="button",data-bind="click:newHeading")
+					span.glyphicon.glyphicon-header 
+					|  Heading
+				button.newitem.btn.btn-info(type="button",data-bind="click:newHtml")
+					span.glyphicon.glyphicon-cog 
+					|  HTML
+				button.newitem.btn.btn-info(type="button",data-bind="click:newPicture")
+					span.glyphicon.glyphicon-picture 
+					|  Picture
+	script(src="/javascripts/utils.js")
+	script(src="/javascripts/article.js")

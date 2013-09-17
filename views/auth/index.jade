@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	div.container.index_wrapper
+		div.row
+			div.col-lg-12
+			form.form-signin(method="post",action="/auth/login")
+				h2 Login
+				input.form-control.top-input(type="text",placeholder="username",name="username",autofocus)
+				input.form-control.bottom-input(type="password",placeholder="password",name="password")
+				if error
+					p.text-danger #{error}
+				button.btn.btn-lg.btn-primary.btn-block(type="submit") Login

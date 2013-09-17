@@ -1,0 +1,168 @@
+/*==== reset.css 2/15 =====*/
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,
+em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,
+table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}
+body{line-height:1}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+:focus{outline:0}
+ins{text-decoration:none}
+del{text-decoration:line-through}
+table{border-collapse:collapse;border-spacing:0}
+
+/*==== newstyle.css =====*/
+
+body {
+	font-family: 'quicksand_bookregular', Calibri, sans-serif;
+        font-weight: normal;
+	font-size: 1.0625em;
+	line-height: 1.411764705882353em;
+	background-color: #fff;
+}
+h1, h2, h3 {
+	padding-top: 2.823529411764706em;
+	padding-bottom: 1.4em;
+	text-align: center;
+}
+img {
+        width:100%;
+}
+p, article li {
+	letter-spacing: -.05em;
+}
+article li {
+	list-style: disc;
+        margin-left:1em;
+}
+p, nav>ul>li, .codebox, article li {
+	padding-bottom: .68em;
+}
+article, header, nav, #masthead, footer, #comments {
+	width: 15.529411764705882em;
+	margin: 0 auto;
+}
+pre {
+	white-space: pre-wrap;
+}
+strong, .codebox header {
+	background-color: #000;
+	color: #fff;
+	font-size: 0.7647058823529411em;
+	padding: 4px;
+}
+article>strong {
+	margin-right:14px;
+}
+.codebox, .codebox header, strong, pre {
+	min-width: 10em;
+	width:100%;
+}
+.codebox li {
+        line-height:1;
+}
+nav strong {
+        padding: 2px 12px 2px 12px;
+}
+.codebox header {
+        padding: 2px 8px 2px 12px;
+}
+nav a, article a, footer a {
+	border-bottom: 0.06470588235294118em solid #171717;
+}
+a {
+	color: #171717;
+	text-decoration: none;
+}
+#masthead h1 {
+	letter-spacing: .064em;
+        font-weight:normal!important;
+}
+nav a:hover, article a:hover, footer a:hover {
+	color: #E84C38;
+	border-bottom: 0.06470588235294118em solid #E84C38;
+}
+::selection {
+		background-color: #E84C38;
+		color: #fff;
+}
+.linenums {
+	padding-left: 20px;
+}
+footer, #commentstart header {
+	text-align: center;
+}
+#commentstart, footer {
+    border-top: 0.06470588235294118em solid #171717;
+    margin-top: 1.7em;
+    padding-top: 1.7em;
+}
+input[type="text"], textarea {
+    display: block;
+}
+#comments li {
+    list-style: none;
+}
+#comments li:nth-child(even) {
+    margin-left: 2em;
+}
+#comments header {
+    margin-bottom: 1.7em;
+}
+.websymbols {
+    font-family: WebSymbolsRegular;
+}
+.skillstable {
+     font-size: .8em;
+     border-collapse: separate;
+     border: 1px dashed;
+     padding: 12px;
+}
+.skillstable th, .skillstable td {
+     border-bottom: 1px dashed;
+     padding: 4px;
+}
+.skillstable tr:last-child>td {
+     border-bottom: none;
+}
+.skillstable tr:hover {
+     background-color:#bbb;
+}
+.readmore {
+        border-bottom:none;
+}
+/*==== media queries =====*/
+@media screen and (max-width: 29.9999995em) {
+	body {font-size: .96em;
+	line-height: 1.1em }
+}
+@media screen and (min-width: 30em){
+	body{font-size:1.125em;}
+}
+@media screen and (min-width: 30em){ 
+	article, header, nav, #masthead, footer, #comments {width:24em;} 
+	nav li {display: inline;}
+	h1 {font-size: 1.2em}
+	h3 {text-align: left;}
+}
+
+@media screen and (min-width: 37.5em){ 
+	article, header, nav, #masthead, footer {width:32.470588235294116em;}
+	 h1 {font-size: 1.6em}
+        
+
+}
+@media screen and (min-width: 65em){
+	article, header, nav, #masthead, footer {width:49.411764705882355em;}
+	h1 {font-size: 2.4em; text-align: left; padding-top: 1.4em; float: right;}
+	nav {padding-top: .5em}
+	h2 {font-size: 1.6em}
+        #nametag {position:relative;width:16em;left:16em;top:12em;}
+}
+@media print{
+    article, header, nav, #masthead, footer {width:49.411764705882355em;}
+    h1 {font-size: 2.4em; text-align: left; padding-top: 1.4em; float: right;}
+	nav {padding-top: .5em}
+	h2 {font-size: 1.6em}
+        #nametag {position:relative;width:16em;left:16em;top:12em;}
+}

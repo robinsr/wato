@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	div.container.index_wrapper
+			div.row
+				div.col-lg-12
+					table.table
+						for val in users
+							tr
+								td= val.name
+								td= val.permissions
+								td= val.user_id

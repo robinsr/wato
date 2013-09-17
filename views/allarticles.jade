@@ -1,0 +1,15 @@
+extends layout
+
+block css
+	link(rel='stylesheet',href='/dev/stylesheets/style.css')
+	link(rel='stylesheet',href='/dev/stylesheets/fonts.css')
+	link(rel='stylesheet',href='/dev/stylesheets/prettify.css')
+
+block content
+	article
+		h2 All Articles
+		each val in list
+			strong= val.category
+			a(href='/dev/article/'+val.url)= val.title
+			p= val.previewtext
+				a.readmore(href='/dev/article/'+val.url) [ Read More... ]
