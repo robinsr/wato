@@ -46,7 +46,7 @@
  		publishDate : ko.observable(new Date()),
  		content : ko.observableArray([]),
  		tags : ko.observableArray([]),
- 		categories : ko.observableArray([]),
+ 		category : ko.observable(),
  		hideTitle : ko.observable(false),
  		previewtext : ko.observable(''),
  		headerTags : ko.observable(''),
@@ -60,19 +60,7 @@
 	 	writeAccess : ko.observable(0)
 	 }
 
-	 self.alert = ko.observableArray([]);
-
-	// =================================
-	// MenuLists - arrays holding file names; used in dropdowns
-	// and controls for the dropdowns
-
-	self.liveArticles = ko.observableArray();
-	self.drafts = ko.observableArray();
-	self.landingPages = ko.observableArray();
-	self.errorPages = ko.observableArray();
-	self.cssFiles = ko.observableArray();
-	self.headerFiles = ko.observableArray();
-	self.footerFiles = ko.observableArray();
+	self.alert = ko.observableArray([]);
 	self.dragElement = ko.observable(null);
 
 	self.getFile = function(title){
@@ -102,19 +90,7 @@
 					}
 				})
 
-				self.article.categories.removeAll();
-				if (parsed.categories) {
-					$(parsed.categories).each(function(){
-						if ($.type(this) == 'object'){
-							self.article.categories.push(new catTag(this.name))
-						} else if ($.type(this) == 'string'){
-							self.article.categories.push(new catTag(this))
-						}
-					})
-				} else if (parsed.category) {
-					self.article.categories.push(new catTag(parsed.category))
-				}
-
+				self.article.category(parsed.category)
 				self.article.hideTitle(parsed.hideTitle)
 				self.article.previewtext(parsed.previewtext)
 				self.article.headerTags(parsed.headerTags)
@@ -294,17 +270,10 @@
 		self.findIncludedFiles();
 		if (self.article.css().length == 0){
 			self.alert.push(new alert('','Warning!','You did not include and CSS files'))
-		} else if (self.article.header().length == 0){
-			self.alert.push(new alert('','Warning!','You did not include and header files'))
-		} else if (self.article.footer().length == 0){
-			self.alert.push(new alert('','Warning!','You did not include and footer files'))
 		} else if (self.article.selectedDestination() == '' || typeof self.article.selectedDestination() == 'undefined'){
 			self.alert.push(new alert('','Warning!','Please select a save destination'))
 		} else {
-			var saveArticle = ko.toJS(self.article);
-			saveArticle.destination = directories[self.article.selectedDestination()];
-			console.log(saveArticle)
-			utils.issue('/auth/savedata',JSON.stringify(saveArticle),function(err,stat,text){
+			utils.issue('/auth/article',ko.toJSON(self.article),function(err,stat,text){
 				if (err || stat != 200){
 					self.alert.push(new alert('error','Error!',text))
 				} else {
@@ -339,8 +308,8 @@
 	// =================================
 	// useful bits
 
-	self.saveDestinations = ko.observableArray(['Articles','Drafts','Landing Pages','Error Pages']);
-
+	self.cssFiles = ko.observableArray([]);
+	self.templates = ko.observableArray([])
 	self.dragActive = ko.observable(true);
 
 	var directories = {
@@ -349,80 +318,32 @@
 		'Landing Pages':'landingpages',
 		'Error Pages':'errorpages'
 	}
-
-	// // =================================
-	// // init function called on load
-	// // loads file lists
-	// var init = function(){
-	// 	var api_urls = $([{
-	// 		directory: "jsondocs",
-	// 		array: 'liveArticles'
-	// 	},{
-	// 		directory:"drafts",
-	// 		array: 'drafts'
-	// 	},{
-	// 		directory:"errorpages",
-	// 		array: 'errorPages'
-	// 	},{
-	// 		directory:"landingpages",
-	// 		array: 'landingPages'
-	// 	},{
-	// 		directory:"csslist",
-	// 		array: 'cssFiles'
-	// 	},{
-	// 		directory:"headerlist",
-	// 		array: 'headerFiles'
-	// 	},{
-	// 		directory:"footerlist",
-	// 		array: 'footerFiles'
-	// 	}]);
-
-	// 	api_urls.each(function(){
-			
-	// 		var url = "/auth/"+this.directory;
-	// 		var fileType = this.directory;
-	// 		var target = this.array;
-	// 		utils.issue(url,null,function(err,stat,text){
-	// 			if (err){
-
-	// 			} else if (stat !== 200) {
-
-	// 			} else {
-	// 				var parsed = JSON.parse(text);
-	// 				parsed.forEach(function(newFile){
-	// 					self[target].push(new file(newFile,fileType,false))
-	// 				})
-	// 			}
-	// 		})
-	// 	})
-	// }
-	// init();
 }
 
 var wato = { viewmodel: new AppViewModel()};
 
 
- // auto-running function checks query string to load article or make new article
+$(document).ready(function(){
+	if (window.location.search) {
+		var query = window.location.search.replace('?','');
+		var parts = query.split('&');
+		var queryObject = {};
+		for (i=0;i<parts.length;i++){
+			var keyValue = parts[i].split('=');
+			queryObject[keyValue[0]] = keyValue[1]
+		}
+		if (queryObject.file){
+			wato.viewmodel.getFile(queryObject.file)
+		}
+		ko.applyBindings(wato.viewmodel);
+	} else {
 
- (function(){
- 	if (window.location.search) {
- 		var query = window.location.search.replace('?','');
- 		var parts = query.split('&');
- 		var queryObject = {};
- 		for (i=0;i<parts.length;i++){
- 			var keyValue = parts[i].split('=');
- 			queryObject[keyValue[0]] = keyValue[1]
- 		}
- 		if (queryObject.file){
- 			wato.viewmodel.getFile(queryObject.file)
- 		}
- 		ko.applyBindings(wato.viewmodel);
- 	} else {
-
- 		ko.applyBindings(wato.viewmodel);
- 	}
- })();
-
- $(document).ready(function(){
- 	console.log('ready?')
- });
+		ko.applyBindings(wato.viewmodel);
+	}
+	$(_cssFiles).each(function(ind, obj){
+	wato.viewmodel.cssFiles.push(new file(obj,'css',false))
+	$(_templates).each(function(ind, obj){
+	wato.viewmodel.templates.push(new file(obj,'css',false))
+})
+})
+});

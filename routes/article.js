@@ -59,3 +59,8 @@ exports.all = function(req, res){
 		}
 	})
 }
+
+exports.post = function(req,res){
+	//db.article.insert()
+	console.log(req.body);
+}

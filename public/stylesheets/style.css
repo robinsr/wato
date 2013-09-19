@@ -15,10 +15,13 @@ table{border-collapse:collapse;border-spacing:0}
 
 body {
 	font-family: 'quicksand_bookregular', Calibri, sans-serif;
-        font-weight: normal;
+    font-weight: normal;
 	font-size: 1.0625em;
 	line-height: 1.411764705882353em;
 	background-color: #fff;
+}
+article p, article a, article li {
+    font-family: Calibri, Arial, sans-serif;
 }
 h1, h2, h3 {
 	padding-top: 2.823529411764706em;
@@ -138,6 +141,7 @@ input[type="text"], textarea {
 }
 @media screen and (min-width: 30em){
 	body{font-size:1.125em;}
+    article p, article a, article li { font-size: .85em }
 }
 @media screen and (min-width: 30em){ 
 	article, header, nav, #masthead, footer, #comments {width:24em;} 

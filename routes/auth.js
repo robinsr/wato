@@ -45,14 +45,16 @@ exports.logout = function(req,res){
 
 // pages
 exports.index = function(req, res){
-	utils.getMenuFileList(function(err,files){
+	utils.getMenuFileList(function(err,render_obj){
+		render_obj.login = false;
 		if (err) {
 			res.render('auth/error')
 		} else {
 			if (req.session && req.session.error){
-				res.render('auth/index', {files: files, login: false, error: req.session.error});
+				render_obj.error = req.session.error
+				res.render('auth/index',render_obj);
 			} else {
-				res.render('auth/index', {files: files, login: false});
+				res.render('auth/index',render_obj);
 			}
 		}
 	})
@@ -60,11 +62,13 @@ exports.index = function(req, res){
 
 
 exports.article = function (req,res){
-	utils.getMenuFileList(function(err,files){
+	utils.getMenuFileList(function(err,render_obj){
 		if (err) {
 			res.render('auth/error')
 		} else {
-			res.render('auth/article', {files: files, login: true});
+			render_obj.login = true; 
+			render_obj.article_editor = true;
+			res.render('auth/article', render_obj);
 		}
 	});
 }
