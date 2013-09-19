@@ -18,10 +18,6 @@
  	this.selected = ko.observable(selected);
  }
 
- // object for category or tag 
- function catTag(name){
- 	this.name = name;
- }
 
  // object for piece of content
  function contentBlock(type,order,text){
@@ -37,8 +33,61 @@
  	this.message = message;
  }
 
+ // ========== Custom Bindings ==========
+
+ ko.bindingHandlers.hideTitle = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    	$(element).click(function(){
+    		var value = valueAccessor();
+        	value() ? value(false) : value(true);
+    	});
+    	$(element).hover(
+    		function(){
+    			$(this).children('p').text(' Display Title')
+    		},
+    		function(){
+    			$(this).children('p').text('');
+    		}
+    	)
+    },
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = valueAccessor();
+        console.log(value());
+
+        if (value() == false){
+        	$(element).attr('title','Title not hidden')
+        	.addClass("btn-primary")
+        	.removeClass("btn-danger")
+        	.children('span')
+        		.removeClass("glyphicon glyphicon-ban-circle")
+        		.addClass("glyphicon glyphicon-ok")
+        } else {
+        	$(element).attr('title','Title will be hidden')
+        	.addClass("btn-danger")
+        	.removeClass("btn-primary")
+        	.children('span')
+        		.removeClass("glyphicon glyphicon-ok")
+        		.addClass("glyphicon glyphicon-ban-circle")
+        }
+    }
+ }
+  ko.bindingHandlers._value = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    	$(element).next().children('li').click(function(){
+    		var value = valueAccessor();
+    		console.log($(this).attr('name'))
+        	value($(this).attr('name'));
+    	});
+    },
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = valueAccessor();
+        $(element).children('p').text(value()+" ")     
+    }
+ }
+
  function AppViewModel(){
  	var self = this;
+ 	self.modified = ko.observable(true);
 
  	self.article = {
  		title : ko.observable('New Article'),
@@ -50,14 +99,8 @@
  		hideTitle : ko.observable(false),
  		previewtext : ko.observable(''),
  		headerTags : ko.observable(''),
- 		selectedDestination : ko.observable(''),
+ 		destination : ko.observable(''),
  		css : ko.observableArray([]),
- 		header : ko.observableArray([]),
- 		footer : ko.observableArray([]),
-
-	 	// write access specifies basic permissions
-
-	 	writeAccess : ko.observable(0)
 	 }
 
 	self.alert = ko.observableArray([]);
@@ -66,7 +109,7 @@
 	self.getFile = function(title){
 		console.log(title);
 		utils.issue('/article/'+title+'?json=true',null,function(err,stat,text){
-			console.log(err,stat,text);
+			console.log(err,stat);
 			if (err || stat != 200){
 				self.alert.push(new alert('error','Error!','Failed to load '+me.title))
 			} else {
@@ -82,20 +125,15 @@
 				})
 
 				self.article.tags.removeAll();
-				$(parsed.tags).each(function(){
-					if ($.type(this) == 'object'){
-						self.article.tags.push(new catTag(this.name))
-					} else if ($.type(this) == 'string'){
-						self.article.tags.push(new catTag(this))
-					}
+				$(parsed.tags).each(function(ind,obj){
+					self.article.tags.push(obj)
 				})
 
 				self.article.category(parsed.category)
-				self.article.hideTitle(parsed.hideTitle)
+				self.article.hideTitle(parsed.hidetitle)
 				self.article.previewtext(parsed.previewtext)
 				self.article.headerTags(parsed.headerTags)
-				self.article.selectedDestination(parsed.selectedDestination)
-				self.article.writeAccess(parsed.writeAccess);
+				self.article.destination(parsed.destination)
 
 				ko.utils.arrayForEach(self.cssFiles(), function(file) {
 					file.selected(false) 
@@ -105,25 +143,9 @@
 						}
 					})
 				});
-				ko.utils.arrayForEach(self.headerFiles(), function(file) {
-					file.selected(false) 
-					$(parsed.header).each(function(){
-						if (this.file == file.title){
-							file.selected(true)
-						}
-					})
-				});
-				ko.utils.arrayForEach(self.footerFiles(), function(file) {
-					file.selected(false) 
-					$(parsed.footer).each(function(){
-						if (this.file == file.title){
-							file.selected(true)
-						}
-					})
-				});
 				utils.fitToContent($('textarea'),10000)
-				$("#articledraft").sortable();
-				$( "#sortable" ).disableSelection();
+				//$("#articledraft").sortable();
+				//$( "#sortable" ).disableSelection();
 			}
 		})
 }
@@ -157,8 +179,8 @@
 	}
 	self.findIncludedFiles = function(){
 		self.findCss();
-		self.findFooters();
-		self.findHeaders();
+		//self.findFooters();
+		//self.findHeaders();
 	}
 
 	// =================================
@@ -269,10 +291,11 @@
 	self.save = function(){
 		self.findIncludedFiles();
 		if (self.article.css().length == 0){
-			self.alert.push(new alert('','Warning!','You did not include and CSS files'))
-		} else if (self.article.selectedDestination() == '' || typeof self.article.selectedDestination() == 'undefined'){
+			self.alert.push(new alert('','Warning!','You did not include any CSS files'))
+		} else if (self.article.destination() == '' || typeof self.article.destination() == 'undefined'){
 			self.alert.push(new alert('','Warning!','Please select a save destination'))
 		} else {
+			console.log(ko.toJS(self.article))
 			utils.issue('/auth/article',ko.toJSON(self.article),function(err,stat,text){
 				if (err || stat != 200){
 					self.alert.push(new alert('error','Error!',text))

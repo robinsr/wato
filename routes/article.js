@@ -60,7 +60,10 @@ exports.all = function(req, res){
 	})
 }
 
-exports.post = function(req,res){
-	//db.article.insert()
-	console.log(req.body);
+exports.save = function(req,res){
+	if (req.session.permissions <= 1){
+		res.status(403).send('You do not have the necessary permissions to save')
+	} else {
+		res.status(200).send('Article Saved Successfully')
+	}
 }

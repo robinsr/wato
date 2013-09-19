@@ -64,7 +64,8 @@ app.get('/auth', auth.index); // shows login
 app.post('/auth/login', auth.login); // takes form fields and sets cookie
 app.get('/auth/logout', auth.logout);
 app.get('/auth/article', auth.checkSession, auth.article); // reads cookie, shows article editor
-app.post('/auth/article', auth.checkSession, auth.article);
+app.post('/auth/article', auth.checkSession, article.save);
+
 
 
 // defines routes for admins

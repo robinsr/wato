@@ -14,7 +14,12 @@ block content
 						div.form-group
 							label.control-label.col-lg-5 Title
 							div.controls.col-lg-7
-								input.form-control.col-lg-2(type="text",data-bind="value: article.title")
+								div.input-group
+										input.form-control(type="text",data-bind="value:article.title")
+										span.input-group-btn
+											button.btn.btn-primary(data-bind="hideTitle:article.hideTitle") 
+												span.glyphicon.glyphicon-ok
+												p.inline
 						div.form-group
 							label.control-label.col-lg-5 Url
 							div.controls.col-lg-7
@@ -22,13 +27,17 @@ block content
 						div.form-group
 							label.control-label.col-lg-5 Save Destination
 							div.controls.col-lg-7
-								select(data-bind="value: article.selectedDestination")
-									option(name="articles") Articles
-									option(name="drafts") Drafts
+								div.dropdown
+									button.btn-block.btn-s.btn.btn-primary.dropdown-toggle(data-toggle="dropdown",href="#",data-bind="_value: article.destination")
+										p.inline(style="text-transform:capitalize;") Select 
+										span.caret
+									ul.dropdown-menu
+										li(name="articles"): a Articles
+										li(name="drafts"): a Drafts
 						div.form-group
 							label.control-label.col-lg-5 Tags
 							div.controls.col-lg-7(data-bind="foreach: article.tags")
-								span.label.label-info.label-trash(data-bind="text:name, click:$root.deleteTag")
+								span.label.label-info.label-trash(data-bind="text:$data, click:$root.deleteTag")
 						div.form-group
 							label.control-label.col-lg-5 New Tag
 							div.controls.col-lg-7
