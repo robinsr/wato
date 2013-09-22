@@ -17,6 +17,7 @@ $(function(){
 });
 
 
+
 // ===========  Utils module =============
 var utils = (function(){
   return {
@@ -67,7 +68,7 @@ var utils = (function(){
                 if ( maxHeight )
                     adjustedHeight = Math.min(maxHeight, adjustedHeight);
                 if ( adjustedHeight > text.clientHeight )
-                    text.style.height = adjustedHeight + "px";
+                    text.style.height = (adjustedHeight+25) + "px";
             }
         }
     },

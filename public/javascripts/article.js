@@ -133,7 +133,7 @@
 				})
 
 				self.article.category(parsed.category)
-				self.article.hideTitle(parsed.hidetitle)
+				self.article.hideTitle(parsed.hideTitle)
 				self.article.previewtext(parsed.previewtext)
 				self.article.headerTags(parsed.headerTags)
 				self.article.destination(parsed.destination)

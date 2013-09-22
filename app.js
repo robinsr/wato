@@ -67,13 +67,27 @@ app.get('/auth/article', auth.checkSession, auth.article); // reads cookie, show
 app.get('/auth/all', auth.checkSession, auth.allArticles);
 app.post('/article', auth.checkSession, article.save);
 app.put('/article', auth.checkSession, article.preview);
+<<<<<<< HEAD
 //app.del('/article', auth.checkSession, article.del);
+=======
+app.del('/article', auth.checkSession, article.del);
+app.get('/auth/css', auth.checkSession, function(req,res){
+	res.render('auth/notavailable')
+});
+app.get('/auth/template', auth.checkSession, function(req,res){
+	res.render('auth/notavailable')
+});
+>>>>>>> 9915b53cb02c2f5de0769a4dc2b9da1b038c4110
 
 
 
 // defines routes for admins
 app.get('/auth/user', auth.checkSession, user.index);
-app.post('/auth/user', auth.checkSession, user.add);
+app.post('/user', auth.checkSession, user.add);
+app.del('/user', auth.checkSession, user.del);
+app.put('/user/password', auth.checkSession, user.changePass);
+app.put('/user/permissions', auth.checkSession, user.changeLevel);
+
 
 
 // 404 route

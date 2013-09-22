@@ -4,8 +4,13 @@ block content
 	div.container.index_wrapper
 		div.row
 			div.col-lg-12
+<<<<<<< HEAD
 				table.table.table-condensed
 					caption Articles 
+=======
+				pre Articles
+				table.table.table-condensed
+>>>>>>> 9915b53cb02c2f5de0769a4dc2b9da1b038c4110
 					thead
 						tr
 							th Name
@@ -25,12 +30,21 @@ block content
 										a(href="/article/"+val.url) View
 									td= val.category
 									td= val.publishDate
+<<<<<<< HEAD
 									td
 									td= val.lastEditName
 									td
 										span.glyphicon.glyphicon-trash.center(onclick="window.alert()")
 				table.table.table-condensed
 					caption Drafts 
+=======
+									td= val.saveDate
+									td= val.lastEditName
+									td(data-filename=''+val._id)
+										span.glyphicon.glyphicon-trash
+				pre Drafts
+				table.table.table-condensed
+>>>>>>> 9915b53cb02c2f5de0769a4dc2b9da1b038c4110
 					thead
 						tr
 							th Name
@@ -45,6 +59,7 @@ block content
 							if val.destination == 'drafts'
 								tr
 									td: a(href="/auth/article?file="+val.url)= val.title
+<<<<<<< HEAD
 									td: a() Preview
 									td= val.category
 									td= val.publishDate
@@ -52,3 +67,37 @@ block content
 									td= val.lastEditName
 									td
 										span.glyphicon.glyphicon-trash.center
+=======
+									td: a(href="/article/"+val.url) Preview
+									td= val.category
+									td= val.publishDate
+									td= val.saveDate
+									td= val.lastEditName
+									td
+										span.glyphicon.glyphicon-trash
+				pre Trash
+				table.table.table-condensed
+					thead
+						tr
+							th Name
+							th Link
+							th Category
+							th Publish Date
+							th Save Date
+							th Last edited by
+							th Delete
+					tbody
+						for val in files
+							if val.destination == 'trash'
+								tr
+									td: a(href="/auth/article?file="+val.url)= val.title
+									td: a() Preview
+									td= val.category
+									td= val.publishDate
+									td= val.saveDate
+									td= val.lastEditName
+									td
+										span.glyphicon.glyphicon-trash
+	script(src="/javascripts/utils.js")
+	script(src="/javascripts/allarticles.js")
+>>>>>>> 9915b53cb02c2f5de0769a4dc2b9da1b038c4110
