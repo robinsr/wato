@@ -17,17 +17,18 @@ $(function(){
 });
 
 
+
 // ===========  Utils module =============
 var utils = (function(){
   return {
           // issues all ajax calls to server
-      issue : function (url, Json, cb) {
+      issue : function (url, Json, method, cb) {
           var error = null;
           if (Json == null){
             // request is a get
             $.ajax({
               url: url,
-              type: 'GET',
+              type: method,
               error: function(dat){
                 error = true;
               },
@@ -39,7 +40,7 @@ var utils = (function(){
           } else {
             $.ajax({
               url: url,
-              type: 'POST',
+              type: method,
 		          contentType: 'application/json',
               data: Json,
               error: function(dat){
@@ -67,7 +68,7 @@ var utils = (function(){
                 if ( maxHeight )
                     adjustedHeight = Math.min(maxHeight, adjustedHeight);
                 if ( adjustedHeight > text.clientHeight )
-                    text.style.height = adjustedHeight + "px";
+                    text.style.height = (adjustedHeight+25) + "px";
             }
         }
     },

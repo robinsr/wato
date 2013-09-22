@@ -41,14 +41,72 @@ exports.index = function(req,res){
 }
 
 exports.add = function(req,res){
-
-	db.users.count(function(err,result){
-		console.log(result)
-	})
-	res.send()
+	if (req.session.permissions <= 2){
+		res.status(403).send('You do not have the necessary permissions to save')
+	} else {
+		req.body.permissions = parseInt(req.body.permissions)
+		db.users.count({},function(err,count){
+			req.body.user_id = count + 1;
+			db.users.insert(req.body,function(err){
+				if (err) {
+					res.status(500).send("Could not add User")
+				} else {
+					res.status(200).send("User Added")
+				}
+			})
+		})
+	}
 }
 
-exports.remove = function(){}
+exports.del = function(req,res){
+	if (req.session.permissions <= 2){
+		res.status(403).send('You do not have the necessary permissions to save')
+	} else if (req.body.user_id == 1) {
+		res.status(400).send('Cannot remove root user');
+	} else {
+		db.users.remove({user_id: req.body.user_id},function(err){
+			if (err) {
+				res.status(500).send("Could not delete user")
+			} else {
+				res.status(200).send("User Deleted")
+			}
+		})
+	}
+}
 
-exports.changePass = function(){}
-exports.changeLevel = function(){}
+exports.changePass = function(req,res){
+	if (req.session.permissions <= 2){
+		res.status(403).send('You do not have the necessary permissions to save')
+	} else {
+		args = {
+	        'query': {user_id: parseInt(req.body.user_id)},
+	        'update': {$set: {pass: req.body.password}},
+	        'upsert':false
+	    }
+	    db.users.findAndModify(args, function(err,result){
+	        if (err) {
+	            res.status(500).send('Error changing pass')
+	        } else {
+	            res.status(200).send('Pass Changed');
+	        }
+	    })
+	}
+}
+exports.changeLevel = function(req,res){
+	if (req.session.permissions <= 2){
+		res.status(403).send('You do not have the necessary permissions to save')
+	} else {
+		args = {
+	        'query': {user_id: parseInt(req.body.user_id)},
+	        'update': {$set: {permissions: parseInt(req.body.permissions)}},
+	        'upsert':false
+	    }
+	    db.users.findAndModify(args, function(err,result){
+	        if (err) {
+	            res.status(500).send('Error changing permissions level')
+	        } else {
+	            res.status(200).send('Permission Level Changed');
+	        }
+	    })
+	}
+}

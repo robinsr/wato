@@ -9,7 +9,7 @@ exports.getMenuFileList = function(next){
 	return_obj.files = [];
 	async.parallel([
 	function(cb){
-		db.articles.find({destination:'articles'}).limit(10,function(err,result){
+		db.articles.find({destination:'articles'}).sort({publishDate: -1}).limit(10,function(err,result){
 			if (err) {
 				cb('error')
 			} else {
@@ -19,7 +19,7 @@ exports.getMenuFileList = function(next){
 		})
 	},
 	function(cb){
-		db.articles.find({destination:'drafts'}).limit(10,function(err,result){
+		db.articles.find({destination:'drafts'}).sort({publishDate: -1}).limit(10,function(err,result){
 			if (err) {
 				cb('error')
 			} else {
@@ -51,6 +51,17 @@ exports.getMenuFileList = function(next){
 				cb(null)
 			}
 		})
+	},
+	function(cb){
+		db.articles.distinct("category",function(err,result){
+			if (err) cb('err')
+			return_obj.category = result.filter(function(_category){
+				return _category.length != 0
+			}).map(function(_category){
+				return "\"" + _category + "\"";
+			}).join(",");
+			cb(null)
+		})
 	}
 	],
 	function(err){
@@ -58,6 +69,40 @@ exports.getMenuFileList = function(next){
 			next('error',null)
 		} else {
 			next(null, return_obj);
+		}
+	})
+}
+exports.getAllFiles = function(next){
+	var return_obj = {};
+	return_obj.files = [];
+	db.articles.find().sort({publishDate: -1},function(err,result){
+		if (err) {
+			cb('error')
+		} else {
+			async.eachSeries(result,function(file,_cb){
+				if (file.lastEdit){
+					console.log("last edit "+file.lastEdit)
+					db.users.findOne({user_id: parseInt(file.lastEdit)},function(err,_result){
+						if (err || !_result){
+							file.lastEditName = "-";
+						} else {
+							file.lastEditName = _result.name;
+						}
+						return_obj.files.push(file);
+						_cb(null)
+					})
+				} else {
+					file.lastEditName = "-";
+					return_obj.files.push(file);
+					_cb(null)
+				}
+			},function(err){
+				if (err) {
+					next('error',null)
+				} else {
+					next(null, return_obj);
+				}
+			})
 		}
 	})
 }

@@ -72,4 +72,15 @@ exports.article = function (req,res){
 		}
 	});
 }
+exports.allArticles = function (req,res){
+	utils.getAllFiles(function(err,render_obj){
+		if (err) {
+			res.render('auth/error')
+		} else {
+			render_obj.login = true; 
+			render_obj.article_editor = true;
+			res.render('auth/all', render_obj);
+		}
+	});
+}
 

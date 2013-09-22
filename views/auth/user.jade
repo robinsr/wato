@@ -5,8 +5,73 @@ block content
 			div.row
 				div.col-lg-12
 					table.table
-						for val in users
+						thead
 							tr
-								td= val.name
-								td= val.permissions
-								td= val.user_id
+								th.col-lg-1 Username
+								th.col-lg-1 User ID
+								th Permissions level
+								th Save
+								th Change Pass
+								th Save
+								th.col-lg-1 delete
+						tbody
+							for val in users
+								tr
+									td= val.name
+									td= val.user_id
+									td
+										select.form-control.input-sm(data-userid=''+val.user_id,data-action="permissions")
+											if val.permissions == 0
+												option(value="0" selected) 0 - No Permissions 
+											else
+												option(value="0" selected) 0 - No Permissions 
+											if val.permissions == 1
+												option(value="1" selected) 1 - Read Access
+											else 
+												option(value="1") 1 - Read Access
+											if val.permissions == 2
+												option(value="2" selected) 2 - Read/Write Access
+											else
+												option(value="2") 2 - Read/Write Access
+											if val.permissions == 3
+												option(value="3" selected) 3 - Read/Write & Manager Users	
+											else
+												option(value="3") 3 - Read/Write & Manager Users
+										td
+											button.btn.btn-sm.btn-default(data-userid=''+val.user_id,data-action="permissions") Save
+										td
+											input.form-control.input-sm.col-lg-3(type="text",data-userid=''+val.user_id,data-action="password")
+										td
+											button.btn.btn-sm.btn-default(data-userid=''+val.user_id,data-action="password")  Save									
+									td(data-userid=''+val.user_id)
+										span.glyphicon.glyphicon-trash
+					table.table
+						thead
+							tr
+								th.col-lg-2 Add User
+								th Permissions level
+								th New Pass
+								th Save
+								th.col-lg-1
+						tbody
+							tr
+								td
+									input.form-control.input-sm.col-lg-3#new_user_name(type="text",placeholder="UserName")
+								td
+									select.form-control.input-sm#new_user_perm
+										option(value="0" selected) 0 - No Permissions 
+										option(value="1") 1 - Read Access
+										option(value="2") 2 - Read/Write Access
+										option(value="3") 3 - Read/Write & Manager Users
+									td
+										input.form-control.input-sm.col-lg-3#new_user_pass(type="text",placeholder="newpass")
+									td
+										button.btn.btn-sm.btn-default#new_user Save									
+								td
+							if error
+								tr
+									td
+										p.text-danger #{error}
+block javascripts
+	script(src="/javascripts/utils.js")
+	script(src="/javascripts/manageusers.js")

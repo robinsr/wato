@@ -27,54 +27,11 @@ html
 								li: a(href="/auth/css") CSS Editor
 								li: a(href="/auth/template") Template Editor
 								li: a(href="/auth/user") Manage Users
-						li.dropdown
-							a.dropdown-toggle(data-toggle="dropdown",href="#") Articles
-							ul.dropdown-menu
-								for val in files
-									if val.destination == 'articles'
-										li: a(href="/auth/article?file="+val.url) #{val.title}
-								li: a(href="/") All Articles
-						li.dropdown
-							a.dropdown-toggle(data-toggle="dropdown",href="#") Drafts
-							ul.dropdown-menu
-								for val in files
-									if val.destination == 'drafts'
-										li: a(href="/auth/article?file="+val.url) #{val.title}
-								li: a(href="/") All Drafts
-						if article_editor
-							li.dropdown
-								a.dropdown-toggle(data-toggle="dropdown",href="#") CSS Files
-								ul.dropdown-menu(data-bind="foreach: cssFiles")
-									li: a
-										label.checkbox
-											input(type="checkbox",data-bind="checked:selected")
-											span(data-bind="text:title")
-							li.dropdown
-								a.dropdown-toggle(data-toggle="dropdown",href="#") Template
-								ul.dropdown-menu(data-bind="foreach: templates")
-									li: a
-										label.checkbox
-											input(type="checkbox",data-bind="checked:selected")
-											span(data-bind="text:title")
-					form.navbar-form.navbar-right(method="get",action="/auth/logout");
-						button.btn.btn-success(type="submit") Log Out
-					button.btn.btn-primary.navbar-btn.navbar-right(type="button",style="display:none;",data-bind="visible:modified,click:save") Save
+								li.divider
+								li: a(href="/auth/all") All Articles
+						block navDropdowns
+					ul.nav.navbar-nav.navbar-right
+						block navButtons
+						li: a(href="/auth/logout") Log Out
 		block content
-
-
-
-
-
-		//-
-		//-
-		//- adds variable _cssFiles to HTML so knockout doesn't have to make ajax call but can still load
-		//-
-		//-	
-		if css
-			!= "<script>"
-			!= "var _cssFiles = [" + css + "];"
-			!= "</script>"
-		if templates
-			!= "<script>"
-			!= "var _templates = [" + templates + "];"
-			!= "</script>"
+		block javascripts

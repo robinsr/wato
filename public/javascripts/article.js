@@ -71,25 +71,30 @@
         }
     }
  }
-  ko.bindingHandlers._value = {
+ ko.bindingHandlers._selectCat = {
     init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-    	$(element).next().children('li').click(function(){
-    		var value = valueAccessor();
-    		console.log($(this).attr('name'))
-        	value($(this).attr('name'));
+    	var value = valueAccessor()
+    	$(element).click(function(){
+    		value($(this).text())
     	});
     },
     update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         var value = valueAccessor();
-        $(element).children('p').text(value()+" ")     
+        if (value() == $(element).text()){
+        	$(element).removeClass('label-info').addClass('label-success')
+        } else {
+    		$(element).removeClass('label-success').addClass('label-info')
+        }  
     }
  }
 
  function AppViewModel(){
  	var self = this;
  	self.modified = ko.observable(true);
+ 	self.previousCategories = ko.observableArray([])
 
  	self.article = {
+ 		_id: null,
  		title : ko.observable('New Article'),
  		url : ko.observable(''),
  		publishDate : ko.observable(new Date()),
@@ -99,7 +104,7 @@
  		hideTitle : ko.observable(false),
  		previewtext : ko.observable(''),
  		headerTags : ko.observable(''),
- 		destination : ko.observable(''),
+ 		destination : ko.observable('Select'),
  		css : ko.observableArray([]),
 	 }
 
@@ -107,9 +112,7 @@
 	self.dragElement = ko.observable(null);
 
 	self.getFile = function(title){
-		console.log(title);
-		utils.issue('/article/'+title+'?json=true',null,function(err,stat,text){
-			console.log(err,stat);
+		utils.issue('/article/'+title+'?json=true',null,"GET",function(err,stat,text){
 			if (err || stat != 200){
 				self.alert.push(new alert('error','Error!','Failed to load '+me.title))
 			} else {
@@ -130,10 +133,11 @@
 				})
 
 				self.article.category(parsed.category)
-				self.article.hideTitle(parsed.hidetitle)
+				self.article.hideTitle(parsed.hideTitle)
 				self.article.previewtext(parsed.previewtext)
 				self.article.headerTags(parsed.headerTags)
 				self.article.destination(parsed.destination)
+				self.article._id = (parsed._id);
 
 				ko.utils.arrayForEach(self.cssFiles(), function(file) {
 					file.selected(false) 
@@ -189,10 +193,9 @@
 	self.newTag = ko.observable();
 	self.deleteTag = function(element){
 		self.article.tags.remove(element);
-		console.log(element);
 	}
 	self.addTag = function(){
-		self.article.tags.push(new catTag(self.newTag()))
+		self.article.tags.push(self.newTag())
 		self.newTag('');
 	}
 
@@ -201,7 +204,7 @@
 		self.article.categories.remove(element);
 	}
 	self.addCat = function(){
-		self.article.categories.push(new catTag(self.newCat()))
+		self.previousCategories.push(self.newCat())
 		self.newCat('');
 	}
 
@@ -228,7 +231,6 @@
 		utils.fitToContent();
 	}
 	self.dismiss = function(me){
-		console.log(me);
 		self.alert.remove(me);
 	}
 
@@ -262,45 +264,45 @@
 	// document options
 
 	self.newDocument = function(){
+		self.article._id = null;
 		self.article.title('New Article');
 		self.article.url('');
 		self.article.publishDate(new Date());
 		self.article.content([]);
 		self.article.tags([]);
-		self.article.categories([]);
+		self.article.category();
 		self.article.hideTitle(false);
 		self.article.previewtext('');
 		self.article.headerTags('');
-		self.article.selectedDestination('');
+		self.article.destination('Select');
 		self.article.css([]);
-		self.article.header([]);
-		self.article.footer([]);
 		self.article.writeAccess(0);
 	}
 	self.exportFile = function(){}
 	self.preview = function(){
 		self.findIncludedFiles();
-		utils.issue("/auth/quickpreview",ko.toJSON(self.article),function(err,stat,text){
+		utils.issue("/article",ko.toJSON(self.article),"PUT", function(err,stat,text){
 			if (err || stat != 200){
 				self.alert.push(new alert('error','Error!','There was a problem generating your preview'))
 			} else {
-				window.open('/auth/preview.html');
+				window.open('/article/__preview');
 			}
 		})
 	}
 	self.save = function(){
 		self.findIncludedFiles();
 		if (self.article.css().length == 0){
-			self.alert.push(new alert('','Warning!','You did not include any CSS files'))
-		} else if (self.article.destination() == '' || typeof self.article.destination() == 'undefined'){
-			self.alert.push(new alert('','Warning!','Please select a save destination'))
+			self.alert.push(new alert('warning','Warning!','You did not include any CSS files'))
+		} else if (self.article.destination() == '' || typeof self.article.destination() == 'Select '){
+			self.alert.push(new alert('warning','Warning!','Please select a save destination'))
 		} else {
 			console.log(ko.toJS(self.article))
-			utils.issue('/auth/article',ko.toJSON(self.article),function(err,stat,text){
+			utils.issue('/article',ko.toJSON(self.article),"POST", function(err,stat,text){
 				if (err || stat != 200){
 					self.alert.push(new alert('error','Error!',text))
 				} else {
-					self.alert.push(new alert('success','Success!',text))
+					self.alert.push(new alert('success','Success!','File Saved Successfully'))
+					self.article._id = text;
 				}
 			})
 		}
@@ -364,9 +366,17 @@ $(document).ready(function(){
 		ko.applyBindings(wato.viewmodel);
 	}
 	$(_cssFiles).each(function(ind, obj){
-	wato.viewmodel.cssFiles.push(new file(obj,'css',false))
+		wato.viewmodel.cssFiles.push(new file(obj,'css',false))
+	})
 	$(_templates).each(function(ind, obj){
-	wato.viewmodel.templates.push(new file(obj,'css',false))
-})
-})
+		wato.viewmodel.templates.push(new file(obj,'template',false))
+	})
+	$(_category).each(function(ind, obj){
+		wato.viewmodel.previousCategories.push(obj)
+	})
+	$('.dropdown-menu').click(function(event){
+      if($(this).hasClass('keep-open')){
+       event.stopPropagation();
+     }
+   });
 });
