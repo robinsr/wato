@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -67,9 +66,7 @@ app.get('/auth/article', auth.checkSession, auth.article); // reads cookie, show
 app.get('/auth/all', auth.checkSession, auth.allArticles);
 app.post('/article', auth.checkSession, article.save);
 app.put('/article', auth.checkSession, article.preview);
-<<<<<<< HEAD
-//app.del('/article', auth.checkSession, article.del);
-=======
+app.del('/article', auth.checkSession, article.del);
 app.del('/article', auth.checkSession, article.del);
 app.get('/auth/css', auth.checkSession, function(req,res){
 	res.render('auth/notavailable')
@@ -77,7 +74,6 @@ app.get('/auth/css', auth.checkSession, function(req,res){
 app.get('/auth/template', auth.checkSession, function(req,res){
 	res.render('auth/notavailable')
 });
->>>>>>> 9915b53cb02c2f5de0769a4dc2b9da1b038c4110
 
 
 
