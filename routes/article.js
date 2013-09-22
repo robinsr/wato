@@ -6,7 +6,8 @@
 var databaseUrl = "wato",
 	collections = ["articles"],
 	db = require("mongojs").connect(databaseUrl, collections),
-	u = require("underscore");
+	u = require("underscore"),
+	objectid = require('mongodb').ObjectID;
 
 exports.single = function(req, res){
 	db.articles.findOne({url: req.params.article_name},function(err,result){
@@ -64,6 +65,45 @@ exports.save = function(req,res){
 	if (req.session.permissions <= 1){
 		res.status(403).send('You do not have the necessary permissions to save')
 	} else {
-		res.status(200).send('Article Saved Successfully')
+		req.body._id = req.body._id ? new objectid(req.body._id) : new objectid();
+		req.body.lastEdit = req.session.user_id;
+		args = {
+            'query': {_id: req.body._id},
+            'update': req.body,
+            'upsert':true
+        }
+        console.log(args.query)
+        db.articles.findAndModify(args, function(err,result){
+            if (err) {
+                res.status(500).send('Error Saving Article')
+                return
+            } else {
+                res.status(200).send(req.body._id.toString());
+                return
+            }
+        })
 	}
+}
+exports.preview = function(req, res){
+	req.body.url = "__preview";
+	req.body.category = "dnd";
+	req.body.destination = "preview";
+	args = {
+        'query': {url: req.body.url},
+        'update': req.body,
+        'upsert':true
+    }
+    console.log(args.query)
+    db.articles.findAndModify(args, function(err,result){
+        if (err) {
+            res.status(500).send('Error Saving Article')
+            return
+        } else {
+            res.status(200).send(req.body._id.toString());
+            return
+        }
+    })
+}
+exports.del = function(req,res){
+
 }

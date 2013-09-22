@@ -16,7 +16,7 @@ var express = require('express')
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 8125);
+app.set('port', process.env.PORT || 8126);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.cookieParser('some secret'));
@@ -64,7 +64,10 @@ app.get('/auth', auth.index); // shows login
 app.post('/auth/login', auth.login); // takes form fields and sets cookie
 app.get('/auth/logout', auth.logout);
 app.get('/auth/article', auth.checkSession, auth.article); // reads cookie, shows article editor
-app.post('/auth/article', auth.checkSession, article.save);
+app.get('/auth/all', auth.checkSession, auth.allArticles);
+app.post('/article', auth.checkSession, article.save);
+app.put('/article', auth.checkSession, article.preview);
+//app.del('/article', auth.checkSession, article.del);
 
 
 

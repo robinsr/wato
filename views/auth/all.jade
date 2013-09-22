@@ -1,0 +1,54 @@
+extends layout
+
+block content
+	div.container.index_wrapper
+		div.row
+			div.col-lg-12
+				table.table.table-condensed
+					caption Articles 
+					thead
+						tr
+							th Name
+							th Link
+							th Category
+							th Publish Date
+							th Save Date
+							th Last edited by
+							th Delete
+					tbody
+						for val in files
+							if val.destination == 'articles'
+								tr
+									td
+										a(href="/auth/article?file="+val.url)= val.title
+									td
+										a(href="/article/"+val.url) View
+									td= val.category
+									td= val.publishDate
+									td
+									td= val.lastEditName
+									td
+										span.glyphicon.glyphicon-trash.center(onclick="window.alert()")
+				table.table.table-condensed
+					caption Drafts 
+					thead
+						tr
+							th Name
+							th Link
+							th Category
+							th Publish Date
+							th Save Date
+							th Last edited by
+							th Delete
+					tbody
+						for val in files
+							if val.destination == 'drafts'
+								tr
+									td: a(href="/auth/article?file="+val.url)= val.title
+									td: a() Preview
+									td= val.category
+									td= val.publishDate
+									td
+									td= val.lastEditName
+									td
+										span.glyphicon.glyphicon-trash.center
