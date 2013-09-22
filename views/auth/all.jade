@@ -1,0 +1,79 @@
+extends layout
+
+block content
+	div.container.index_wrapper
+		div.row
+			div.col-lg-12
+				pre Articles
+				table.table.table-condensed
+					thead
+						tr
+							th Name
+							th Link
+							th Category
+							th Publish Date
+							th Save Date
+							th Last edited by
+							th Delete
+					tbody
+						for val in files
+							if val.destination == 'articles'
+								tr
+									td
+										a(href="/auth/article?file="+val.url)= val.title
+									td
+										a(href="/article/"+val.url) View
+									td= val.category
+									td= val.publishDate
+									td= val.saveDate
+									td= val.lastEditName
+									td(data-filename=''+val._id)
+										span.glyphicon.glyphicon-trash
+				pre Drafts
+				table.table.table-condensed
+					thead
+						tr
+							th Name
+							th Link
+							th Category
+							th Publish Date
+							th Save Date
+							th Last edited by
+							th Delete
+					tbody
+						for val in files
+							if val.destination == 'drafts'
+								tr
+									td: a(href="/auth/article?file="+val.url)= val.title
+									td: a(href="/article/"+val.url) Preview
+									td= val.category
+									td= val.publishDate
+									td= val.saveDate
+									td= val.lastEditName
+									td
+										span.glyphicon.glyphicon-trash
+				pre Trash
+				table.table.table-condensed
+					thead
+						tr
+							th Name
+							th Link
+							th Category
+							th Publish Date
+							th Save Date
+							th Last edited by
+							th Delete
+					tbody
+						for val in files
+							if val.destination == 'trash'
+								tr
+									td: a(href="/auth/article?file="+val.url)= val.title
+									td: a() Preview
+									td= val.category
+									td= val.publishDate
+									td= val.saveDate
+									td= val.lastEditName
+									td
+										span.glyphicon.glyphicon-trash
+	script(src="/javascripts/utils.js")
+	script(src="/javascripts/allarticles.js")
