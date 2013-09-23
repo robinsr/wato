@@ -7,18 +7,13 @@ block css
 	script(src="http://www.google.com/jsapi")
 	script
 		google.load("feeds", "1") //Load Google Ajax Feed API (version 1)
-	script(src='/dev/javascripts/googlefeed.js')
+	script(src='/javascripts/googlefeed.js')
 
 block content
 	article
 		h2 Latest Articles
 		each val in list
-			a(href='/dev/article/'+val.url)= val.title
+			a(href='/article/'+val.url)= val.title
 			p= val.previewtext
-				a.readmore(href='/dev/article/'+val.url)  [ Read More... ]
+				a.readmore(href='/article/'+val.url)   [ Read More... ]
 
-		h2 Getting Started
-
-		div#feeddiv
-	script
-		rssfeedsetup();

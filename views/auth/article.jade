@@ -64,14 +64,6 @@ block content
 									option(value="articles") Articles
 									option(value="drafts") Drafts
 									option(value="trash") Trash
-<<<<<<< HEAD
-						div.form-group(data-bind="if: article.destination() == 'trash'")
-							label.control-label.col-lg-5 Delete?
-							div.controls.col-lg-7
-								button.btn.btn-danger(type="button")
-									span.glyphicon.glyphicon-trash
-=======
->>>>>>> 9915b53cb02c2f5de0769a4dc2b9da1b038c4110
 						div.form-group
 							label.control-label.col-lg-5 Tags
 							div.controls.col-lg-7(data-bind="foreach: article.tags")
@@ -112,15 +104,9 @@ block content
 								input(type="date",data-bind="value: article.publishDate")
 			div#draftcolumn.col-lg-8
 				div(data-bind="foreach: alert")
-<<<<<<< HEAD
-					div.col-lg-7(data-bind="css: {'alert-danger': type == 'error','alert-success': type == 'success','alert-warning': type == 'warning'}")
-						button.alert.close(data-bind="click: $root.dismiss") x
-						strong(data-bind="text:title")
-=======
 					div.col-lg-12.alert(data-bind="css: {'alert-danger': type == 'error','alert-success': type == 'success','alert-warning': type == 'warning'}")
 						button.alert.close(data-bind="click: $root.dismiss") x
 						strong(data-bind="text:title+' '")
->>>>>>> 9915b53cb02c2f5de0769a4dc2b9da1b038c4110
 						span(data-bind="text:message")
 				div#articledraft(data-bind="foreach: article.content")
 					div.itemholder
