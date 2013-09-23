@@ -15,10 +15,5 @@ block content
 		each val in list
 			a(href='/article/'+val.url)= val.title
 			p= val.previewtext
-				a.readmore(href='/article/'+val.url)  [ Read More... ]
+				a.readmore(href='/article/'+val.url)   [ Read More... ]
 
-		h2 Getting Started
-
-		div#feeddiv
-	script
-		rssfeedsetup();
