@@ -24,6 +24,11 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
+app.locals({
+	title: "WatoCMS",
+	demo_mode: true
+})
+app.use(function(req,res,next){ req.wato_title = app.locals.title;next()});
 app.use(app.router);
 
 // expose public status files (listing works better with 404 logic)
@@ -62,10 +67,10 @@ app.put('/article', auth.checkSession, article.preview);
 app.del('/article', auth.checkSession, article.del);
 app.del('/article', auth.checkSession, article.del);
 app.get('/auth/css', auth.checkSession, function(req,res){
-	res.render('auth/notavailable')
+	res.render('auth/notavailable',{login:true})
 });
 app.get('/auth/template', auth.checkSession, function(req,res){
-	res.render('auth/notavailable')
+	res.render('auth/notavailable',{login:true})
 });
 
 
@@ -85,6 +90,7 @@ app.get('*',function(req,res){
 	res.render('404');
 })
 
+exports.title = "WatoCMS";
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

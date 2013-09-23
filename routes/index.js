@@ -14,7 +14,7 @@ exports.index = function(req, res){
 		} else if (!result){
 			res.render('404', result);
 		} else {
-			res.render('index', { title: 'Ethernet Bucket',  list: result });
+			res.render('index', { list: result });
 		}
 	})
   

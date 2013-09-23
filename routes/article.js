@@ -20,6 +20,7 @@ exports.single = function(req, res){
 		} else if (req.session.user_id && req.query.json == 'true'){
 			res.send(200, result);
 		} else {
+			result.title = result.title + " - " + req.wato_title;
 			res.render('article', result);
 		}
 	})
@@ -55,7 +56,8 @@ exports.all = function(req, res){
 		} else if (!result){
 			res.render('404')
 		} else {
-			res.render('allarticles', { list:  u.filter(result, function(thisArt){return thisArt.category != 'dnd'}) });
+			res.render('allarticles', { list:  u.filter(result, function(thisArt){return thisArt.category != 'dnd'}),
+			title: "All Articles - "+req.wato_title});
 		}
 	})
 }

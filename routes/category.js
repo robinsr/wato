@@ -16,7 +16,10 @@ exports.list = function(req, res){
 			res.render('404', result);
 		} else {
 			console.log(result);
-			res.render('category', {category: req.params.category_name,  list: u.filter(result, function(thisArt){return thisArt.destination == 'articles'}) });
+			res.render('category', {category: req.params.category_name,  
+				list: u.filter(result, function(thisArt){return thisArt.destination == 'articles'}) /*,
+				title: "Results for "+req.params.category_name+" - "+req.wato_title*/
+			});
 		}
 	})
 };

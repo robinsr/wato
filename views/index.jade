@@ -19,6 +19,9 @@ block css
 		h4 {
 		font-weight: normal;
 		}
+		h2,h3,h4{
+		font-family: Georgia, Serif;
+		}
 
 block content
 	article
@@ -34,7 +37,8 @@ block content
 				p When a request comes in for a category page, Wato looks through the DB and returns a list of all the articles in the category which can then be rendered in the category template
 		h3 Features
 		section(style="padding-left:1em;")
-			h4 Author Tools
+			h4 Author Tools 
+				a(href="/auth") link
 			section(style="padding-left:1em;")
 				p "/auth" get you to the Author Tools login page. After logging in you see the article editor. The article editor allows you to create articles with unique titles, urls, categories, tags, preview text, header tags, css files, and publish dates.
 				p To compose an article, click "Paragraph" to add a paragraph, "Heading" to add a heading, etc. Composing articles like this keeps the HTML produced very clean. It also means you must be familiar with how to format basic HTML features like links and lists.
