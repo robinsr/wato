@@ -158,7 +158,7 @@ input[type="text"], textarea {
 }
 @media screen and (min-width: 65em){
 	article, header, nav, #masthead, footer {width:49.411764705882355em;}
-	h1 {font-size: 2.4em; text-align: left; padding-top: 1.4em; float: right;}
+	h1 {text-align: left; float: right; font-size: 6.1em; padding-top: .45em; padding-bottom: .4em;}
 	nav {padding-top: .5em}
 	h2 {font-size: 1.6em}
         #nametag {position:relative;width:16em;left:16em;top:12em;}
