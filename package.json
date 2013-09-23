@@ -12,6 +12,7 @@
     "async": "*",
     "mongodb":"*",
     "moment":"*",
-    "underscore":"*"
+    "underscore":"*",
+    "forever":"*"
   }
 }
