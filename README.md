@@ -12,6 +12,14 @@ To Install (warning ubuntu instructions ahead)
 
 	sudo apt-get install mongodb
 	sudo service mongodb start
+	mongo
+	> use wato
+	> db.users.insert({
+		name:"root",
+		pass:"whatever",
+		permissions:3,
+		user_id:1
+		});
 
 ## Step Three: Nginx
 
