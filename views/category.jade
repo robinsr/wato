@@ -9,6 +9,6 @@ block content
 	article
 		h2 Results for #{category}
 		each val in list
-			a(href='/dev/article/'+val.url)= val.title
+			a(href='/article/'+val.url)= val.title
 			p= val.previewtext
-				a.readmore(href='/dev/article/'+val.url) [&nbsp;Read More...&nbsp;]
+				a.readmore(href='/article/'+val.url) [&nbsp;Read More...&nbsp;]
