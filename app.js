@@ -24,13 +24,6 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-
-	// required to use dev url
-app.use(function(req,res,next){
-	req.url = req.url.replace('/dev','')
-	console.log(req.url)
-	next()
-})
 app.use(app.router);
 
 // expose public status files (listing works better with 404 logic)
