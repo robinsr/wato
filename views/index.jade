@@ -8,12 +8,75 @@ block css
 	script
 		google.load("feeds", "1") //Load Google Ajax Feed API (version 1)
 	script(src='/javascripts/googlefeed.js')
+	style
+		h3 {
+		text-align: left;
+		padding-top: 1em;
+		padding-bottom: .5em;
+		font-size: 1.4em;
+		font-weight: normal;
+		}
+		h4 {
+		font-weight: normal;
+		}
 
 block content
 	article
-		h2 Latest Articles
-		each val in list
-			a(href='/article/'+val.url)= val.title
-			p= val.previewtext
-				a.readmore(href='/article/'+val.url)   [ Read More... ]
+		h2 The Node/MongoDB Blog Tool!
+		h3 How it works
+		section(style="padding-left:1em;")
+			h4 Articles
+			section(style="padding-left:1em;")
+				p The basic organizational unit for Wato is the article. Articles can be reached at "www.yoursite.com/article/article_name".
+			h4 Categories
+			section(style="padding-left:1em;")
+				p Articles can be put into one category which can be reached at "www.yoursite.com/category/category_name".
+				p When a request comes in for a category page, Wato looks through the DB and returns a list of all the articles in the category which can then be rendered in the category template
+		h3 Features
+		section(style="padding-left:1em;")
+			h4 Author Tools
+			section(style="padding-left:1em;")
+				p "/auth" get you to the Author Tools login page. After logging in you see the article editor. The article editor allows you to create articles with unique titles, urls, categories, tags, preview text, header tags, css files, and publish dates.
+				p To compose an article, click "Paragraph" to add a paragraph, "Heading" to add a heading, etc. Composing articles like this keeps the HTML produced very clean. It also means you must be familiar with how to format basic HTML features like links and lists.
+				p To see every article in Mongo go to "All Articles". Here you can delete articles, see their category, last save date, and who last edited them.
+			h4 Drafts & Trash
+			section(style="padding-left:1em;")
+				p You can save your articles in "Articles", "Drafts", or "Trash". Articles in "Articles" are directly accessible to readers through the usual URL. Articles saved in "Drafts" are only available to see if you are logged into the author tools. Articles in "Trash" do not appear to anyone, but are still saved in Mongo and be easily restored or deleted permanently.
+			h4 Templates
+			section(style="padding-left:1em;")
+				ul
+					li Layout: The layout defines the general structure and style for the rest of the pages within the blog. Modify 
+						i views/layout.jade
+						|  to change this page.
+					li Index: This (what you're lookin at) is the default index page. Modify 
+						i views/index.jade
+						|  to change this page.
+					li allarticles: This page lists every article in descending publish order. Modify 
+						i views/allarticles.jade
+						|  to change that page
+					li Article:  Modify 
+						i views/article.jade
+						|  to change the article template. 
+					li Category: Modify 
+						i views/category.jade
+						|  to change the category template. 
+					li 404 & 503: These are your error pages. Modify 
+						i views/404.jade
+						|  and 
+						i view/503.jade
+						|  to change these templates. 
+					li view/auth: These templates define the Author Tools pages. It is not reccommended you modify these.	
+				p: a(href="http://jade-lang.com/",target="_blank") Learn about Jade Templates
+			h4 Users
+			section(style="padding-left:1em;")
+				p Different users can log in to compose articles, change CSS, change templates, or manage users. There are permissions levels to keep some users from doing too much:
+				ul
+					li 0: No permissions. Cannot read or write in Author Tools
+					li 1: Read Access. Can read articles in Author tools and see the other pages but cannot save changes
+					li 2: Read/Write Access. Normal author permissions
+					li 3: Read/Write and manage users. Normal author permissions plus the ability to add, modify and remove users
+		h3 Updates
+		section(style="padding-left:1em;")
+			p Certain features are not complete yet, namely the template and CSS editors. You will have to modify templates and CSS directly for now. The advantage of having a template editor and CSS editor in Wato is that users will not need direct access to the server or network to modify these files. Users will be able to edit them from any computer with internet access.
+
 
