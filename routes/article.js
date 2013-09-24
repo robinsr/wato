@@ -7,7 +7,21 @@ var databaseUrl = "wato",
 	db = require("mongojs").connect(databaseUrl, collections),
 	u = require("underscore"),
 	objectid = require('mongodb').ObjectID,
-	moment = require('moment');
+	moment = require('moment'),
+	async = require('async'),
+	marked = require('marked'),
+	opt = {
+	  gfm: true,
+	  tables: true,
+	  breaks: true,
+	  pedantic: false,
+	  smartLists: true,
+	  langPrefix: 'language-',
+	  highlight: function(code,lang) {
+  		return code
+	  }
+	}
+console.log(marked('i am using __markdown__.'));
 
 exports.single = function(req, res){
 	db.articles.findOne({url: req.params.article_name},function(err,result){
@@ -21,7 +35,14 @@ exports.single = function(req, res){
 			res.send(200, result);
 		} else {
 			result.title = result.title + " - " + req.wato_title;
-			res.render('article', result);
+			marked(result.content, opt, function (err,mk){
+				if (err){
+					console.log('error')
+				} else {
+					result.content = mk;
+					res.render('article', result);
+				}
+			})	
 		}
 	})
 }

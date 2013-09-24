@@ -5,11 +5,6 @@
  *
  */
 
- if (Modernizr.draganddrop) {
- 	console.log('drag drop yes')
- } else {
- 	console.log('drag drop no')
- }
 
  // object representing a file; used for makeing dropdowns
  function file(title,type,selected){
@@ -87,23 +82,104 @@
         }  
     }
  }
+ ko.bindingHandlers.markdown = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    	var value = valueAccessor();
+    	$(element).data("focus",false)
+    	$(element).focus(function(){
+    		$(element).data("focus",true)
+    	});
+		$(element).blur(function(){
+			$(element).data("focus",false)
+    		value(element.innerText)
+    	});
+		$(element).on('keydown',function(){
+    		value(element.innerText)
+    	});
+    	$(element).on('keydown',function(e){
+    		if (e.keyCode == 9){
+    			console.log('tab')
+    			e.preventDefault();
+    			var sel, range, html;
+			    if (window.getSelection) {
+			        sel = window.getSelection();
+			        if (sel.getRangeAt && sel.rangeCount) {
+			            range = sel.getRangeAt(0);
+			            range.deleteContents();
+			            range.insertNode( document.createTextNode("    ") );
+			        }
+			    } else if (document.selection && document.selection.createRange) {
+			        document.selection.createRange().text = "    ";
+			    }
+    		}
+    	})
+    },
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = valueAccessor();
+        if ($(element).data("focus") == false && value()){
+        	element.innerText = value();
+        }
+    }
+ }
+  ko.bindingHandlers.pushEnter = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    	var value = valueAccessor();
+    	$(element).on('keydown',function(e){
+    		if (e.keyCode == 13){
+    			e.preventDefault();
+    			value();
+    			$(element).empty();
+    		}
+    	})
+    	$(element).focus(function(){
+        	$(element).empty();
+        })
+        $(element).blur(function(){
+        	$(element).text($(element).data('refresh'));
+        })
+    },
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        
+    }
+ }
+ ko.bindingHandlers.showParams = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+    },
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        var value = valueAccessor();
+        if (value()){
+        	
+        	$(element).addClass('open')
+        } else {
+        	$(element).removeClass('open')
+        }
+    }
+ }
 
  function AppViewModel(){
  	var self = this;
  	self.modified = ko.observable(true);
  	self.previousCategories = ko.observableArray([])
+ 	self.showParams = ko.observable(false);
+ 	self.clickShowParams = function(){
+ 		if (self.showParams()){
+ 			self.showParams(false);
+ 		} else {
+ 			self.showParams(true);
+ 		}
+ 	}
 
  	self.article = {
  		_id: null,
- 		title : ko.observable('New Article'),
+ 		title : ko.observable(''),
  		url : ko.observable(''),
- 		publishDate : ko.observable(new Date()),
- 		content : ko.observableArray([]),
+ 		publishDate : ko.observable(),
+ 		content : ko.observable(),
  		tags : ko.observableArray([]),
  		category : ko.observable(),
  		hideTitle : ko.observable(false),
- 		previewtext : ko.observable(''),
- 		headerTags : ko.observable(''),
+ 		previewtext : ko.observable(),
+ 		headerTags : ko.observable(),
  		destination : ko.observable('Select'),
  		css : ko.observableArray([]),
 	 }
@@ -122,10 +198,7 @@
 				self.article.url(parsed.url)
 				self.article.publishDate(parsed.publishDate)
 
-				self.article.content.removeAll();
-				$(parsed.content).each(function(index){
-					self.article.content.push(new contentBlock(this.type,index,this.text))
-				})
+				self.article.content(parsed.content);
 
 				self.article.tags.removeAll();
 				$(parsed.tags).each(function(ind,obj){
@@ -267,8 +340,8 @@
 		self.article._id = null;
 		self.article.title('New Article');
 		self.article.url('');
-		self.article.publishDate(new Date());
-		self.article.content([]);
+		self.article.publishDate();
+		self.article.content();
 		self.article.tags([]);
 		self.article.category();
 		self.article.hideTitle(false);
@@ -362,7 +435,6 @@ $(document).ready(function(){
 		}
 		ko.applyBindings(wato.viewmodel);
 	} else {
-
 		ko.applyBindings(wato.viewmodel);
 	}
 	$(_cssFiles).each(function(ind, obj){

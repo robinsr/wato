@@ -7,6 +7,7 @@ var databaseUrl = "wato",
 	collections = ["articles","users"],
 	db = require("mongojs").connect(databaseUrl, collections),
 	async = require('async'),
+	moment = require('moment'),
 	utils = require('./../utils');
 
 // authentication for authors
@@ -68,6 +69,7 @@ exports.article = function (req,res){
 		} else {
 			render_obj.login = true; 
 			render_obj.article_editor = true;
+			render_obj.today = moment().utc().format("YYYY-MM-DD")
 			res.render('auth/article', render_obj);
 		}
 	});

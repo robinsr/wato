@@ -3,9 +3,22 @@ extends layout
 block css
 	each val in css
 		link(rel='stylesheet', href='/stylesheets/'+val.file)
+	style
+		blockquote p {
+		font-family: Georgia, serif;
+		font-style: italic;
+		}
+		blockquote {
+		background-color: #666;
+		vertical-align: middle;
+		padding-left: 20px;
+		color: white;
+		font-family: Georgia, serif;
+		}
+	
 
-block headertags
-	!= headertags
+block headerTags
+	!= headerTags
 
 block content
 	article
@@ -14,14 +27,5 @@ block content
 		if publishDate
 			date
 				strong= publishDate
-		each val in content
-			if val.type == 'p'
-				p= val.text
-			if val.type == 'h2'
-				h2= val.text
-			if val.type == 'HTML'
-				!= val.text
-			if val.type == 'pre'
-				div.codebox
-					header Code
-					pre.prettyprint.linenums.lang-js= val.text
+		!= content
+

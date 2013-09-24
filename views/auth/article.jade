@@ -1,8 +1,56 @@
 extends layout
 
-block headertags
+block headerTags
 	script(src="/javascripts/knockout.js")
 	script(src="/javascripts/modernizr-custom-2.6.2.js")
+	style
+		div.article-params {
+		width:100%;
+		height:100%;
+		padding:4px;
+		background-color:#333;
+		padding-bottom: 6px;
+		}
+		div.article-params p {
+		color:#fff;
+		vertical-align:middle;
+		margin:0;
+		}
+		div.article-params select, div.article-params date{
+		background-color: #333;
+		color: #fff;
+		border-color: transparent;
+		height: 20px;
+		padding-top: 0;
+		font-size: 15px;
+		border-radius: 0px;
+		border: none;
+		padding-bottom: 0px;
+		}
+		div.article-params select:focus {
+		border-color: #333;
+		outline: none;
+		}
+		div.params-holder {
+		min-height:24px;
+		}
+		div#params {
+		opacity:0;
+		min-height:200px;
+		background-color:#eee;
+		margin-top:-350px;
+		-webkit-transition: margin-top 500ms ease-out, opacity 500ms ease-out;
+		}
+		div#params.open {
+		opacity: 1;
+		margin-top: 51px;
+		}
+		@media (max-width:992px) {
+			div#params {
+				margin-top:-750px;
+			}
+		}
+
 
 block navDropdowns
 	li.dropdown
@@ -26,13 +74,63 @@ block navDropdowns
 				label.checkbox
 					input(type="checkbox",data-bind="checked:selected")
 					span(data-bind="text:title")
-	//-li.dropdown
-	//-	a.dropdown-toggle(data-toggle="dropdown",href="#") Attach Template
-	//-	ul.dropdown-menu.keep-open(data-bind="foreach: templates")
-	//-		li: a
-	//-			label.checkbox
-	//-				input(type="checkbox",data-bind="checked:selected")
-	//-				span(data-bind="text:title")
+
+block navParams
+	div.container#params(data-bind="showParams:showParams")
+		div.row
+			div.col-lg-3
+				h3 Title
+				div.article-params
+					p(contenteditable="true",data-bind="markdown:article.title") New Article
+			div.col-lg-3
+				h3 Url
+				div.article-params
+					p(contenteditable="true",data-bind="markdown: article.url") newarticle
+			div.col-lg-3
+				h3 Save Destination
+				div.article-params
+					select.form-control.input-sm(data-bind="value: article.destination"))
+						option(value="articles") Articles
+						option(value="drafts") Drafts
+						option(value="trash") Trash
+			div.col-lg-3
+				h3 Publish Date
+				div.article-params
+					p(contenteditable="true",data-bind="markdown:article.publishDate")= today			
+		div.row
+			div.col-lg-6
+				h3 Tags
+				div.article-params
+					div.params-holder(data-bind="foreach: article.tags")
+						p.label-trash
+							span.label.label-info(data-bind="text:$data, click:$root.deleteTag")
+					div.article-param-group
+						span.glyphicon.glyphicon-plus.pull-right(style="color:#fff;",data-bind="click:addTag")
+						p(contenteditable="true",data-bind="markdown:newTag,pushEnter:addTag",data-refresh="New Tag") New Tag
+						
+			div.col-lg-6
+				h3 Category
+				div.article-params
+					div.params-holder(data-bind="foreach: previousCategories")
+						p.label-trash
+							span.label.label-info(data-bind="text:$data, _selectCat:$root.article.category")
+					div.article-param-group
+						span.glyphicon.glyphicon-plus.pull-right(style="color:#fff;",data-bind="click:addCat")
+						p(contenteditable="true",data-bind="markdown:newCat,pushEnter:addCat",data-refresh="New Cat") New Cat
+		div.row
+			div.col-lg-12
+				h3 Header Tags
+		div.row
+			div.col-lg-12
+				div.article-params
+					p(contenteditable="true",data-bind="markdown: article.headerTags") <--Header Tags-->
+		div.row
+			div.col-lg-12
+				h3 Preview Text
+		div.row
+			div.col-lg-12
+				div.article-params
+					p(contenteditable="true",data-bind="markdown: article.previewtext") Preview Text
 
 block navButtons
 	li: a(type="button",style="display:none;",data-bind="visible:modified,click:preview") Preview
@@ -41,80 +139,26 @@ block navButtons
 block content
 	div.container.index_wrapper
 		div.row
-			div.col-lg-4
-				div#properties_div.bottom_space
-					div.form-horizontal
-						div.form-group
-							label.control-label.col-lg-5 Title
-							div.controls.col-lg-7
-								div.input-group
-										input.form-control(type="text",data-bind="value:article.title")
-										span.input-group-btn
-											button.btn.btn-primary(data-bind="hideTitle:article.hideTitle") 
-												span.glyphicon.glyphicon-ok
-												p.inline
-						div.form-group
-							label.control-label.col-lg-5 Url
-							div.controls.col-lg-7
-								input.form-control(type="text",data-bind="value: article.url")
-						div.form-group
-							label.control-label.col-lg-5 Save Destination
-							div.controls.col-lg-7
-								select.form-control(data-bind="value: article.destination"))
-									option(value="articles") Articles
-									option(value="drafts") Drafts
-									option(value="trash") Trash
-						div.form-group
-							label.control-label.col-lg-5 Tags
-							div.controls.col-lg-7(data-bind="foreach: article.tags")
-								p.label-trash
-									span.label.label-info(data-bind="text:$data, click:$root.deleteTag")
-						div.form-group
-							label.control-label.col-lg-5 New Tag
-							div.controls.col-lg-7
-								form.short-form(data-bind="submit:addTag")
-									div.input-group
-										input.form-control(type="text",data-bind="value:newTag")
-										span.input-group-btn
-											button.btn.btn-search(type="submit") &#43;
-						div.form-group
-							label.control-label.col-lg-5 Category
-							div.controls.col-lg-7(data-bind="foreach: previousCategories")
-								p.label-trash
-									span.label.label-info(data-bind="text:$data, _selectCat:$root.article.category")
-						div.form-group
-							label.control-label.col-lg-5 New Category
-							div.controls.col-lg-7
-								form.short-form(data-bind="submit:addCat")
-									div.input-group
-										input.form-control(type="text",data-bind="value:newCat")
-										span.input-group-btn
-											button.btn.btn-search(type="submit") &#43;
-						div.form-group
-							label.control-label.col-lg-5 Preview Text
-							div.controls.col-lg-7
-								textarea.form-control(data-bind="value: article.previewtext")
-						div.form-group
-							label.control-label.col-lg-5 Header Tags
-							div.controls.col-lg-7
-								textarea.form-control(data-bind="value: article.headerTags")
-						div.form-group
-							label.control-label.col-lg-5 Publish Date
-							div.controls.col-lg-7
-								input(type="date",data-bind="value: article.publishDate")
-			div#draftcolumn.col-lg-8
+			div.col-lg-2.col-lg-offset-5
+				p.text-center
+					button.btn.btn-success.btn-block.btn-sm(data-bind="click:clickShowParams",type="button") 
+						span(data-bind="ifnot: showParams") Show Params
+						span(data-bind="if: showParams") Hide Params
+		div.row
+			div#draftcolumn.col-lg-12
 				div(data-bind="foreach: alert")
 					div.col-lg-12.alert(data-bind="css: {'alert-danger': type == 'error','alert-success': type == 'success','alert-warning': type == 'warning'}")
 						button.alert.close(data-bind="click: $root.dismiss") x
 						strong(data-bind="text:title+' '")
 						span(data-bind="text:message")
-				div#articledraft(data-bind="foreach: article.content")
-					div.itemholder
-						textarea.col-lg-7.center.item.inline.form-control(data-bind="value: text,css: { 'code-edit-p': type() == 'pre', 'code-edit-html': type() == 'HTML','text-edit-p': type() == 'p', 'text-edit-h2': type() == 'h2'}")
-					button.btn.btn-primary(type="button",data-bind="click: $root.pop") Pop
-					button.btn.btn-primary(type="button",data-bind="click: $root.clone") Clone
+				//-div#articledraft(data-bind="foreach: article.content")
+				//-	div.itemholder
+				//-		textarea.col-lg-7.center.item.inline.form-control(data-bind="value: text,css: { 'code-edit-p': type() == 'pre', 'code-edit-html': type() == 'HTML','text-edit-p': type() == 'p', 'text-edit-h2': type() == 'h2'}")
+				//-	button.btn.btn-primary(type="button",data-bind="click: $root.pop") Pop
+				//-	button.btn.btn-primary(type="button",data-bind="click: $root.clone") Clone
+				div#articledraft(style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",contenteditable="true",data-bind="markdown:article.content",data-init="false")
 
-			div#controlsdiv
+			div#controlsdiv(style="display:none;")
 				button.newitem.btn.btn-info(type="button",data-bind="click:newParagraph")
 					span.glyphicon.glyphicon-pencil 
 					|  Paragragh

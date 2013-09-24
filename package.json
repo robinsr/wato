@@ -8,11 +8,12 @@
   "dependencies": {
     "express": "3.4.0",
     "jade": "*",
-    "mongodb":"*",
+    "mongodb": "*",
     "mongojs": "*",
     "async": "*",
-    "moment":"*",
-    "underscore":"*",
-    "forever":"*"
+    "moment": "*",
+    "underscore": "*",
+    "forever": "*",
+    "marked": "~0.2.9"
   }
 }
