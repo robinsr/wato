@@ -1,32 +1,35 @@
 doctype 5
 html
-	head
-		title= title
-		script(src='/javascripts/prettify/prettify.js')
-		script(src='/javascripts/etherbuck27Mar13.js')
-		block css
-		block headerTags
-	body
-		header(id='masthead')
-			h1
-				a(href='/') WatoCMS
-			nav
-				ul
-					li
-						strong Categories
-						ul
-							li
-								a(href='/category/Wato') Wato
-							li 
-								a(href='/category/help') Help
-						strong More By Ryan
-						ul
-							li 
-								a(href='http://demos.ethernetbucket.com') Demos
-		block content
-		footer
-			p: a(href='/allarticles') all articles
-		script
-			window.onload = function(){
-				prettyPrint();
-			}
+    head
+        title= title
+        link(rel="stylesheet",href="/bootstrap/bootstrap.min.css")
+        link(rel="stylesheet",href="/stylesheets/fonts.css")
+        script(src="/javascripts/jquery-1.9.1.min.js")
+        script(src="/bootstrap/bootstrap.min.js")
+        script(src="/bootstrap/collapse.js")
+        block css
+        block headerTags
+    body
+        div#wrap
+            div.navbar.navbar-default(role="navigation")
+                div.navbar-header
+                    button.navbar-toggle(type="button",data-toggle="collapse",data-target=".navbar-ex1-collapse")
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href="/")
+                        h1 compose
+                        span Blog Tool
+                div.collapse.navbar-collapse.navbar-ex1-collapse
+                    ul.nav.navbar-nav.navbar-right
+                        li: a.nav-light(href="/article/install") Install
+                        li: a.nav-light(href="/article/Compose") Compose
+                        li: a.nav-light(href="/article/Organize") Organize
+                
+            block content
+        div#footer
+            div.container
+                div.row
+                    div.col-lg-12
+                        p.text-center: a(href='/allarticles') all articles

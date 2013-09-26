@@ -1,0 +1,130 @@
+extends layout
+
+block headerTags
+	script(src="/javascripts/knockout.js")
+	script(src="/javascripts/modernizr-custom-2.6.2.js")
+	style
+		div.article-params {
+		width:100%;
+		height:100%;
+		padding:4px;
+		background-color:#333;
+		padding-bottom: 6px;
+		}
+		div.article-params p {
+		color:#fff;
+		vertical-align:middle;
+		margin:0;
+		}
+		div.article-params select, div.article-params date{
+		background-color: #333;
+		color: #fff;
+		border-color: transparent;
+		height: 20px;
+		padding-top: 0;
+		font-size: 15px;
+		border-radius: 0px;
+		border: none;
+		padding-bottom: 0px;
+		}
+		div.article-params select:focus {
+		border-color: #333;
+		outline: none;
+		}
+		div.params-holder {
+		min-height:24px;
+		}
+		div.params {
+		opacity:0;
+		min-height:200px;
+		background-color:#eee;
+		margin-top:-350px;
+		-webkit-transition: margin-top 500ms ease-out, opacity 500ms ease-out;
+		}
+		div.params.open {
+		opacity: 1;
+		margin-top: 51px;
+		}
+		@media (max-width:992px) {
+			div#params {
+				margin-top:-750px;
+			}
+		}
+
+
+block navDropdowns
+	li.dropdown
+		a.dropdown-toggle(data-toggle="dropdown",href="#") Templates
+		ul.dropdown-menu
+			for val in views
+				if (val != 'auth')
+					li: a(href="/auth/template?file="+val) #{val}
+
+block navParams
+	div.container.params(data-bind="showParams:showParams")
+		div.row
+			div.col-lg-4
+				h3 filename
+			div.col-lg-4
+				h3 preview file
+		div.row
+			div.col-lg-4
+				div.article-params
+					p(contenteditable="true",data-bind="markdown:template.filename")	
+			div.col-lg-4
+				div.article-params
+					select.form-control.input-sm(data-bind="value: template.previewFile")
+						for val in files
+							option(value=""+val.url)= val.title
+		div.row
+			div.col-lg-4
+				h3 filename
+			div.col-lg-4
+				h3 preview file
+		div.row
+			div.col-lg-4
+				div.article-params
+					p(contenteditable="true",data-bind="markdown:template.filename")	
+			div.col-lg-4
+				div.article-params
+					select.form-control.input-sm(data-bind="value: template.previewFile")
+						for val in files
+							option(value=""+val.url)= val.title
+
+
+block navButtons
+	li: a(href="#",data-bind="click:preview") Preview
+	li: a(href="#",data-bind="click:save") Save
+
+block content
+	div.container.index_wrapper
+		div.row
+			div.col-lg-2.col-lg-offset-4
+				p.text-center
+					button.btn.btn-success.btn-block.btn-sm(data-bind="click:clickShowParams",type="button") 
+						span(data-bind="ifnot: showParams") Show Params
+						span(data-bind="if: showParams") Hide Params
+			div.col-lg-2
+				p.text-center
+					button.btn.btn-warning.btn-block.btn-sm(data-bind="click:clickShowHints",type="button") 
+						span(data-bind="ifnot: showHints") Show Hints
+						span(data-bind="if: showHints") Hide Hints
+		div.row
+			div#draftcolumn.col-lg-12
+				div(data-bind="foreach: alert")
+					div.col-lg-12.alert(data-bind="css: {'alert-danger': type == 'error','alert-success': type == 'success','alert-warning': type == 'warning'}")
+						button.alert.close(data-bind="click: $root.dismiss") x
+						strong(data-bind="text:title+' '")
+						span(data-bind="text:message")
+				
+				div#articledraft(style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",contenteditable="true",data-bind="markdown:template.content",data-init="false")
+	
+block javascripts
+	script(src="/javascripts/utils.js")
+	script(src="/javascripts/handlers.js")
+	script(src="/javascripts/template.js")
+	!= "<script>"
+	!= "var _cssFiles = [" + css + "];"
+	!= "var _templates = [" + templates + "];"
+	!= "var _category = [" + category + "];"
+	!= "</script>"

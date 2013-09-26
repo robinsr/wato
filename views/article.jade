@@ -22,10 +22,11 @@ block headerTags
 
 block content
 	article
-		if hideTitle == false
-			h2= title
-		if publishDate
-			date
-				strong= publishDate
-		!= content
+		div.container
+			if hideTitle == false
+				h2= title
+			if publishDate
+				date
+					strong= publishDate
+			!= content
 
