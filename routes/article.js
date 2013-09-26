@@ -33,7 +33,7 @@ exports.single = function(req, res){
 		} else if (req.session.user_id && req.query.json == 'true'){
 			res.send(200, result);
 		} else {
-			result.title = result.title + " - " + req.wato_title;
+			result.pagetitle = result.title + " - " + req.wato_title;
 			marked(result.content, opt, function (err,mk){
 				if (err){
 					res.status(503).render('503')
