@@ -27,7 +27,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.locals({
-	title: "_compose",
+	title: "Wato",
 	demo_mode: true
 })
 app.use(function(req,res,next){ req.wato_title = app.locals.title;next()});
