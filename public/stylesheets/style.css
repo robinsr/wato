@@ -67,7 +67,7 @@ p {
 	font-family: 'open_sansregular',Arial,'sans-serif';
 }
 
-article div p {
+article.index div p {
 	text-align: center;
 	width: 70%;
 	margin-left: 15%
