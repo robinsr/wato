@@ -6,6 +6,8 @@ var express = require('express')
 	, routes = require('./routes')
 	, article = require('./routes/article')
 	, category = require('./routes/category')
+	, css = require('./routes/css')
+	, template = require('./routes/template')
 	, auth = require('./routes/auth')
 	, user = require('./routes/user')
 	, http = require('http')
@@ -25,8 +27,8 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.locals({
-	title: "WatoCMS",
-	demo_mode: true
+	title: "Wato",
+	demo_mode: false
 })
 app.use(function(req,res,next){ req.wato_title = app.locals.title;next()});
 app.use(app.router);
@@ -56,22 +58,25 @@ app.get('/category/:category_name', category.list);
 
 
 
-// defines routes for authors
+// defines routes for author tools pages
 app.get('/auth', auth.index); // shows login
 app.post('/auth/login', auth.login); // takes form fields and sets cookie
 app.get('/auth/logout', auth.logout);
-app.get('/auth/article', auth.checkSession, auth.article); // reads cookie, shows article editor
+app.get('/auth/article', auth.checkSession, auth.article);
 app.get('/auth/all', auth.checkSession, auth.allArticles);
+app.get('/auth/css', auth.checkSession, css.indexPage);
+app.get('/auth/template', auth.checkSession, template.indexPage);
+
+// defines routes for get/posting/putting/deleting resources
 app.post('/article', auth.checkSession, article.save);
 app.put('/article', auth.checkSession, article.preview);
 app.del('/article', auth.checkSession, article.del);
-app.del('/article', auth.checkSession, article.del);
-app.get('/auth/css', auth.checkSession, function(req,res){
-	res.render('auth/notavailable',{login:true})
-});
-app.get('/auth/template', auth.checkSession, function(req,res){
-	res.render('auth/notavailable',{login:true})
-});
+app.post('/css', auth.checkSession, css.post);
+app.get('/template/:template_name', auth.checkSession, template.file);
+app.post('/template', auth.checkSession, template.post);
+app.put('/template', auth.checkSession, template.preview);
+app.get('/__template', auth.checkSession, article.templatePreview);
+
 
 
 
