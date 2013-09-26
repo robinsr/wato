@@ -28,7 +28,7 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.locals({
 	title: "Wato",
-	demo_mode: false
+	demo_mode: true
 })
 app.use(function(req,res,next){ req.wato_title = app.locals.title;next()});
 app.use(app.router);

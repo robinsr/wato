@@ -21,7 +21,6 @@ var databaseUrl = "wato",
   		return code
 	  }
 	}
-console.log(marked('i am using __markdown__.'));
 
 exports.single = function(req, res){
 	db.articles.findOne({url: req.params.article_name},function(err,result){
@@ -37,7 +36,7 @@ exports.single = function(req, res){
 			result.title = result.title + " - " + req.wato_title;
 			marked(result.content, opt, function (err,mk){
 				if (err){
-					console.log('error')
+					res.status(503).render('503')
 				} else {
 					result.content = mk;
 					res.render('article', result);
@@ -136,6 +135,24 @@ exports.del = function(req,res){
 			} else {
 				res.status(200).send("Article Deleted")
 			}
+		})
+	}
+}
+exports.templatePreview = function(req, res){
+	console.log(req.query.previewFile);
+	if (!req.session){
+		res.status(404).render('404');
+	} else {
+		db.articles.findOne({url: req.query.previewFile},function(err,result){
+			result.title = result.title + " - " + req.wato_title;
+			marked(result.content, opt, function (err,mk){
+				if (err){
+					console.log('error')
+				} else {
+					result.content = mk;
+					res.render('__preview', result);
+				}
+			})	
 		})
 	}
 }

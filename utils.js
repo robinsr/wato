@@ -2,11 +2,15 @@ var databaseUrl = "wato",
 	collections = ["articles","users"],
 	db = require("mongojs").connect(databaseUrl, collections),
 	fs = require('fs'),
-	async = require('async');
+	async = require('async'),
+	path = require('path');
 
 exports.getMenuFileList = function(next){
-	var return_obj = {};
-	return_obj.files = [];
+	var return_obj = {
+		login: true,
+		article_editor: true,
+		files: []
+	}
 	async.parallel([
 	function(cb){
 		db.articles.find({destination:'articles'}).sort({publishDate: -1}).limit(10,function(err,result){
@@ -62,6 +66,14 @@ exports.getMenuFileList = function(next){
 			}).join(",");
 			cb(null)
 		})
+	},
+	function(cb){
+		fs.readdir('./views/',function(err,result){
+			return_obj.views = result.map(function(_view){
+				return path.basename(_view);
+			});
+		cb(null);
+	})
 	}
 	],
 	function(err){

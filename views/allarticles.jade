@@ -1,15 +1,17 @@
 extends layout
 
 block css
-	link(rel='stylesheet',href='/stylesheets/style.css')
-	link(rel='stylesheet',href='/stylesheets/fonts.css')
-	link(rel='stylesheet',href='/stylesheets/prettify.css')
+    link(rel='stylesheet',href='/stylesheets/style.css')
+    link(rel='stylesheet',href='/stylesheets/fonts.css')
+    link(rel='stylesheet',href='/stylesheets/prettify.css')
 
 block content
-	article
-		h2 All Articles
-		each val in list
-			strong= val.category
-			a(href='/article/'+val.url)= val.title
-			p= val.previewtext
-				a.readmore(href='/article/'+val.url) [ Read More... ]
+    div.container
+            div.row
+                article
+                    h2 All Articles
+                    each val in list
+                        strong= val.category
+                        a(href='/article/'+val.url)= val.title
+                        p= val.previewtext
+                            a.readmore(href='/article/'+val.url) [ Read More... ]

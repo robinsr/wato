@@ -8,7 +8,8 @@ var databaseUrl = "wato",
 	db = require("mongojs").connect(databaseUrl, collections),
 	async = require('async'),
 	moment = require('moment'),
-	utils = require('./../utils');
+	utils = require('./../utils'),
+	fs = require('fs');
 
 // authentication for authors
 exports.checkSession = function(req, res, next) {
@@ -85,4 +86,3 @@ exports.allArticles = function (req,res){
 		}
 	});
 }
-
