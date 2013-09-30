@@ -28,9 +28,10 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.locals({
 	title: "Wato",
+	location: "http://wato.ethernetbucket.com",
 	demo_mode: true
 })
-app.use(function(req,res,next){ req.wato_title = app.locals.title;next()});
+app.use(function(req,res,next){ req.locals = app.locals;next()});
 app.use(app.router);
 
 // expose public status files (listing works better with 404 logic)
