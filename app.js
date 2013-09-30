@@ -62,8 +62,8 @@ app.get('/category/:category_name', category.list);
 app.get('/auth', auth.index); // shows login
 app.post('/auth/login', auth.login); // takes form fields and sets cookie
 app.get('/auth/logout', auth.logout);
-app.get('/auth/article', auth.checkSession, auth.article);
-app.get('/auth/all', auth.checkSession, auth.allArticles);
+app.get('/auth/article', auth.checkSession, article.articleEditor);
+app.get('/auth/all', auth.checkSession, article.allArticles);
 app.get('/auth/css', auth.checkSession, css.indexPage);
 app.get('/auth/template', auth.checkSession, template.indexPage);
 
