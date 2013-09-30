@@ -62,31 +62,6 @@ exports.index = function(req, res){
 	})
 }
 
-
-exports.article = function (req,res){
-	utils.getMenuFileList(function(err,render_obj){
-		if (err) {
-			res.render('auth/error')
-		} else {
-			render_obj.login = true; 
-			render_obj.article_editor = true;
-			render_obj.today = moment().utc().format("YYYY-MM-DD")
-			res.render('auth/article', render_obj);
-		}
-	});
-}
-exports.allArticles = function (req,res){
-	utils.getAllFiles(function(err,render_obj){
-		if (err) {
-			res.render('auth/error')
-		} else {
-			render_obj.login = true; 
-			render_obj.article_editor = true;
-			res.render('auth/all', render_obj);
-		}
-	});
-}
-
 exports.createRoot = function(){
 	var rootName = "root_test";
 	var rootPass = "pass";
