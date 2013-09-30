@@ -86,3 +86,27 @@ exports.allArticles = function (req,res){
 		}
 	});
 }
+
+exports.createRoot = function(){
+	var rootName = "root_test";
+	var rootPass = "pass";
+	args = {
+        'query': {name: rootName},
+        'update': {
+		    name:rootName,
+		    pass: rootPass,
+		    permissions:3,
+		    user_id:1
+	    },
+        'upsert':true
+    }
+    db.users.findAndModify(args, function(err,result,upserted){
+        if (err) {
+        	console.log(err);
+        } else if (result) {
+            console.log('Wato already installed. Log in as %s with the pass %s', result.name, result.pass)
+        } else {
+        	console.log('Install finished. Log in as %s with the pass %s', rootName, rootPass)
+        }
+    })
+}

@@ -95,7 +95,9 @@ app.get('*',function(req,res){
 	res.render('404');
 })
 
-exports.title = "WatoCMS";
+if (process.argv[2] == '-install'){
+    auth.createRoot();
+}
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
