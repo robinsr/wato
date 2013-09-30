@@ -28,9 +28,10 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.locals({
 	title: "Wato",
+	location: "http://wato.ethernetbucket.com",
 	demo_mode: true
 })
-app.use(function(req,res,next){ req.wato_title = app.locals.title;next()});
+app.use(function(req,res,next){ req.locals = app.locals;next()});
 app.use(app.router);
 
 // expose public status files (listing works better with 404 logic)
@@ -62,8 +63,8 @@ app.get('/category/:category_name', category.list);
 app.get('/auth', auth.index); // shows login
 app.post('/auth/login', auth.login); // takes form fields and sets cookie
 app.get('/auth/logout', auth.logout);
-app.get('/auth/article', auth.checkSession, auth.article);
-app.get('/auth/all', auth.checkSession, auth.allArticles);
+app.get('/auth/article', auth.checkSession, article.articleEditor);
+app.get('/auth/all', auth.checkSession, article.allArticles);
 app.get('/auth/css', auth.checkSession, function(req,res){
 	res.render('auth/notavailable', {login: true});
 });
@@ -99,7 +100,9 @@ app.get('*',function(req,res){
 	res.render('404');
 })
 
-exports.title = "WatoCMS";
+if (process.argv[2] == '-install'){
+    auth.createRoot();
+}
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
