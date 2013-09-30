@@ -7,11 +7,14 @@ block css
 
 block content
     div.container
-            div.row
+        div.row
+            div.col-lg-12
                 article
                     h2 All Articles
                     each val in list
                         strong= val.category
                         a(href='/article/'+val.url)= val.title
                         p= val.previewtext
-                            a.readmore(href='/article/'+val.url) [ Read More... ]
+                            b   [ 
+                            a.readmore(href='/article/'+val.url) Read More...
+                            b  ]

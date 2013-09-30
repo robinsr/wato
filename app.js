@@ -65,8 +65,12 @@ app.post('/auth/login', auth.login); // takes form fields and sets cookie
 app.get('/auth/logout', auth.logout);
 app.get('/auth/article', auth.checkSession, article.articleEditor);
 app.get('/auth/all', auth.checkSession, article.allArticles);
-app.get('/auth/css', auth.checkSession, css.indexPage);
-app.get('/auth/template', auth.checkSession, template.indexPage);
+app.get('/auth/css', auth.checkSession, function(req,res){
+	res.render('auth/notavailable', {login: true});
+});
+app.get('/auth/template', auth.checkSession, function(req,res){
+	res.render('auth/notavailable', {login: true});
+});
 
 // defines routes for get/posting/putting/deleting resources
 app.post('/article', auth.checkSession, article.save);

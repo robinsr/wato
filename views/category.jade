@@ -6,11 +6,14 @@ block css
     link(rel='stylesheet',href='/stylesheets/prettify.css')
 
 block content
-	div.container
+    div.container
         div.row
-            article
-		        h2 Results for #{category}
-		        each val in list
-		            a(href='/article/'+val.url)= val.title
-		            p= val.previewtext
-		                a.readmore(href='/article/'+val.url) [&nbsp;Read More...&nbsp;]
+            div.col-lg-12
+                article
+                    h2 Results for #{category}
+                    each val in list
+                        a(href='/article/'+val.url)= val.title
+                        p= val.previewtext
+                            b   [ 
+                            a.readmore(href='/article/'+val.url) Read More...
+                            b  ]
