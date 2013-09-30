@@ -22,6 +22,35 @@ var databaseUrl = "wato",
 	  }
 	}
 
+
+// GET /auth/article
+exports.articleEditor = function (req,res){
+	utils.getMenuFileList(function(err,render_obj){
+		if (err) {
+			res.render('auth/error')
+		} else {
+			render_obj.login = true; 
+			render_obj.article_editor = true;
+			render_obj.today = moment().utc().format("YYYY-MM-DD")
+			res.render('auth/article', render_obj);
+		}
+	});
+}
+
+// GET /auth/all
+exports.allArticles = function (req,res){
+	utils.getAllFiles(function(err,render_obj){
+		if (err) {
+			res.render('auth/error')
+		} else {
+			render_obj.login = true; 
+			render_obj.article_editor = true;
+			res.render('auth/all', render_obj);
+		}
+	});
+}
+
+// GET /article/:article_name
 exports.single = function(req, res){
 	db.articles.findOne({url: req.params.article_name},function(err,result){
 		if (err) {
@@ -45,6 +74,8 @@ exports.single = function(req, res){
 		}
 	})
 }
+
+// GET /article
 exports.list = function(req, res){
 	db.articles.find({},function(err,result){
 		if (err) {
@@ -69,6 +100,8 @@ exports.list = function(req, res){
 		}
 	})  
 };
+
+// GET /allarticles
 exports.all = function(req, res){
 	db.articles.find({destination: 'articles'}).sort({publishDate: -1},function(err,result){
 		if (err) {
@@ -82,6 +115,7 @@ exports.all = function(req, res){
 	})
 }
 
+// POST /article
 exports.save = function(req,res){
 	if (req.session.permissions <= 1){
 		res.status(403).send('You do not have the necessary permissions to save')
@@ -104,6 +138,8 @@ exports.save = function(req,res){
         })
 	}
 }
+
+// PUT /article
 exports.preview = function(req, res){
 	delete req.body._id;
 	req.body.url = "__preview";
@@ -124,6 +160,8 @@ exports.preview = function(req, res){
         }
     })
 }
+
+// DELETE /article
 exports.del = function(req,res){
 	if (req.session.permissions <= 1){
 		res.status(403).send('You do not have the necessary permissions to save')
@@ -138,6 +176,8 @@ exports.del = function(req,res){
 		})
 	}
 }
+
+// GET /__template (special route for previewing a template with the data from a specific article)
 exports.templatePreview = function(req, res){
 	console.log(req.query.previewFile);
 	if (!req.session){
