@@ -2,7 +2,8 @@
  * GET article.
  */
 
-var databaseUrl = "wato",
+var utils = require('./../utils'),
+	databaseUrl = "wato",
 	collections = ["articles"],
 	db = require("mongojs").connect(databaseUrl, collections),
 	u = require("underscore"),
@@ -60,20 +61,46 @@ exports.single = function(req, res){
 		} else if (!req.session.user_id && result.destination != 'articles'){
 			res.status(404).render('404');
 		} else if (req.session.user_id && req.query.json == 'true'){
-			res.send(200, result);
-		} else {
+			res.send(result);
+		} else  {
 			result.pagetitle = result.title + " - " + req.wato_title;
 			marked(result.content, opt, function (err,mk){
-				if (err){
+				if (err && !req.query.json)
+				{
 					res.status(503).render('503')
-				} else {
+				} 
+
+				else if (err && req.query.json == 'true') 
+				{
+					res.status(503).send()
+				} 
+
+				else if (!err && !req.query.json) 
+				{
 					result.content = mk;
 					res.render('article', result);
+				} 
+
+				else if (!err && req.query.json == 'true') 
+				{
+					res.send({
+						title: result.title,
+						url: req.locals.location + "/article/" + result.url,
+						content: mk,
+						tags: result.tags,
+						category: result.category
+					});
+				} 
+
+				else 
+				{
+					res.status(400).send();
 				}
 			})	
 		}
 	})
 }
+			
 
 // GET /article
 exports.list = function(req, res){
@@ -92,7 +119,8 @@ exports.list = function(req, res){
 						tags: thisArt.tags,
 						category: thisArt.category,
 						previewText: thisArt.previewtext,
-						url: thisArt.url
+						location:  req.locals.location + "/article/" + thisArt.url,
+						json: req.locals.location + "/article/" + thisArt.url + "?json=true"
 					})
 				}
 			})
