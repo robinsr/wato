@@ -104,7 +104,7 @@ exports.single = function(req, res){
 
 // GET /article
 exports.list = function(req, res){
-	db.articles.find({},function(err,result){
+	function returnResult(err,result){
 		if (err) {
 			res.send(503);
 		} else if (!result){
@@ -112,7 +112,6 @@ exports.list = function(req, res){
 		} else {
 			var return_obj = []
 			result.forEach(function(thisArt){
-				console.log(thisArt)
 				if (thisArt.destination == 'articles'){
 					return_obj.push({
 						title: thisArt.title,
@@ -126,7 +125,14 @@ exports.list = function(req, res){
 			})
 			res.send(200, return_obj);
 		}
-	})  
+	}
+
+	if (req.query.limit){
+		console.log(req.query.limit)
+		db.articles.find({destination: 'articles'}).sort({publishDate: -1}).limit(parseInt(req.query.limit),function(e,r){returnResult(e,r)})
+	} else {
+		db.articles.find({destination: 'articles'}).sort({publishDate: -1},function(e,r){returnResult(e,r)})
+	}  
 };
 
 // GET /allarticles
