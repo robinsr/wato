@@ -67,7 +67,7 @@
     		value(element.innerText)
     	});
     	$(element).on('keydown',function(e){
-    		if (e.keyCode == 9){
+    		if (e.keyCode == 9 && $(element).data('enableTab') == true){
     			console.log('tab')
     			e.preventDefault();
     			var sel, range, html;
