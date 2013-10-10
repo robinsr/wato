@@ -174,22 +174,6 @@ block content
 				//-	button.btn.btn-primary(type="button",data-bind="click: $root.clone") Clone
 				div#articledraft(style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",contenteditable="true",data-bind="markdown:article.content",data-init="false")
 
-			div#controlsdiv(style="display:none;")
-				button.newitem.btn.btn-info(type="button",data-bind="click:newParagraph")
-					span.glyphicon.glyphicon-pencil 
-					|  Paragragh
-				button.newitem.btn.btn-info(type="button",data-bind="click:newCode")
-					span.glyphicon.glyphicon-list-alt 
-					|  Code Section
-				button.newitem.btn.btn-info(type="button",data-bind="click:newHeading")
-					span.glyphicon.glyphicon-header 
-					|  Heading
-				button.newitem.btn.btn-info(type="button",data-bind="click:newHtml")
-					span.glyphicon.glyphicon-cog 
-					|  HTML
-				button.newitem.btn.btn-info(type="button",data-bind="click:newPicture")
-					span.glyphicon.glyphicon-picture 
-					|  Picture
 	script(src="/javascripts/utils.js")
 	script(src="/javascripts/handlers.js")
 	script(src="/javascripts/article.js")
