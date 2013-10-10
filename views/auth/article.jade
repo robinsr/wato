@@ -97,22 +97,22 @@ block navParams
 			div.col-lg-3
 				h3 Title
 				div.article-params
-					p(contenteditable="true",data-bind="markdown:article.title") New Article
+					p(contenteditable="true",data-bind="markdown:article.title",tabindex="1") New Article
 			div.col-lg-3
 				h3 Url
 				div.article-params
-					p(contenteditable="true",data-bind="markdown: article.url") newarticle
+					p(contenteditable="true",data-bind="markdown: article.url",tabindex="2") newarticle
 			div.col-lg-3
 				h3 Save Destination
 				div.article-params
-					select.form-control.input-sm(data-bind="value: article.destination"))
+					select.form-control.input-sm(data-bind="value: article.destination",tabindex="3")
 						option(value="articles") Articles
 						option(value="drafts") Drafts
 						option(value="trash") Trash
 			div.col-lg-3
 				h3 Publish Date
 				div.article-params
-					p(contenteditable="true",data-bind="markdown:article.publishDate")= today			
+					p(contenteditable="true",data-bind="markdown:article.publishDate",tabindex="4")= today			
 		div.row
 			div.col-lg-6
 				h3 Tags
@@ -122,7 +122,7 @@ block navParams
 							span.label.label-info(data-bind="text:$data, click:$root.deleteTag")
 					div.article-param-group
 						span.glyphicon.glyphicon-plus.pull-right(style="color:#fff;",data-bind="click:addTag")
-						p(contenteditable="true",data-bind="markdown:newTag,pushEnter:addTag",data-refresh="New Tag") New Tag
+						p(contenteditable="true",data-bind="markdown:newTag,pushEnter:addTag",data-refresh="New Tag",tabindex="5") New Tag
 						
 			div.col-lg-6
 				h3 Category
@@ -132,21 +132,21 @@ block navParams
 							span.label.label-info(data-bind="text:$data, _selectCat:$root.article.category")
 					div.article-param-group
 						span.glyphicon.glyphicon-plus.pull-right(style="color:#fff;",data-bind="click:addCat")
-						p(contenteditable="true",data-bind="markdown:newCat,pushEnter:addCat",data-refresh="New Cat") New Cat
+						p(contenteditable="true",data-bind="markdown:newCat,pushEnter:addCat",data-refresh="New Cat",tabindex="6") New Cat
 		div.row
 			div.col-lg-12
 				h3 Header Tags
 		div.row
 			div.col-lg-12
 				div.article-params
-					p(contenteditable="true",data-bind="markdown: article.headerTags") <--Header Tags-->
+					p(contenteditable="true",data-bind="markdown: article.headerTags",tabindex="7") <--Header Tags-->
 		div.row
 			div.col-lg-12
 				h3 Preview Text
 		div.row
 			div.col-lg-12
 				div.article-params
-					p(contenteditable="true",data-bind="markdown: article.previewtext") Preview Text
+					p(contenteditable="true",data-bind="markdown: article.previewtext",tabindex="8") Preview Text
 
 block navButtons
 	li: a(type="button",style="display:none;",data-bind="visible:modified,click:preview") Preview
@@ -172,7 +172,7 @@ block content
 				//-		textarea.col-lg-7.center.item.inline.form-control(data-bind="value: text,css: { 'code-edit-p': type() == 'pre', 'code-edit-html': type() == 'HTML','text-edit-p': type() == 'p', 'text-edit-h2': type() == 'h2'}")
 				//-	button.btn.btn-primary(type="button",data-bind="click: $root.pop") Pop
 				//-	button.btn.btn-primary(type="button",data-bind="click: $root.clone") Clone
-				div#articledraft(style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",contenteditable="true",data-bind="markdown:article.content",data-init="false")
+				div#articledraft(style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",contenteditable="true",data-bind="markdown:article.content",data-init="false",data-enable-tab="true")
 
 	script(src="/javascripts/utils.js")
 	script(src="/javascripts/handlers.js")
