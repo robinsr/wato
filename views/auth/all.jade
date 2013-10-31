@@ -50,7 +50,7 @@ block content
 									td= val.publishDate
 									td= val.saveDate
 									td= val.lastEditName
-									td
+									td(data-filename=''+val._id)
 										span.glyphicon.glyphicon-trash
 				pre Trash
 				table.table.table-condensed
@@ -73,7 +73,7 @@ block content
 									td= val.publishDate
 									td= val.saveDate
 									td= val.lastEditName
-									td
+									td(data-filename=''+val._id)
 										span.glyphicon.glyphicon-trash
 	script(src="/javascripts/utils.js")
 	script(src="/javascripts/allarticles.js")
