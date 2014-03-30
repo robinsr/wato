@@ -2,10 +2,9 @@
  * GET article.
  */
 
-var utils = require('./../utils'),
-	databaseUrl = "wato",
-	collections = ["articles"],
-	db = require("mongojs").connect(databaseUrl, collections),
+var utils = require(__dirname+ '/../utils'),
+	config = require(__dirname + '/../sample_config'),
+	db = utils.db,
 	u = require("underscore"),
 	objectid = require('mongodb').ObjectID,
 	moment = require('moment'),
@@ -78,7 +77,7 @@ exports.single = function(req, res){
 				else if (!err && !req.query.json) 
 				{
 					result.content = mk;
-					res.render('article', result);
+					res.render(req.query.render || 'article', result);
 				} 
 
 				else if (!err && req.query.json == 'true') 
@@ -139,7 +138,7 @@ exports.list = function(req, res){
 exports.all = function(req, res){
 	db.articles.find({destination: 'articles'}).sort({publishDate: -1},function(err,result){
 		if (err) {
-			res.render('503')
+			res.render('503', { message: err.toString() })
 		} else if (!result){
 			res.render('404')
 		} else {
