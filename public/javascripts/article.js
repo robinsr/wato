@@ -28,6 +28,19 @@
  	this.message = message;
  }
 
+ function Article(opt){
+ 	var self = this;
+
+ 	self.title = ko.observable('pooop');
+ }
+
+var articleMap = {
+	create: function(opt){
+		console.log('creating')
+		return new Article(opt.data)
+	}
+}
+
 
  function AppViewModel(){
  	var self = this;
@@ -42,20 +55,22 @@
  		}
  	}
 
- 	self.article = {
- 		_id: null,
- 		title : ko.observable(''),
- 		url : ko.observable(''),
- 		publishDate : ko.observable(),
- 		content : ko.observable(),
- 		tags : ko.observableArray([]),
- 		category : ko.observable(),
- 		hideTitle : ko.observable(false),
- 		previewtext : ko.observable(),
- 		headerTags : ko.observable(),
- 		destination : ko.observable('Select'),
- 		css : ko.observableArray([]),
-	 }
+ 	// self.article = {
+ 	// 	_id: null,
+ 	// 	title : ko.observable(''),
+ 	// 	url : ko.observable(''),
+ 	// 	publishDate : ko.observable(),
+ 	// 	content : ko.observable(),
+ 	// 	tags : ko.observableArray([]),
+ 	// 	category : ko.observable(),
+ 	// 	hideTitle : ko.observable(false),
+ 	// 	previewtext : ko.observable(),
+ 	// 	headerTags : ko.observable(),
+ 	// 	destination : ko.observable('Select'),
+ 	// 	css : ko.observableArray([]),
+	 // }
+
+	self.article = ko.mapping.fromJS({});
 
 	self.alert = ko.observableArray([]);
 	self.dragElement = ko.observable(null);
@@ -67,35 +82,33 @@
 			} else {
 				var parsed = JSON.parse(text)
 
-				self.article.title(parsed.title)
-				self.article.url(parsed.url)
-				self.article.publishDate(parsed.publishDate)
+				// self.article.title(parsed.title)
+				// self.article.url(parsed.url)
+				// self.article.publishDate(parsed.publishDate)
 
-				self.article.content(parsed.content);
+				// self.article.content(parsed.content);
 
-				self.article.tags.removeAll();
-				$(parsed.tags).each(function(ind,obj){
-					self.article.tags.push(obj)
-				})
+				// self.article.tags.removeAll();
+				// $(parsed.tags).each(function(ind,obj){
+				// 	self.article.tags.push(obj)
+				// })
 
-				self.article.category(parsed.category)
-				self.article.hideTitle(parsed.hideTitle)
-				self.article.previewtext(parsed.previewtext)
-				self.article.headerTags(parsed.headerTags)
-				self.article.destination(parsed.destination)
-				self.article._id = (parsed._id);
+				// self.article.category(parsed.category)
+				// self.article.hideTitle(parsed.hideTitle)
+				// self.article.previewtext(parsed.previewtext)
+				// self.article.headerTags(parsed.headerTags)
+				// self.article.destination(parsed.destination)
+				// self.article._id = (parsed._id);
 
-				ko.utils.arrayForEach(self.cssFiles(), function(file) {
-					file.selected(false) 
-					$(parsed.css).each(function(){
-						if (this.file == file.title){
-							file.selected(true)
-						}
-					})
-				});
-				utils.fitToContent($('textarea'),10000)
-				//$("#articledraft").sortable();
-				//$( "#sortable" ).disableSelection();
+				// ko.utils.arrayForEach(self.cssFiles(), function(file) {
+				// 	file.selected(false) 
+				// 	$(parsed.css).each(function(){
+				// 		if (this.file == file.title){
+				// 			file.selected(true)
+				// 		}
+				// 	})
+				// });
+				ko.mapping.fromJS(parsed, articleMap, self.article);
 			}
 		})
 }
