@@ -1,0 +1,31 @@
+extends layout
+
+block css
+	each val in css
+		link(rel='stylesheet', href='/stylesheets/'+val.file)
+	style
+		blockquote p {
+		font-family: Georgia, serif;
+		font-style: italic;
+		}
+		blockquote {
+		background-color: #666;
+		vertical-align: middle;
+		padding-left: 20px;
+		color: white;
+		font-family: Georgia, serif;
+		}
+	
+
+block headerTags
+	!= headerTags
+
+block content
+	article
+		div.container
+			if hideTitle == false
+				h2= title
+			!= content
+			if publishDate
+				small Published on #{publishDate}
+

@@ -1,21 +1,60 @@
 extends layout
 
-block css
-    link(rel='stylesheet',href='/stylesheets/style.css')
-    link(rel='stylesheet',href='/stylesheets/fonts.css')
-    style
-
+block headerTags
+	style
+		.form-signin {
+		max-width: 330px;
+		padding: 15px;
+		margin: 0 auto;
+		}
+		.form-signin .form-signin-heading,
+		.form-signin .checkbox {
+		margin-bottom: 10px;
+		}
+		.form-signin .checkbox {
+		font-weight: normal;
+		}
+		.form-signin .form-control {
+		position: relative;
+		font-size: 16px;
+		height: auto;
+		padding: 10px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		}
+		.form-signin .form-control:focus {
+		z-index: 2;
+		}
+		.form-signin .top-input {
+		margin-bottom: -1px;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+		}
+		.form-signin .middle-input {
+		margin-bottom: -1px;
+		border-radius: 0;
+		}
+		.form-signin .bottom-input {
+		margin-bottom: 10px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		}
 
 block content
-    div.container
-        div.row
-            article.index
-                div.col-md-4
-                    div.indeximage.node
-                    p Wato uses an all-javascript backend: Node, ExpressJS, and MongoDB. Anyone familiar with coding javascript can customize their install of compose to meet their unique needs.
-                div.col-md-4
-                    div.indeximage.jade
-                    p Jade is the defacto standard for node templates. It's syntax is simple and easy to learn. You'll spend less time working on templates and more time focusing on your blog's content.
-                div.col-md-4
-                    div.indeximage.markdown
-                    p As Jade is to templates, Markdown is to articles. Writing in markdown shields authors from the troubles of HTML while maintaining consitently clean code.
+	div.container.index_wrapper
+		div.row
+			div.col-lg-12
+			form.form-signin#form(method="post",action="/auth/login")
+				h2 Login
+				input.form-control.top-input#name(type="text",placeholder="username",name="username",autofocus)
+				input.form-control.bottom-input#pass(type="password",placeholder="password",name="password")
+				if error
+					p.text-danger #{error}
+				button.btn.btn-lg.btn-primary.btn-block(type="submit") Login
+				if demo_mode
+					button.btn.btn-lg.btn-warning.btn-block#demo(type="button") Demo
+
+block javascripts
+	if demo_mode
+		script(src="/javascripts/demos.js")

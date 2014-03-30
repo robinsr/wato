@@ -1,0 +1,40 @@
+doctype 5
+html
+    head
+        meta(name="viewport",content="width=device-width, initial-scale=1.0")
+        title= pagetitle
+        link(rel="stylesheet",href="/bootstrap/bootstrap.min.css")
+        link(rel="stylesheet",href="/stylesheets/fonts.css")
+        script(src="/javascripts/jquery-1.9.1.min.js")
+        script(src="/bootstrap/bootstrap.min.js")
+        script(src="/bootstrap/collapse.js")
+        block css
+        block headerTags
+    body
+        div#wrap
+            div.navbar.navbar-default(role="navigation")
+                div.navbar-header
+                    button.navbar-toggle(type="button",data-toggle="collapse",data-target=".navbar-ex1-collapse")
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href="/")
+                        h1 Wato
+                        span Blog Tool
+                div.collapse.navbar-collapse.navbar-ex1-collapse
+                    ul.nav.navbar-nav.navbar-right
+                        li: a.nav-light(href="/article/install") Install
+                        li: a.nav-light(href="/article/Compose") Compose
+                        li: a.nav-light(href="/article/Organize") Organize
+                        li: a.nav-light(href="/auth") Demo
+                
+            block content
+        div#footer
+            div.container
+                div.row
+                    div.col-lg-12
+                        p.text-center
+                            a(href='/allarticles') All Articles
+                            span  - 
+                            a(href="http://demos.ethernetbucket.com") More by Ryan
