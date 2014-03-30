@@ -1,9 +1,23 @@
-var databaseUrl = "wato",
-	collections = ["articles","users"],
-	db = require("mongojs").connect(databaseUrl, collections),
-	fs = require('fs'),
+var fs = require('fs'),
 	async = require('async'),
-	path = require('path');
+	path = require('path'),
+	util = require('util'),
+	config = require(__dirname + '/sample_config');
+
+exports.getConnectionString = function(){
+	return util.format("%s:%s@%s/%s",
+		config.database_username,
+		config.database_password,
+		config.database_url,
+		config.database_name);
+}
+
+console.log(exports.getConnectionString())
+
+var collections = ["articles","users"],
+	db = require("mongojs").connect(exports.getConnectionString(), collections);
+
+module.exports.db = db;
 
 exports.getMenuFileList = function(next){
 	var return_obj = {
