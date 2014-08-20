@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Watocms express : WatoCMS using express.js">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Watocms express</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/robinsr/WatoCMS_express">View on GitHub</a>
+
+          <h1 id="project_title">Watocms express</h1>
+          <h2 id="project_tagline">WatoCMS using express.js</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/robinsr/WatoCMS_express/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/robinsr/WatoCMS_express/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="watocms" class="anchor" href="#watocms"><span class="octicon octicon-link"></span></a>WatoCMS</h1>
+
+<p>To Install (warning ubuntu instructions ahead)</p>
+
+<h2>
+<a name="step-one-node" class="anchor" href="#step-one-node"><span class="octicon octicon-link"></span></a>Step One: Node</h2>
+
+<pre><code>sudo apt-get install nodejs
+sudo apt-get install npm
+</code></pre>
+
+<h2>
+<a name="step-two-mongo" class="anchor" href="#step-two-mongo"><span class="octicon octicon-link"></span></a>Step Two: Mongo</h2>
+
+<pre><code>sudo apt-get install mongodb
+sudo service mongodb start
+mongo
+&gt; use wato
+&gt; db.users.insert({
+    name:"root",
+    pass:"whatever",
+    permissions:3,
+    user_id:1
+    });
+</code></pre>
+
+<h2>
+<a name="step-three-nginx" class="anchor" href="#step-three-nginx"><span class="octicon octicon-link"></span></a>Step Three: Nginx</h2>
+
+<pre><code>sudo apt-get install nginx
+sudo service nginx start
+cd /etc/nginx/sites-enabled
+mv default &lt;yoursitesname&gt;
+sudo vi &lt;yoursitesname&gt;
+</code></pre>
+
+<p>copy and paste this:</p>
+
+<pre><code>upstream app_wato {
+    server 127.0.0.1:8126;
+} 
+server { 
+    listen 0.0.0.0:80;
+    server_name &lt;yoursitesname&gt;.com &lt;yoursitesname&gt;;
+    location / { 
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_pass http://app_wato; 
+        proxy_redirect off;
+    }
+}
+</code></pre>
+
+<p>then</p>
+
+<pre><code>sudo service nginx restart
+</code></pre>
+
+<h2>
+<a name="step-four-watocms" class="anchor" href="#step-four-watocms"><span class="octicon octicon-link"></span></a>Step Four: WatoCMS</h2>
+
+<pre><code>cd /wherever/you/feel/like
+git clone http://github.com/robinsr/WatoCMS_express
+cd WatoCMS_express
+npm install
+forever start app.js
+</code></pre>
+
+<p>aaaaaand your done</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Watocms express maintained by <a href="https://github.com/robinsr">robinsr</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
