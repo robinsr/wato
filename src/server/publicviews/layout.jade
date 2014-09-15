@@ -1,4 +1,4 @@
-doctype 5
+doctype html
 html
     head
         meta(name="viewport",content="width=device-width, initial-scale=1.0")
@@ -8,8 +8,14 @@ html
         script(src="/javascripts/jquery-1.9.1.min.js")
         script(src="/bootstrap/bootstrap.min.js")
         script(src="/bootstrap/collapse.js")
-        block css
-        block headerTags
+            // bower:css
+            link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap.css')
+            // endbower
+            // bower:js
+            script(src='components/jquery/dist/jquery.js')
+            script(src='components/knockout/dist/knockout.js')
+            script(src='components/bootstrap/dist/js/bootstrap.js')
+            // endbower
     body
         div#wrap
             div.navbar.navbar-default(role="navigation")
