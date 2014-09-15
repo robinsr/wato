@@ -1,0 +1,6 @@
+module.exports = {
+    database_username: "",
+    database_password: "",
+    database_url: "localhost:27017",
+    database_name: "test"
+}
