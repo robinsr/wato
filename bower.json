@@ -1,0 +1,25 @@
+{
+  "name": "wato",
+  "version": "0.0.0",
+  "homepage": "https://github.com/robinsr/wato",
+  "authors": [
+    "Ryan Robinson <ryan.b.robinson@gmail.com>"
+  ],
+  "description": "Wato CMS",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "3.2.0",
+    "jquery": "2.1.1"
+  }
+}
