@@ -62,6 +62,7 @@ exports.index = function(req, res){
 	})
 }
 
+//TODO: move this to a utility or build file
 exports.createRoot = function(){
 	var rootName = "root_test";
 	var rootPass = "pass";
