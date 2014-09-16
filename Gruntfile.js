@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         src: [
           'src/server/publicviews/**/*.jade'
         ],
-        ignorePath: /\.\.\/\.\.\/client\//
+        ignorePath: /\.\.\/\.\.\/client/
       }
     }
   });
