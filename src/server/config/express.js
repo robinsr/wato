@@ -12,6 +12,14 @@ module.exports = function(app, config) {
     app.use(express.errorHandler());
   }
 
+  app.use('/components', express.static(config.appRoot + 'client/components'));
+  app.use('/stylesheets', express.static(config.appRoot + 'client/stylesheets'));
+  app.use('/bootstrap', express.static(config.appRoot + 'client/bootstrap'));
+  app.use('/fonts', express.static(config.appRoot + 'client/fonts'));
+  app.use('/images', express.static(config.appRoot + 'client/images'));
+  //TODO remove javascripts static route
+  app.use('/javascripts', express.static(config.appRoot + 'client/javascripts'));
+
   // remove dev directory from request
 
   app.all('/*', function(req, res, next) {
@@ -22,7 +30,7 @@ module.exports = function(app, config) {
 
   // all environments
   app.set('port', process.env.PORT || 8126);
-  app.set('views', __dirname + '/../publicviews');
+  app.set('views', config.appRoot + 'server/publicviews/');
   app.set('view engine', 'jade');
   app.use(express.cookieParser('some secret'));
   app.use(express.session())
@@ -36,7 +44,5 @@ module.exports = function(app, config) {
       demo_mode: true
   })
   app.use(function(req,res,next){ req.locals = app.locals;next()});
-  app.use(express.static('/components', path.normalize(__dirname + '/../client/components')));
-  app.use(express.static('/views', __dirname + '/views'));
   app.use(app.router);
 }

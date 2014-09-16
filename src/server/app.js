@@ -5,13 +5,12 @@
 var express = require('express')
 	, http = require('http')
 	, path = require('path')
-    , config = require(__dirname + "/config/config");
+    , config = require(__dirname + "/config/config")
+    , app = express();
 
-    console.log(config.root)
-
-var app = express()
 // express settings
 require('./config/express')(app, config);
+// express routes
 require('./config/routes')(app);
 
 
