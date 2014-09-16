@@ -3,19 +3,22 @@ html
     head
         meta(name="viewport",content="width=device-width, initial-scale=1.0")
         title= pagetitle
-        link(rel="stylesheet",href="/bootstrap/bootstrap.min.css")
         link(rel="stylesheet",href="/stylesheets/fonts.css")
-        script(src="/javascripts/jquery-1.9.1.min.js")
         script(src="/bootstrap/bootstrap.min.js")
         script(src="/bootstrap/collapse.js")
-            // bower:css
-            link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap.css')
-            // endbower
-            // bower:js
-            script(src='components/jquery/dist/jquery.js')
-            script(src='components/knockout/dist/knockout.js')
-            script(src='components/bootstrap/dist/js/bootstrap.js')
-            // endbower
+
+        // bower:css
+        link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.css')
+        // endbower
+
+        // bower:js
+        script(src='/components/jquery/dist/jquery.js')
+        script(src='/components/knockout/dist/knockout.js')
+        script(src='/components/bootstrap/dist/js/bootstrap.js')
+        script(src='/components/jquery-ui/jquery-ui.js')
+        // endbower
+
+        block css
     body
         div#wrap
             div.navbar.navbar-default(role="navigation")
