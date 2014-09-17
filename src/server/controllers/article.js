@@ -54,50 +54,49 @@ exports.allArticles = function (req,res){
 exports.single = function(req, res){
 	db.articles.findOne({url: req.params.article_name},function(err,result){
 		if (err) {
-			res.status(503).render('503')
-		} else if (!result){
-			res.status(404).render('404');
-		} else if (!req.session.user_id && result.destination != 'articles'){
-			res.status(404).render('404');
-		} else if (req.session.user_id && req.query.json == 'true'){
-			res.send(result);
-		} else  {
-			result.pagetitle = result.title + " - " + req.wato_title;
-			marked(result.content, opt, function (err,mk){
-				if (err && !req.query.json)
-				{
-					res.status(503).render('503')
-				} 
-
-				else if (err && req.query.json == 'true') 
-				{
-					res.status(503).send()
-				} 
-
-				else if (!err && !req.query.json) 
-				{
-					result.content = mk;
-					res.render(req.query.render || 'article', result);
-				} 
-
-				else if (!err && req.query.json == 'true') 
-				{
-					res.send({
-						title: result.title,
-						url: req.locals.location + "/article/" + result.url,
-						content: mk,
-						tags: result.tags,
-						category: result.category
-					});
-				} 
-
-				else 
-				{
-					res.status(400).send();
-				}
-			})	
+			return res.status(503).render('503', { message: err.toString() });
 		}
-	})
+
+		if (!result){
+			return res.status(404).render('404');
+		}
+
+		if (!req.session.user_id && result.destination != 'articles'){
+			return res.status(404).render('404');
+		}
+
+		if (req.session.user_id && req.query.json == 'true'){
+			return res.send(result);
+		}
+		
+		result.pagetitle = result.title + " - " + req.wato_title;
+		marked(result.content, opt, function (err, mk){
+			if (err && !req.query.json) {
+				return res.status(503).render('503')
+			} 
+
+			if (err && req.query.json == 'true')  {
+				return res.status(503).send()
+			} 
+
+			else if (!err && !req.query.json)  {
+				result.content = mk;
+				return res.render(req.query.render || 'article', result);
+			} 
+
+			else if (!err && req.query.json == 'true') {
+				return res.send({
+					title: result.title,
+					url: req.locals.location + "/article/" + result.url,
+					content: mk,
+					tags: result.tags,
+					category: result.category
+				});
+			} 
+
+			return res.status(400).send();
+		});
+	});
 }
 			
 
