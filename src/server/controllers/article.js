@@ -1,3 +1,6 @@
+var mongoose = require('mongoose');
+var Article = mongoose.model('Article');
+
 /*
  * GET article.
  */
@@ -52,85 +55,37 @@ exports.allArticles = function (req,res){
 
 // GET /article/:article_name
 exports.single = function(req, res){
-	db.articles.findOne({url: req.params.article_name},function(err,result){
-		if (err) {
-			return res.status(503).render('503', { message: err.toString() });
-		}
+	Article.load(req.params.article_name, function (err, article) {
+		if (err) return res.render('503', err);
+		if (!article) return res.render('404');
+		return res.render('article',article)
+	});
+}
 
-		if (!result){
-			return res.status(404).render('404');
-		}
-
-		if (!req.session.user_id && result.destination != 'articles'){
-			return res.status(404).render('404');
-		}
-
-		if (req.session.user_id && req.query.json == 'true'){
-			return res.send(result);
-		}
-		
-		result.pagetitle = result.title + " - " + req.wato_title;
-		marked(result.content, opt, function (err, mk){
-			if (err && !req.query.json) {
-				return res.status(503).render('503')
-			} 
-
-			if (err && req.query.json == 'true')  {
-				return res.status(503).send()
-			} 
-
-			else if (!err && !req.query.json)  {
-				result.content = mk;
-				return res.render(req.query.render || 'article', result);
-			} 
-
-			else if (!err && req.query.json == 'true') {
-				return res.send({
-					title: result.title,
-					url: req.locals.location + "/article/" + result.url,
-					content: mk,
-					tags: result.tags,
-					category: result.category
-				});
-			} 
-
-			return res.status(400).send();
-		});
+exports.singleJson = function (req, res) {
+	Article.loadSafe(req.params.article_name, function (err, article) {
+		if (err) return res.render('503', err);
+		if (!article) return res.render('404');
+		return res.send(article);
 	});
 }
 			
 
-// GET /article
+// GET /api/article - gets list of articles in JSON
 exports.list = function(req, res){
-	function returnResult(err,result){
-		if (err) {
-			res.send(503);
-		} else if (!result){
-			res.send(404);
-		} else {
-			var return_obj = []
-			result.forEach(function(thisArt){
-				if (thisArt.destination == 'articles'){
-					return_obj.push({
-						title: thisArt.title,
-						tags: thisArt.tags,
-						category: thisArt.category,
-						previewText: thisArt.previewtext,
-						location:  req.locals.location + "/article/" + thisArt.url,
-						json: req.locals.location + "/article/" + thisArt.url + "?json=true"
-					})
-				}
-			})
-			res.send(200, return_obj);
-		}
-	}
+	var options = {
+		//TODO: Expand usable query param options
+		criteria: {
+			destination: 'articles'
+		},
+		perPage: req.query.limit || 15,
+		page: req.query.page || 0
+	};
 
-	if (req.query.limit){
-		console.log(req.query.limit)
-		db.articles.find({destination: 'articles'}).sort({publishDate: -1}).limit(parseInt(req.query.limit),function(e,r){returnResult(e,r)})
-	} else {
-		db.articles.find({destination: 'articles'}).sort({publishDate: -1},function(e,r){returnResult(e,r)})
-	}  
+	Article.listSafe(options, function (err, articles) {
+		if (err) return res.render('503', err);
+		return res.send(articles);
+	});
 };
 
 // GET /allarticles

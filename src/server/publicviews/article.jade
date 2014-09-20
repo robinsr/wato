@@ -1,20 +1,8 @@
 extends layout
 
 block css
-	each val in css
+	each val in cssFiles
 		link(rel='stylesheet', href='/stylesheets/'+val.file)
-	style
-		blockquote p {
-		font-family: Georgia, serif;
-		font-style: italic;
-		}
-		blockquote {
-		background-color: #666;
-		vertical-align: middle;
-		padding-left: 20px;
-		color: white;
-		font-family: Georgia, serif;
-		}
 	
 
 block headerTags

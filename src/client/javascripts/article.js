@@ -30,13 +30,10 @@
 
  function Article(opt){
  	var self = this;
-
- 	self.title = ko.observable('pooop');
  }
 
 var articleMap = {
 	create: function(opt){
-		console.log('creating')
 		return new Article(opt.data)
 	}
 }

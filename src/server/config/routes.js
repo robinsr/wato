@@ -11,11 +11,12 @@ module.exports = function (app){
   // defines routes for readers
   app.get('/', routes.index);
   app.get('/article/:article_name', article.single);
-  app.get('/article', article.list);
   app.get('/allarticles', article.all);
   app.get('/category/:category_name', category.list);
 
-
+  // defines routes for the web api
+  app.get('/api/article', article.list);
+  app.get('/api/article/:article_name', article.singleJson);
 
   // defines routes for author tools pages
   app.get('/auth', auth.index); // shows login

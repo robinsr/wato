@@ -1,21 +1,19 @@
-
+var mongoose = require('mongoose');
+var Article = mongoose.model('Article');
 /*
- * GET home page.
- */
+* GET home page.
+*/
 
-var databaseUrl = "wato",
-	collections = ["articles"],
-	db = require("mongojs").connect(databaseUrl, collections);
 
 exports.index = function(req, res){
-	db.articles.find({destination: 'articles'}).sort({publishDate: -1}).limit(4,function(err,result){
-		if (err) {
-			res.render('503', result);
-		} else if (!result){
-			res.render('404', result);
-		} else {
-			res.render('index', { list: result });
-		}
-	})
-  
+  Article.list({
+    criteria: {
+      destination: 'articles'
+    },
+    perPage: 4,
+    page: 1,
+  }, function(err, articles) {
+    if (err) return res.render('503', err);
+    res.render('index', articles);
+  })
 };
