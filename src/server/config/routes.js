@@ -5,7 +5,9 @@ var routes = require(__dirname + '/../controllers')
 , template = require(__dirname + '/../controllers/template')
 , auth = require(__dirname + '/../controllers/auth')
 , user = require(__dirname + '/../controllers/user')
+, middleware = require(__dirname + '/middlewares');
 
+var articleAuth = middleware.article.auth;
 
 module.exports = function (app){
   // defines routes for readers
@@ -34,7 +36,7 @@ module.exports = function (app){
   // defines routes for get/posting/putting/deleting resources
   app.post('/article', auth.checkSession, article.save);
   app.put('/article', auth.checkSession, article.preview);
-  app.del('/article', auth.checkSession, article.del);
+  app.del('/article', auth.checkSession, articleAuth, article.del);
   app.post('/css', auth.checkSession, css.post);
   app.get('/template/:template_name', auth.checkSession, template.file);
   app.post('/template', auth.checkSession, template.post);

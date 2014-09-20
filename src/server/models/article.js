@@ -274,6 +274,14 @@ ArticleSchema.statics = {
       .limit(options.perPage)
       .skip(options.perPage * options.page)
       .exec(cb);
+  },
+
+  /**
+   * Remove article
+   */
+  
+  article: function (url, cb) {
+    this.findOneAndRemove({ url: url}, cb);
   }
 }
  
