@@ -90,16 +90,18 @@ exports.list = function(req, res){
 
 // GET /allarticles
 exports.all = function(req, res){
-	db.articles.find({destination: 'articles'}).sort({publishDate: -1},function(err,result){
-		if (err) {
-			res.render('503', { message: err.toString() })
-		} else if (!result){
-			res.render('404')
-		} else {
-			res.render('allarticles', { list:  u.filter(result, function(thisArt){return thisArt.category != 'dnd'}),
-			title: "All Articles - "+req.wato_title});
-		}
-	})
+	var options = {
+		criteria: {
+			destination: 'articles'
+		},
+		perPage: 999,
+		page: 0
+	};
+
+	Article.listSafe(options, function (err, articles) {
+		if (err) return res.render('503', err);
+		return res.send(articles);
+	});
 }
 
 // POST /article
