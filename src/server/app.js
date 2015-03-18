@@ -20,7 +20,7 @@ var connect = function() {
       }
     }
   }
-  mongoose.connect(config.db, options)
+  mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/test', options)
 }
 connect()
 
