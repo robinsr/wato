@@ -13,6 +13,8 @@ var express = require('express')
 // Bootstrap db connection
 // Connect to mongodb
 var connect = function() {
+  var mongoUrl = process.env.MONGOLAB_URI || 'mongodb://localhost/test';
+  console.log("mongo url: " + mongoUrl);
   var options = {
     server: {
       socketOptions: {
@@ -20,7 +22,7 @@ var connect = function() {
       }
     }
   }
-  mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/test', options)
+  mongoose.connect(mongoUrl, options)
 }
 connect()
 
@@ -31,12 +33,14 @@ mongoose.connection.on('error', function(err) {
 
 // Reconnect when closed
 mongoose.connection.on('disconnected', function() {
+  console.log("mongo disconnected. Reconnecting.")
   connect()
 })
 
 // Bootstrap models
 var models_path = __dirname + '/models'
 fs.readdirSync(models_path).forEach(function(file) {
+  console.log("loading model " + file);
   if (~file.indexOf('.js')) require(models_path + '/' + file)
 })
 
