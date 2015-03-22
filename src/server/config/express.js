@@ -16,7 +16,7 @@ module.exports = function(app, config) {
 
   // all environments
   app.use(express.logger('dev'));
-  app.set('port', process.env.$PORT || 3000);
+  app.set('port', process.env.PORT || 3000);
   app.set('views', config.appRoot + 'server/publicviews/');
   app.set('view engine', 'jade');
   app.use(express.cookieParser('some secret'));

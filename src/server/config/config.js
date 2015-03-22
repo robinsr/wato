@@ -10,18 +10,8 @@ var development = require('./env/development');
 var test = require('./env/test');
 var production = require('./env/production');
 
-var notifier = {
-  service: 'postmark',
-  APN: false,
-  email: true, // true
-  actions: ['comment'],
-  tplPath: path.normalize(__dirname + '/../app/mailer/templates'),
-  key: 'POSTMARK_KEY'
-};
-
 var defaults = {
-  appRoot: path.normalize(__dirname + '/../../'),
-  notifier: notifier
+  appRoot: path.normalize(__dirname + '/../../')
 };
 
 /**

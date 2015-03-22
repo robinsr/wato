@@ -10,11 +10,12 @@ var express = require('express')
   , fs = require('fs')
   , app = express();
 
+console.log("NODE_ENV " + process.env.NODE_ENV);
+
 // Bootstrap db connection
 // Connect to mongodb
 var connect = function() {
-  var mongoUrl = process.env.MONGOLAB_URI || 'mongodb://localhost/test';
-  console.log("mongo url: " + mongoUrl);
+  console.log("mongo url: " + config.db);
   var options = {
     server: {
       socketOptions: {
@@ -22,7 +23,7 @@ var connect = function() {
       }
     }
   }
-  mongoose.connect(mongoUrl, options)
+  mongoose.connect(config.db, options)
 }
 connect()
 
@@ -54,9 +55,8 @@ if (process.argv[2] == '-install'){
 //auth.createRoot();
 }
 
-app.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
+app.listen(app.get('port'));
+console.log('Express server listening on port ' + app.get('port');
 
 // expose app
 exports = module.exports = app
