@@ -48,6 +48,7 @@ exports.logout = function(req,res){
 // pages
 exports.index = function(req, res){
 	utils.getMenuFileList(function(err,render_obj){
+		var render_obj = render_obj || {};
 		render_obj.login = false;
 		if (err) {
 			res.render('auth/error')
