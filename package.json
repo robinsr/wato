@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "async": "*",
+    "bower": "^1.3.12",
     "express": "3.4.0",
     "forever": "*",
     "jade": "*",
