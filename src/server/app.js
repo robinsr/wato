@@ -56,7 +56,7 @@ if (process.argv[2] == '-install'){
 }
 
 app.listen(app.get('port'));
-console.log('Express server listening on port ' + app.get('port');
+console.log('Express server listening on port ' + app.get('port'));
 
 // expose app
 exports = module.exports = app
