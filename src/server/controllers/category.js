@@ -1,25 +1,27 @@
+var mongoose = require('mongoose');
+var Article = mongoose.model('Article');
+var u = require("underscore");
 
-/*
- * GET article.
- */
-
-var databaseUrl = "wato",
-	collections = ["articles"],
-	db = require("mongojs").connect(databaseUrl, collections),
-	u = require("underscore");
-
-exports.list = function(req, res){
-	db.articles.find({category: req.params.category_name}).sort({publishDate: -1},function(err,result){
-		if (err) {
-			res.render('503', result);
-		} else if (!result){
-			res.render('404', result);
-		} else {
-			console.log(result);
-			res.render('category', {category: req.params.category_name,  
-				list: u.filter(result, function(thisArt){return thisArt.destination == 'articles'}) /*,
-				title: "Results for "+req.params.category_name+" - "+req.wato_title*/
-			});
+exports.load = function (req, res, next, id) {
+	var options = {
+		criteria: {
+			category: id,
+			destination: 'articles'
 		}
-	})
+	};
+
+	Article.list(options, function (err, articles) {
+		if (err) return next(err);
+		if (!articles) return next(new Error("No categories found"));
+		req.articles = articles;
+		next();
+	});
+}
+
+// GET /category/:category_name
+exports.list = function(req, res, next) {
+	return res.render('public/category', {
+		category: req.params.category_name,  
+		list: req.articles
+	});
 };

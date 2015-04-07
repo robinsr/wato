@@ -4,7 +4,7 @@
 
 var app = require(__dirname + '/../../src/server/app');
 
-var request = require('superagent');
+var request = require('supertest');
 
 module.exports.mount = function () {
   before(function (done) {

@@ -5,7 +5,7 @@ var Article = mongoose.model('Article');
 */
 
 
-exports.index = function(req, res){
+exports.index = function (req, res, next) {
   Article.list({
     criteria: {
       destination: 'articles'
@@ -13,7 +13,7 @@ exports.index = function(req, res){
     perPage: 4,
     page: 1,
   }, function(err, articles) {
-    if (err) return res.render('503', err);
-    res.render('index', articles);
+    if (err) return next(err);
+    res.render('public/index', articles);
   })
 };

@@ -8,55 +8,37 @@ var extend = require('util')._extend;
  * GET article.
  */
 
-
-
-// GET /auth/article
-exports.articleEditor = function (req,res){
-  utils.getMenuFileList(function(err,render_obj){
-    if (err) {
-      res.render('auth/error')
-    } else {
-      render_obj.login = true; 
-      render_obj.article_editor = true;
-      render_obj.today = moment().utc().format("YYYY-MM-DD")
-      res.render('auth/article', render_obj);
-    }
+exports.loadByName = function(req, res, next) {
+  Article.loadSafe({ url: req.params.article_name }, function (err, article) {
+    if (err) return next(err);
+    if (!article)  return next(new Error('Article not found'));
+    req.article = article;
+    next();
   });
 }
 
-// GET /auth/all
-exports.allArticles = function (req,res){
-  utils.getAllFiles(function(err,render_obj){
-    if (err) {
-      res.render('auth/error')
-    } else {
-      render_obj.login = true; 
-      render_obj.article_editor = true;
-      res.render('auth/all', render_obj);
-    }
+exports.loadById = function(req, res, next) {
+  Article.load({ _id: req.params.article_id }, function (err, article) {
+    if (err) return next(err);
+    if (!article)  return next(new Error('Article not found'));
+    req.article = article;
+    next();
   });
 }
+
 
 // GET /article/:article_name
-exports.single = function(req, res){
-  Article.load(req.params.article_name, function (err, article) {
-    if (err) return res.render('503', err);
-    if (!article) return res.render('404');
-    return res.render('article',article)
-  });
+exports.single = function(req, res) {
+  return res.render('public/article', req.article);
 }
 
+// GET /api/article/:article_id
 exports.singleJson = function (req, res) {
-  Article.loadSafe(req.params.article_name, function (err, article) {
-    if (err) return res.render('503', err);
-    if (!article) return res.render('404');
-    return res.send(article);
-  });
+  return res.send(req.article);
 }
       
-
 // GET /api/article - gets list of articles in JSON
-exports.list = function(req, res){
+exports.list = function(req, res, next) {
   var options = {
     //TODO: Expand usable query param options
     criteria: {
@@ -67,13 +49,16 @@ exports.list = function(req, res){
   };
 
   Article.listSafe(options, function (err, articles) {
-    if (err) return res.render('503', err);
+    if (err) {
+      return next(err);
+    }
+
     return res.send(articles);
   });
 };
 
 // GET /allarticles
-exports.all = function(req, res){
+exports.all = function(req, res, next) {
   var options = {
     criteria: {
       destination: 'articles'
@@ -83,31 +68,48 @@ exports.all = function(req, res){
   };
 
   Article.listSafe(options, function (err, articles) {
-    if (err) return res.render('503', err);
+    if (err) {
+      return next(err);
+    }
+
     return res.send(articles);
   });
 }
 
 // POST /article
-exports.save = function(req,res){
+exports.create = function (req, res, next) {
 
   // prepare request body to save
   req.body.lastEdit = req.session.user_id;
   req.body.saveDate = moment().utc().format("YYYY-MM-DD");
 
-  Article.load({ url: "__preview" }, function (err, article){
-    if (err) return res.send(500, "Error generating preview");
-    article = article || {}; // if no article found
-    extend(article, req.body);
-    article.save(function (err) {
-      if (err) return res.send(500, "Error saving");
-      res.send(200, article._id.toString());
-    })
+  Article.create(req.body, function (err, article) {
+    if (err) {
+      return next(err);
+    }
+
+    return res.send(200, article._id.toString());
   });
 }
 
+// PUT /article/:article_id
+exports.update = function (req, res, next){
+  var article = req.article;
+
+  // make sure no one changes the user
+  delete req.body.user;
+  article = extend(article, req.body);
+
+  article.save(function (err) {
+    if (err) {
+      return next(err);
+    }
+    return res.status(200).send();
+  });
+};
+
 // PUT /article
-exports.preview = function(req, res){
+exports.preview = function (req, res, next) {
   
   // Prepare request body to save
   delete req.body._id;
@@ -115,31 +117,44 @@ exports.preview = function(req, res){
   req.body.category = "dnd";
   req.body.destination = "preview";
 
-  Article.load({ url: "__preview" }, function (err, article){
-    if (err) return res.send(500, "Error generating preview");
+  Article.load({ url: "__preview" }, function (err, article) {
+    if (err) {
+      return next(new Error("Error generating preview"));
+    }
+
     article = article || {}; // if no article found
     extend(article, req.body);
+
     article.save(function (err) {
-      if (err) return res.send(500, "Error generating preview");
-      res.send(200, "Preview ready");
-    })
+      if (err) {
+        return next(new Error("Error generating preview"));
+      }
+      return res.send(200, "Preview ready");
+    });
   });
 }
 
 // DELETE /article
-exports.del = function(req, res){
-  Article.remove({ url: url}, function (err, article) {
-    if (err) return res.status(500).send("Could not delete articles");
-    res.status(200).send("Article Deleted")
+exports.del = function (req, res, next) {
+  Article.remove({ _id: req.params.article_id }, function (err, article) {
+    if (err) {
+      return next(err);
+    }
+    return res.status(200).send("Article Deleted")
   });
 }
 
 // GET /__template (special route for previewing a template with the data from a specific article)
-exports.templatePreview = function(req, res){
+exports.templatePreview = function (req, res, next){
   Article.load({url: req.query.previewFile}, function (err, article) {
-    if (err) return res.render('503', err);
-    if (!article) return res.render('503', 
-      new Error('Could not find article for preview'));
-    return res.render('__preview', result);
+    if (err) {
+      return next(err);
+    }
+
+    if (!article) {
+      return next(Error('Could not find article for preview'));
+    }
+
+    return res.render('public/__preview', result);
   });
 }

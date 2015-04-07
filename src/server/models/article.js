@@ -225,8 +225,8 @@ ArticleSchema.statics = {
    * @api private
    */
  
-  load: function (url, cb) {
-    this.findOne({ url: url })
+  load: function (criteria, cb) {
+    this.findOne(criteria)
       //.populate('user', 'name email username')
       //.populate('comments.user')
       .exec(function (err, article) {
@@ -238,8 +238,8 @@ ArticleSchema.statics = {
         });
       });
   },
-  loadSafe: function (url, cb) {
-    this.findOne({ url: url })
+  loadSafe: function (criteria, cb) {
+    this.findOne(criteria)
       .select(safeFields.join(' '))
       //.populate('user', 'name email username')
       //.populate('comments.user')
@@ -264,6 +264,7 @@ ArticleSchema.statics = {
       .skip(options.perPage * options.page)
       .exec(cb);
   },
+
   listSafe: function (options, cb) {
     var criteria = options.criteria || {}
  
@@ -274,6 +275,10 @@ ArticleSchema.statics = {
       .limit(options.perPage)
       .skip(options.perPage * options.page)
       .exec(cb);
+  },
+
+  getCategories: function (next) {
+    this.find().distinct('category').exec(next);
   },
 
   /**

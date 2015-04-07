@@ -4,12 +4,19 @@
   "private": true,
   "scripts": {
     "start": "node src/server/app.js",
+    "test": "NODE_PATH=./config:./app/controllers NODE_ENV=test PORT=3000 ./node_modules/.bin/mocha --reporter spec --timeout 10000 ./test/server/*test-*.js",
     "postinstall": "bower install"
   },
   "dependencies": {
     "async": "*",
     "bower": "^1.3.12",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^0.7.0",
+    "cookie-parser": "^1.3.4",
+    "cookie-session": "^1.1.0",
+    "csurf": "^1.7.0",
     "express": "3.4.0",
+    "express-session": "^1.10.4",
     "forever": "*",
     "jade": "*",
     "marked": "~0.2.9",
@@ -17,6 +24,10 @@
     "mongodb": "*",
     "mongojs": "*",
     "mongoose": "^3.8.16",
+    "multer": "^0.1.8",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "supertest": "^0.15.0",
     "underscore": "*"
   },
   "devDependencies": {

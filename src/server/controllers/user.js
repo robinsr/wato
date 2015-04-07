@@ -1,8 +1,7 @@
-var databaseUrl = "wato",
-	collections = ["articles","users"],
-	db = require("mongojs").connect(databaseUrl, collections),
-	async = require('async'),
-	utils = require('./../utils');
+var async = require('async')
+	, mongoose = require('mongoose')
+	, User = mongoose.model('User')
+	, utils = require('./../utils');
 
 exports.index = function(req,res){
 	var files;
@@ -40,73 +39,108 @@ exports.index = function(req,res){
 	})	
 }
 
-exports.add = function(req,res){
-	if (req.session.permissions <= 2){
-		res.status(403).send('You do not have the necessary permissions to save')
-	} else {
-		req.body.permissions = parseInt(req.body.permissions)
-		db.users.count({},function(err,count){
-			req.body.user_id = count + 1;
-			db.users.insert(req.body,function(err){
-				if (err) {
-					res.status(500).send("Could not add User")
-				} else {
-					res.status(200).send("User Added")
-				}
-			})
-		})
-	}
-}
+/**
+ * Load
+ */
 
-exports.del = function(req,res){
-	if (req.session.permissions <= 2){
-		res.status(403).send('You do not have the necessary permissions to save')
-	} else if (req.body.user_id == 1) {
-		res.status(400).send('Cannot remove root user');
-	} else {
-		db.users.remove({user_id: req.body.user_id},function(err){
-			if (err) {
-				res.status(500).send("Could not delete user")
-			} else {
-				res.status(200).send("User Deleted")
-			}
-		})
-	}
-}
+exports.load = function (req, res, next, id) {
+  var options = {
+    criteria: { _id : id }
+  };
+  User.load(options, function (err, user) {
+    if (err) return next(err);
+    if (!user) return next(new Error('Failed to load User ' + id));
+    req.profile = user;
+    next();
+  });
+};
 
-exports.changePass = function(req,res){
-	if (req.session.permissions <= 2){
-		res.status(403).send('You do not have the necessary permissions to save')
-	} else {
-		args = {
-	        'query': {user_id: parseInt(req.body.user_id)},
-	        'update': {$set: {pass: req.body.password}},
-	        'upsert':false
-	    }
-	    db.users.findAndModify(args, function(err,result){
-	        if (err) {
-	            res.status(500).send('Error changing pass')
-	        } else {
-	            res.status(200).send('Pass Changed');
-	        }
-	    })
-	}
-}
-exports.changeLevel = function(req,res){
-	if (req.session.permissions <= 2){
-		res.status(403).send('You do not have the necessary permissions to save')
-	} else {
-		args = {
-	        'query': {user_id: parseInt(req.body.user_id)},
-	        'update': {$set: {permissions: parseInt(req.body.permissions)}},
-	        'upsert':false
-	    }
-	    db.users.findAndModify(args, function(err,result){
-	        if (err) {
-	            res.status(500).send('Error changing permissions level')
-	        } else {
-	            res.status(200).send('Permission Level Changed');
-	        }
-	    })
-	}
+/**
+ * Create user
+ */
+
+exports.create = function (req, res) {
+  var user = new User(req.body);
+
+  user.save(function (err) {
+    if (err) {
+      return res.render('users/signup', {
+        errors: utils.errors(err.errors),
+        user: user,
+        title: 'Sign up'
+      });
+    }
+
+    // manually login the user once successfully signed up
+    req.logIn(user, function(err) {
+      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
+      return res.redirect('/edit/article');
+    });
+  });
+};
+
+/**
+ *  Show profile
+ */
+
+exports.show = function (req, res) {
+  var user = req.profile;
+
+  res.render('users/show', {
+    email: user.email,
+    user: user
+  });
+};
+
+exports.signin = function (req, res) {};
+
+/**
+ * Show login form
+ */
+
+exports.login = function (req, res) {
+  res.render('users/login', {
+    title: 'Login'
+  });
+};
+
+/**
+ * Show sign up form
+ */
+
+exports.signup = function (req, res) {
+  res.render('users/signup', {
+    title: 'Sign up',
+    user: new User()
+  });
+};
+
+/**
+ * Logout
+ */
+
+exports.logout = function (req, res) {
+  req.logout();
+  res.redirect('/login');
+};
+
+/**
+ * Session
+ */
+
+exports.session = login;
+
+/**
+ * Login
+ */
+
+function login (req, res) {
+  var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
+  delete req.session.returnTo;
+  res.redirect(redirectTo);
+};
+
+
+exports.destroy = function (req, res, next) {
+	return next()
 }

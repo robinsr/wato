@@ -1,134 +1,126 @@
-var fs = require('fs'),
-	async = require('async'),
-	path = require('path'),
-	util = require('util'),
-	config = require(__dirname + '/sample_config');
+var fs = require('fs')
+	, async = require('async')
+	, path = require('path')
+	, util = require('util')
+	, config = require(__dirname + '/config/config')
+	, mongoose = require('mongoose');
 
-exports.getConnectionString = function(){
-	return util.format("%s:%s@%s/%s",
-		config.database_username,
-		config.database_password,
-		config.database_url,
-		config.database_name);
-}
-
-console.log(exports.getConnectionString())
-
-var collections = ["articles","users"],
-	db = require("mongojs").connect(exports.getConnectionString(), collections);
-
-module.exports.db = db;
+var Article = mongoose.model('Article');
+var User = mongoose.model('User');
 
 exports.getMenuFileList = function(next){
 	var return_obj = {
 		login: true,
 		article_editor: true,
 		files: []
-	}
+	};
+
 	async.parallel([
-	function(cb){
-		db.articles.find({destination:'articles'}).sort({publishDate: -1}).limit(10,function(err,result){
-			if (err) {
-				cb('error')
-			} else {
+		function(cb){
+			Article.list({ criteria: {destination:'Article'}, perPage: 10} ,function (err, result) {
+				if (err) return cb(err);
+
 				result.forEach(function(file){return_obj.files.push(file)})
-				cb(null)
-			}
-		})
-	},
-	function(cb){
-		db.articles.find({destination:'drafts'}).sort({publishDate: -1}).limit(10,function(err,result){
-			if (err) {
-				cb('error')
-			} else {
-				result.forEach(function(file){return_obj.files.push(file)})
-				cb(null)
-			}
-		})
-	},
-	function(cb){
-		fs.readdir('public/stylesheets',function(err, result){
-			if (err) {
-				cb('error')
-			} else {
-				return_obj.css = result.map(function(_css){
+				return cb(null);
+			});
+		},
+
+		function(cb){
+			Article.list({ criteria: {destination:'drafts'}, perPage: 10} ,function (err, result) {
+				if (err) return cb(err);
+
+				result.forEach(function(file){return_obj.files.push(file)});
+				return cb(null);
+			});
+		},
+
+		function(cb){
+			var dir = config.appRoot + '/client/stylesheets';
+			fs.readdir(dir, function (err, result){
+				if (err) return cb(err);
+			
+				return_obj.css = result.map(function (_css){
 					return "\"" + _css + "\"";
 				}).join(",");
-				cb(null)
-			}
-		})
-	},
-	function(cb){
-		fs.readdir('views/',function(err, result){
-			if (err) {
-				cb('error')
-			} else {
-				return_obj.templates = result.map(function(_template){
-					return "\"" + _template + "\"";
-				}).join(",");
-				cb(null)
-			}
-		})
-	},
-	function(cb){
-		db.articles.distinct("category",function(err,result){
-			if (err) cb('err')
-			return_obj.category = result.filter(function(_category){
-				return _category.length != 0
-			}).map(function(_category){
-				return "\"" + _category + "\"";
-			}).join(",");
-			cb(null)
-		})
-	},
-	function(cb){
-		fs.readdir('./views/',function(err,result){
-			return_obj.views = result.map(function(_view){
-				return path.basename(_view);
-			});
-		cb(null);
-	})
-	}
-	],
-	function(err){
-		if (err) {
-			next('error',null)
-		} else {
-			next(null, return_obj);
-		}
-	})
-}
-exports.getAllFiles = function(next){
-	var return_obj = {};
-	return_obj.files = [];
-	db.articles.find().sort({publishDate: -1},function(err,result){
-		if (err) {
-			cb('error')
-		} else {
-			async.eachSeries(result,function(file,_cb){
-				if (file.lastEdit){
-					console.log("last edit "+file.lastEdit)
-					db.users.findOne({user_id: parseInt(file.lastEdit)},function(err,_result){
-						if (err || !_result){
-							file.lastEditName = "-";
-						} else {
-							file.lastEditName = _result.name;
-						}
-						return_obj.files.push(file);
-						_cb(null)
-					})
-				} else {
-					file.lastEditName = "-";
-					return_obj.files.push(file);
-					_cb(null)
-				}
-			},function(err){
-				if (err) {
-					next('error',null)
-				} else {
-					next(null, return_obj);
-				}
+
+				return cb(null);
 			})
+		},
+
+		function(cb){
+			Article.getCategories(function (err, result) {
+				if (err) return cb(err);
+
+				return_obj.category = result.filter(function (_category) {
+					return _category.length != 0
+				}).map(function(_category){
+					return "\"" + _category + "\"";
+				}).join(",");
+				
+				return cb(null);
+			});
+		},
+
+		function (cb) {
+			var dir = config.appRoot + '/server/views/';
+			fs.readdir(dir, function (err, result) {
+				if (err) return cb(err);
+
+				return_obj.views = result.map(function (_view) {
+					return path.basename(_view);
+				});
+				
+				return cb(null);
+			});
 		}
-	})
+	],
+
+	function (err) {
+		if (err) {
+			return next(err)
+		}
+		
+		next(null, return_obj);
+	});
+}
+
+
+exports.getAllFiles = function(next) {
+	var return_obj = {
+		file: []
+	};
+
+	Article.list({}, function (err, articles) {
+		if (err) return next(err);
+
+		async.eachSeries(articles, function (article, _cb) {
+			if (article.lastEdit){
+				console.log("last edit "+article.lastEdit)
+				User.load({ criteria: { user_id: parseInt(article.lastEdit) }}, function (err, _result) {
+
+					if (err) return _cb(err);
+
+					if (!_result){
+						article.lastEditName = "-";
+					} else {
+						article.lastEditName = _result.name;
+					}
+
+					return_obj.files.push(article);
+					
+					_cb(null);
+				})
+			} else {
+				article.lastEditName = "-";
+				return_obj.files.push(article);
+				_cb(null)
+			}
+		},function(err){
+			if (err) {
+				return next(err)
+			}
+
+			next(null, return_obj);
+		});
+	});
 }

@@ -18,12 +18,14 @@ describe('Article', function() {
       url: 'test',
       content: 'test',
       destination: 'articles',
-      cssFils: ['test.css']
+      category: 'test_category',
+      cssFiles: ['test.css']
     });
     article.save(function () {
-      Article.count(function(err,count){
+      Article.count(function (err, count) {
+        if (err) return done(err);
         if (count !== 1) {
-          throw new Error("Count does not equal expected");
+          return done(new Error("Count does not equal expected"));
         }
         done();
       });
@@ -35,14 +37,11 @@ describe('Article', function() {
   });
 
   describe('GET /', function() {
-    it('Should respond', function (done) {
+    it.only('Should respond', function (done) {
       this.agent
         .get(this.host + '/')
-        .end(function (err, res) {
-          should.not.exist(err);
-          res.should.have.property('status', 200);
-          done();
-        });
+        .expect(200)
+        .end(done);
     });
   });
 

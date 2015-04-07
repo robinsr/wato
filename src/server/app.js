@@ -7,6 +7,7 @@ var express = require('express')
   , path = require('path')
   , config = require(__dirname + '/config/config')
   , mongoose = require('mongoose')
+  , passport = require('passport')
   , fs = require('fs')
   , app = express();
 
@@ -41,14 +42,17 @@ mongoose.connection.on('disconnected', function() {
 // Bootstrap models
 var models_path = __dirname + '/models'
 fs.readdirSync(models_path).forEach(function(file) {
-  console.log("loading model " + file);
   if (~file.indexOf('.js')) require(models_path + '/' + file)
 })
 
+// Bootstrap passport config
+require('./config/passport')(passport, config);
+
 // express settings
-require('./config/express')(app, config);
+require('./config/express')(app, passport);
+
 // express routes
-require('./config/routes')(app);
+require('./config/routes')(app, passport);
 
 
 if (process.argv[2] == '-install'){

@@ -1,12 +1,9 @@
-/*
- * GET tempalte.
- */
+var fs = require('fs');
+var utils = require('./../utils');
 
-var databaseUrl = "wato",
-	collections = ["articles"],
-	db = require("mongojs").connect(databaseUrl, collections),
-	fs = require('fs'),
-	utils = require('./../utils');
+exports.load = function (req, res, next, id) {
+	next();
+}
 
 exports.indexPage = function(req,res){
 	utils.getMenuFileList(function(err, render_obj){
