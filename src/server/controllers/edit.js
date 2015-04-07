@@ -1,6 +1,5 @@
 var async = require('async')
 	, moment = require('moment')
-	, utils = require('./../utils')
 	, fs = require('fs')
 	, mongoose = require('mongoose')
 	, User = mongoose.model('User');
@@ -30,28 +29,27 @@ exports.index = function(req, res, next) {
 
 // GET /edit/article
 exports.article = function (req, res, next) {
-  utils.getMenuFileList(function (err, render_obj) {
-    if (err) {
-      return next(err);
-    }
-    
-    render_obj.login = true; 
-    render_obj.article_editor = true;
-    render_obj.today = moment().utc().format("YYYY-MM-DD")
-    return res.render('auth/article', render_obj);
-  });
+  var render_obj = {
+    today: moment().utc().format("YYYY-MM-DD")
+  }
+
+  extend(render_obj, req.wato_data);
+  
+  return res.render('auth/article', render_obj);
 }
 
 // GET /edit/all
 exports.all = function (req, res, next) {
-  utils.getAllFiles(function (err, render_obj) {
+  Article.list(function (err, articles) {
     if (err) {
       return next(err);
     }
-    
-    render_obj.login = true; 
-    render_obj.article_editor = true;
-    return res.render('auth/all', render_obj);
+
+    return res.render('auth/all', {
+      files: articles,
+      login: true,
+      article_editor: true
+    });
   });
 }
 

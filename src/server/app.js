@@ -35,7 +35,6 @@ mongoose.connection.on('error', function(err) {
 
 // Reconnect when closed
 mongoose.connection.on('disconnected', function() {
-  console.log("mongo disconnected. Reconnecting.")
   connect()
 })
 
@@ -55,12 +54,15 @@ require('./config/express')(app, passport);
 require('./config/routes')(app, passport);
 
 
-if (process.argv[2] == '-install'){
-//auth.createRoot();
+// expose app
+exports.init = function (locals) {
+  app.locals(locals);
+  return exports;
 }
 
-app.listen(app.get('port'));
-console.log('Express server listening on port ' + app.get('port'));
+exports.start = function () {
+  app.listen(app.get('port'));
+  console.log('Express server listening on port ' + app.get('port'));
+}
 
-// expose app
-exports = module.exports = app
+exports.app = app;

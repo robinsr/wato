@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Article = mongoose.model('Article');
-var utils = require(__dirname+ '/../utils');
 var moment = require('moment');
 var extend = require('util')._extend;
 
@@ -80,7 +79,8 @@ exports.all = function(req, res, next) {
 exports.create = function (req, res, next) {
 
   // prepare request body to save
-  req.body.lastEdit = req.session.user_id;
+  req.body.createdBy = req.user;
+  req.body.lastEditedBy = req.user;
   req.body.saveDate = moment().utc().format("YYYY-MM-DD");
 
   Article.create(req.body, function (err, article) {
@@ -95,6 +95,8 @@ exports.create = function (req, res, next) {
 // PUT /article/:article_id
 exports.update = function (req, res, next){
   var article = req.article;
+
+  article.lastEditedBy = req.user;
 
   // make sure no one changes the user
   delete req.body.user;

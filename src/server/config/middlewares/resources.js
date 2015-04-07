@@ -2,13 +2,27 @@ var fs = require('fs')
 	, async = require('async')
 	, path = require('path')
 	, util = require('util')
-	, config = require(__dirname + '/config/config')
+	, config = require(__dirname + '/../config')
 	, mongoose = require('mongoose');
 
 var Article = mongoose.model('Article');
 var User = mongoose.model('User');
 
-exports.getMenuFileList = function(next){
+
+/**
+ * getMenuFileList
+ *
+ * extends req, req.watoData: {
+ * 		login: true,
+ * 		article_editor: true,
+ * 		files: <Array of articles>,
+ * 		css: <Array of css file paths>,
+ * 		categories: <Array of category strings>,
+ * 		views: <Array of view file paths>
+ * 	}
+ */
+exports.getMenuFileList = function(req, res, next){
+
 	var return_obj = {
 		login: true,
 		article_editor: true,
@@ -79,48 +93,9 @@ exports.getMenuFileList = function(next){
 		if (err) {
 			return next(err)
 		}
+
+		req.watoData = return_obj;
 		
-		next(null, return_obj);
-	});
-}
-
-
-exports.getAllFiles = function(next) {
-	var return_obj = {
-		file: []
-	};
-
-	Article.list({}, function (err, articles) {
-		if (err) return next(err);
-
-		async.eachSeries(articles, function (article, _cb) {
-			if (article.lastEdit){
-				console.log("last edit "+article.lastEdit)
-				User.load({ criteria: { user_id: parseInt(article.lastEdit) }}, function (err, _result) {
-
-					if (err) return _cb(err);
-
-					if (!_result){
-						article.lastEditName = "-";
-					} else {
-						article.lastEditName = _result.name;
-					}
-
-					return_obj.files.push(article);
-					
-					_cb(null);
-				})
-			} else {
-				article.lastEditName = "-";
-				return_obj.files.push(article);
-				_cb(null)
-			}
-		},function(err){
-			if (err) {
-				return next(err)
-			}
-
-			next(null, return_obj);
-		});
+		next(null);
 	});
 }

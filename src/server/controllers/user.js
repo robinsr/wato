@@ -1,42 +1,27 @@
 var async = require('async')
 	, mongoose = require('mongoose')
-	, User = mongoose.model('User')
-	, utils = require('./../utils');
+	, User = mongoose.model('User');
 
-exports.index = function(req,res){
-	var files;
-	var users;
-	async.parallel([
-	function(cb){
-		utils.getMenuFileList(function(err,_files){
-			if (err){
-				cb('error');
-			} else {
-				files = _files
-				cb(null)
-			}
-		})
-	},
-	function(cb){
-		db.users.find({permissions: {$lte: req.session.permissions}},function(err,result){
-			if (err){
-				cb('error')
-			} else {
-				users = result
-				cb()
-			}
-		})
-	}
-	],
-	function(err){
+
+// GET /edit/users - Loads the user management page
+exports.index = function(req, res, next) {
+  User.load({
+    criteria: {
+      permissions: {
+        $lte: req.session.permissions
+      }
+    }
+  }, function (err, users){
 		if (err) {
-			res.render('auth/error')
-		} else {
-			console.log(users)
-			console.log(files)
-			res.render('auth/user', {files: files, users: users, login:true})
+			return next(err);
 		}
-	})	
+
+		return res.render('auth/user', {
+      files: req.watoData, 
+      users: users, 
+      login:true
+    });
+  });
 }
 
 /**
@@ -84,7 +69,7 @@ exports.create = function (req, res) {
  */
 
 exports.show = function (req, res) {
-  var user = req.profile;
+  var user = req.user;
 
   res.render('users/show', {
     email: user.email,

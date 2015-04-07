@@ -14,7 +14,7 @@ exports.requiresLogin = function (req, res, next) {
  */
 exports.article = {
   auth: function (req, res, next){
-    if (req.profile.permissions <= 1){
+    if (req.user.permissions <= 1){
       return res.status(403).send('You do not have the necessary permissions to save')
     }
     next();

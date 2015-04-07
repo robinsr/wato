@@ -26,7 +26,7 @@ block content
 									td= val.category
 									td= val.publishDate
 									td= val.saveDate
-									td= val.lastEditName
+									td= val.lastEditedBy.name
 									td(data-filename=''+val._id)
 										span.glyphicon.glyphicon-trash
 				pre Drafts
@@ -49,7 +49,7 @@ block content
 									td= val.category
 									td= val.publishDate
 									td= val.saveDate
-									td= val.lastEditName
+									td= val.lastEditedBy.name
 									td(data-filename=''+val._id)
 										span.glyphicon.glyphicon-trash
 				pre Trash
@@ -72,7 +72,7 @@ block content
 									td= val.category
 									td= val.publishDate
 									td= val.saveDate
-									td= val.lastEditName
+									td= val.lastEditedBy.name
 									td(data-filename=''+val._id)
 										span.glyphicon.glyphicon-trash
 	script(src="/javascripts/utils.js")

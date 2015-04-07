@@ -5,10 +5,13 @@ var routes = require(__dirname + '/../controllers')
 , template = require(__dirname + '/../controllers/template')
 , edit = require(__dirname + '/../controllers/edit')
 , users = require(__dirname + '/../controllers/user')
-, auth = require('./middlewares/authorization');
+, auth = require('./middlewares/authorization')
+, resources = require('./middlewares/resources');
 
 var articleAuth = auth.article.auth;
 var userAuth = auth.user.auth;
+
+var menuFileList = resources.getMenuFileList;
 
 module.exports = function (app, passport) {
 
@@ -45,10 +48,10 @@ module.exports = function (app, passport) {
 
   // defines routes for author tools pages
   app.get( '/edit',          edit.index); // shows login
-  app.get( '/edit/article',  auth.requiresLogin, edit.article);
-  app.get( '/edit/all',      auth.requiresLogin, edit.all);
-  app.get( '/edit/css',      auth.requiresLogin, edit.notAvailable);
-  app.get( '/edit/template', auth.requiresLogin, edit.notAvailable);
+  app.get( '/edit/article',  auth.requiresLogin, menuFileList, edit.article);
+  app.get( '/edit/all',      auth.requiresLogin, menuFileList, edit.all);
+  app.get( '/edit/css',      auth.requiresLogin, menuFileList, edit.notAvailable);
+  app.get( '/edit/template', auth.requiresLogin, menuFileList, edit.notAvailable);
 
   // defines routes for get/posting/putting/deleting resources
   app.post('/article',                 auth.requiresLogin, article.create);

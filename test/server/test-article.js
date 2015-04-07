@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var Article = mongoose.model('Article');
 var helper = require('./helper');
 
+var articleId;
 
 describe('Article', function() {
   
@@ -37,9 +38,9 @@ describe('Article', function() {
   });
 
   describe('GET /', function() {
-    it.only('Should respond', function (done) {
+    it('Should respond', function (done) {
       this.agent
-        .get(this.host + '/')
+        .get('/')
         .expect(200)
         .end(done);
     });
@@ -48,10 +49,10 @@ describe('Article', function() {
   describe('GET /api/article/', function() {
     it('should list articles in JSON', function (done) {
       this.agent
-        .get(this.host + '/api/article/')
+        .get('/api/article/')
+        .expect(200)
         .end(function (err, res) {
           should.not.exist(err);
-          res.should.have.property('status', 200);
           res.text.should.match(/test/);
           done();
         });
@@ -61,10 +62,10 @@ describe('Article', function() {
   describe('GET /api/article/test', function() {
     it('should return json of article', function(done) {
       this.agent
-        .get(this.host + '/api/article/test')
+        .get('/api/article/test')
+        .expect(200)
         .end(function (err, res) {
           should.not.exist(err);
-          res.should.have.property('status', 200);
           res.text.should.match(/test/);
           done();
         });
@@ -74,17 +75,90 @@ describe('Article', function() {
   describe('GET /article/test', function() {
     it('should return rendered article', function(done) {
       this.agent
-        .get(this.host + '/article/test')
+        .get('/article/test')
+        .expect(200)
         .end(function (err, res) {
           should.not.exist(err);
-          res.should.have.property('status', 200);
           res.text.should.match(/test/);
           done();
         });
-    })
-  })
+    });
+  });
+
+  describe('POST /article', function () {
+    before(function (done) {
+      // login the user
+      this.agent
+        .post('/users/session')
+        .field('email', 'foobar@example.com')
+        .field('password', 'foobar')
+        .end(done)
+    });
+
+    it('should create a new article', function (done) {
+      this.agent
+        .post('/article')
+        .send({
+          title: 'POST test',
+          url: 'post_test',
+          content: '#Test Content',
+          destination: 'articles',
+          category: 'test_category',
+          cssFiles: ['test.css']
+        })
+        .expect(200)
+        .end(function (err, res) {
+          should.not.exist(err);
+          res.text.should.match(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i);
+          articleId = res.text;
+          Article.findOne({ url: 'post_test'}, function (err, article) {
+            should.not.exist(err);
+            should.exist(article);
+            done();
+          });
+        });
+    });
+
+    describe('PUT /article', function () {
+      it('should update the article', function (done) {
+        this.agent
+          .put('/article/' + articleId)
+          .send({
+            title: 'Updated POST test'
+          })
+          .expect(200)
+          .end(function (err, res) {
+            should.not.exist(err);
+
+            Article.findOne({ url: 'post_test'}, function (err, article) {
+              should.not.exist(err);
+              should.exist(article);
+              article.title.should.equal('Updated POST test');
+              done();
+            });
+          });
+      });
+    });
+
+    describe('DEL /article', function () {
+      it('should remove an article', function (done) {
+        this.agent
+          .del('/article/' + articleId)
+          .expect(200)
+          .end(function (err, res) {
+            should.not.exist(err);
+
+            Article.findOne({ url: 'post_test'}, function (err, article) {
+              should.not.exist(err);
+              should.not.exist(article);
+              done();
+            });
+          });
+      });
+    });
+  });
 
   after(function () {
     helper.clearDb();
-  })
+  });
 });

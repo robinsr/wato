@@ -81,7 +81,8 @@ var setTags = function (tags) {
     default: 'drafts'
   },
   cssFiles: {
-    type: Array
+    type: [],
+    default: []
   },
   comments: [{
     body: {
@@ -109,6 +110,14 @@ var setTags = function (tags) {
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  createdBy: {
+    type : Schema.ObjectId, 
+    ref : 'User'
+  },
+  lastEditedBy : {
+    type : Schema.ObjectId, 
+    ref : 'User'
   }
 });
 
@@ -122,7 +131,8 @@ var safeFields = [
     'category',
     'previewText',
     'location',
-    'json'
+    'json',
+    'cssFiles'
 ];
 /**
  * Adds a full url to retrieve this article
@@ -258,7 +268,7 @@ ArticleSchema.statics = {
     var criteria = options.criteria || {}
  
     this.find(criteria)
-      //.populate('user', 'name username')
+      .populate('user', 'name username')
       .sort({'publishDate': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)

@@ -1,14 +1,11 @@
 var fs = require('fs');
-var utils = require('./../utils');
 
 exports.load = function (req, res, next, id) {
 	next();
 }
 
 exports.indexPage = function(req,res){
-	utils.getMenuFileList(function(err, render_obj){
-		res.render('auth/template', render_obj)
-	})
+	return res.render('auth/template', req.watoData);
 }
 
 exports.file = function(req,res){

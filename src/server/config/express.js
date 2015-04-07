@@ -26,20 +26,14 @@ module.exports = function(app, passport) {
   app.set('port', process.env.PORT || 3000);
   app.set('views', config.appRoot + '/server/views/');
   app.set('view engine', 'jade');
-    
-
   app.use(express.favicon());
   app.use(express.bodyParser());
   app.use(multer());
   app.use(express.methodOverride());
-  app.locals({
-      title: "Wato",
-      location: "http://wato.ethernetbucket.com",
-      demo_mode: true
-  })
-  app.use(function(req,res,next){ req.locals = app.locals;next()});
-
-
+  app.use(function (req, res, next){ 
+    req.locals = app.locals;
+    next()
+  });
   // CookieParser should be above session
   app.use(cookieParser());
   app.use(cookieSession({ secret: 'secret' }));
