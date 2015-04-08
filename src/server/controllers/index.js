@@ -14,6 +14,8 @@ exports.index = function (req, res, next) {
     page: 1,
   }, function(err, articles) {
     if (err) return next(err);
-    res.render('public/index', articles);
+    res.render('public/index', {
+      articles: articles
+    });
   })
 };

@@ -1,6 +1,7 @@
 var async = require('async')
 	, mongoose = require('mongoose')
-	, User = mongoose.model('User');
+	, User = mongoose.model('User')
+  , utils = require('./../lib/utils');
 
 
 // GET /edit/users - Loads the user management page
@@ -40,16 +41,13 @@ exports.load = function (req, res, next, id) {
   });
 };
 
-/**
- * Create user
- */
-
+// POST /users
 exports.create = function (req, res) {
   var user = new User(req.body);
 
   user.save(function (err) {
     if (err) {
-      return res.render('users/signup', {
+      return res.render('edit/', {
         errors: utils.errors(err.errors),
         user: user,
         title: 'Sign up'
@@ -64,63 +62,18 @@ exports.create = function (req, res) {
   });
 };
 
-/**
- *  Show profile
- */
-
-exports.show = function (req, res) {
-  var user = req.user;
-
-  res.render('users/show', {
-    email: user.email,
-    user: user
-  });
-};
-
-exports.signin = function (req, res) {};
-
-/**
- * Show login form
- */
-
-exports.login = function (req, res) {
-  res.render('users/login', {
-    title: 'Login'
-  });
-};
-
-/**
- * Show sign up form
- */
-
-exports.signup = function (req, res) {
-  res.render('users/signup', {
-    title: 'Sign up',
-    user: new User()
-  });
-};
-
-/**
- * Logout
- */
-
+// GET /logout
 exports.logout = function (req, res) {
   req.logout();
   res.redirect('/login');
 };
 
 /**
- * Session
+ * Session/Login
  */
 
-exports.session = login;
-
-/**
- * Login
- */
-
-function login (req, res) {
-  var redirectTo = req.session.returnTo ? req.session.returnTo : '/';
+exports.session = function (req, res) {
+  var redirectTo = req.session.returnTo ? req.session.returnTo : '/edit/article';
   delete req.session.returnTo;
   res.redirect(redirectTo);
 };

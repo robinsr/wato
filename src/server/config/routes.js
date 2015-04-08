@@ -33,25 +33,25 @@ module.exports = function (app, passport) {
   app.get('/api/article/:article_name', article.singleJson);
   app.get('/category/:category_name',   category.list);
 
-    // user routes
-  app.get('/login',  users.login);
-  app.get('/signup', users.signup);
-  app.get('/logout', users.logout);
-  app.post('/users', users.create);
-  app.del( '/users/:userId', auth.requiresLogin, users.destroy);
-
+    // login/create session
+  app.get('/logout', auth.requiresLogin, users.logout);
   app.post('/users/session',
     passport.authenticate('local', {
       failureRedirect: '/login',
       failureFlash: 'Invalid email or password.'
     }), users.session);
 
+    // user routes
+  app.post('/users', users.create);
+  app.del( '/users/:userId', auth.requiresLogin, users.destroy);
+
   // defines routes for author tools pages
-  app.get( '/edit',          edit.index); // shows login
+  app.get( '/login',         edit.login); // shows login
   app.get( '/edit/article',  auth.requiresLogin, menuFileList, edit.article);
   app.get( '/edit/all',      auth.requiresLogin, menuFileList, edit.all);
   app.get( '/edit/css',      auth.requiresLogin, menuFileList, edit.notAvailable);
   app.get( '/edit/template', auth.requiresLogin, menuFileList, edit.notAvailable);
+  app.get( '/edit/users',    auth.requiresLogin, menuFileList, users.index);
 
   // defines routes for get/posting/putting/deleting resources
   app.post('/article',                 auth.requiresLogin, article.create);
@@ -62,12 +62,6 @@ module.exports = function (app, passport) {
   app.post('/template',                auth.requiresLogin, template.post);
   app.put( '/template/:template_name', auth.requiresLogin, template.preview);
   app.get( '/__template',              auth.requiresLogin, article.templatePreview);
-
-  // defines routes for admins
-  app.get( '/edit/users',         auth.requiresLogin, users.index);
-
-  // initial create user
-  app.post('/edit/createAdmin', edit.createRoot);
   
   /**
    * Error handling

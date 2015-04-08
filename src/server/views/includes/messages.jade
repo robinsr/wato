@@ -1,0 +1,29 @@
+// messages
+
+if info && info.length
+  div.fade.in.alert.alert-info
+    button.close(type="button",data-dismiss="alert") x
+    ul
+      for inf in info
+        li=inf
+
+if errors && errors.length
+  div.fade.in.alert.alert-danger
+    button.close(type="button",data-dismiss="alert") x
+    ul
+      for err in errors
+        li=err
+
+if success && success.length
+  div.fade.in.alert.alert-success
+    button.close(type="button",data-dismiss="alert") x
+    ul
+      for msg in success
+        li=msg
+
+if warning && warning.length
+  div.fade.in.alert.alert-warning
+    button.close(type="button",data-dismiss="alert") x
+    ul
+      for msg in warning
+        li=msg

@@ -2,7 +2,7 @@ doctype html
 html
 	head
 		meta(name="viewport",content="width=device-width, initial-scale=1.0")
-		title= title
+		title=title
 		link(rel="stylesheet",href="/components/bootstrap/dist/css/bootstrap.min.css")
 		link(rel="stylesheet",href="/stylesheets/cms.css")
 		script(src="/components/jquery/dist/jquery.min.js")
@@ -23,17 +23,18 @@ html
 						li.dropdown
 							a.dropdown-toggle(data-toggle="dropdown",href="#") Actions
 							ul.dropdown-menu
-								li: a(href="/auth/article") Article Editor
-								li: a(href="/auth/css") CSS Editor
-								li: a(href="/auth/template") Template Editor
-								li: a(href="/auth/user") Manage Users
+								li: a(href="/edit/article") Article Editor
+								li: a(href="/edit/css") CSS Editor
+								li: a(href="/edit/template") Template Editor
+								li: a(href="/edit/user") Manage Users
 								li.divider
-								li: a(href="/auth/all") All Articles
+								li: a(href="/edit/all") All Articles
 						block navDropdowns
 					ul.nav.navbar-nav.navbar-right
 						block navButtons
-						li: a(href="/auth/logout") Log Out
+						li: a(href="/logout") Log Out
 			nav.navbar.navbar-fixed-top(style="z-index:0;position:relative;")
 				block navParams
+		include ./../includes/messages.jade
 		block content
 		block javascripts

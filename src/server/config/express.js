@@ -6,32 +6,35 @@ var express = require('express');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
-var config = require('./config');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 var path = require('path');
 var csrf = require('csurf');
 var multer = require('multer');
 var mongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
+var helpers = require('view-helpers');
+var morgan = require('morgan');
+var config = require('./config');
 var pkg = require(config.appRoot + '../package.json');
 
 
 module.exports = function(app, passport) {
   // development only
   if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
+    app.use(morgan('dev'))
   }
 
   // all environments
-  app.use(express.logger('dev'));
   app.set('port', process.env.PORT || 3000);
   app.set('views', config.appRoot + '/server/views/');
   app.set('view engine', 'jade');
-  app.use(express.favicon());
-  app.use(express.bodyParser());
+  app.use(bodyParser.urlencoded());
+  app.use(bodyParser.json());
   app.use(multer());
-  app.use(express.methodOverride());
+  app.use(methodOverride());
   app.use(function (req, res, next){ 
-    req.locals = app.locals;
+    res.locals = app.locals;
     next()
   });
   // CookieParser should be above session
@@ -50,6 +53,10 @@ module.exports = function(app, passport) {
   // use passport session
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.use(flash());
+
+  app.use(helpers(pkg.name));
 
   // static files
   app.use('/components', express.static(config.appRoot + 'client/components'));
@@ -77,6 +84,4 @@ module.exports = function(app, passport) {
       next();
     });
   }
-
-  app.use(app.router);
 }

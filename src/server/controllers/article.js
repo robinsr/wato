@@ -88,7 +88,7 @@ exports.create = function (req, res, next) {
       return next(err);
     }
 
-    return res.send(200, article._id.toString());
+    return res.status(200).send(article._id.toString());
   });
 }
 

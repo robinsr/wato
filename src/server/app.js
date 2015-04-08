@@ -56,7 +56,7 @@ require('./config/routes')(app, passport);
 
 // expose app
 exports.init = function (locals) {
-  app.locals(locals);
+  app.locals = locals;
   return exports;
 }
 

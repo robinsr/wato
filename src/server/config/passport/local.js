@@ -13,12 +13,12 @@ var User = mongoose.model('User');
  */
 
 module.exports = new LocalStrategy({
-    usernameField: 'email',
+    usernameField: 'username',
     passwordField: 'password'
   },
-  function(email, password, done) {
+  function(username, password, done) {
     var options = {
-      criteria: { email: email },
+      criteria: { username: username },
       select: 'email hashed_password salt permissions'
     };
     User.load(options, function (err, user) {

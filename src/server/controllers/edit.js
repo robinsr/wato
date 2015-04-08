@@ -2,43 +2,37 @@ var async = require('async')
 	, moment = require('moment')
 	, fs = require('fs')
 	, mongoose = require('mongoose')
-	, User = mongoose.model('User');
+	, User = mongoose.model('User')
+  , Article = mongoose.model('Article')
+  , extend = require('util')._extend;
 
-/**	
- * GET /edit
- */
-exports.index = function(req, res, next) {
-	var options = { 
-		criteria: { 
-			permissions: 3
-		} 
-	};
-
-	User.find(options, function (err, users) {
+// GET /edit - shows login page
+exports.login = function(req, res, next) {
+	User.count({ permissions: 3 }, function (err, count) {
 		if (err) {
 			return next(err);
 		}
 
-		if (!users.length) {
+		if (!count) {
 			return res.render('auth/welcome');
 		}
-		
-		return res.render('auth/index');
+
+    if (req.isAuthenticated()) {
+      return res.redirect('/edit/article');
+    }
+
+    return res.render('auth/index');
 	});
 }
 
-// GET /edit/article
+// GET /edit/article - shows article edit page
 exports.article = function (req, res, next) {
-  var render_obj = {
+  return res.render('auth/article', extend({
     today: moment().utc().format("YYYY-MM-DD")
-  }
-
-  extend(render_obj, req.wato_data);
-  
-  return res.render('auth/article', render_obj);
+  }, req.watoData));
 }
 
-// GET /edit/all
+// GET /edit/all - shows all article page
 exports.all = function (req, res, next) {
   Article.list(function (err, articles) {
     if (err) {
