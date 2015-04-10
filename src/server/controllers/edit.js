@@ -27,9 +27,12 @@ exports.login = function(req, res, next) {
 
 // GET /edit/article - shows article edit page
 exports.article = function (req, res, next) {
-  return res.render('auth/article', extend({
+  return res.render('auth/article', {
+    login: true,
+    article_editor: true,
+    menu: req.watoData,
     today: moment().utc().format("YYYY-MM-DD")
-  }, req.watoData));
+  });
 }
 
 // GET /edit/all - shows all article page
@@ -40,6 +43,7 @@ exports.all = function (req, res, next) {
     }
 
     return res.render('auth/all', {
+      menu: req.watoData,
       files: articles,
       login: true,
       article_editor: true
@@ -63,7 +67,7 @@ exports.users = function (req, res, next) {
     }
 
     return res.render('auth/user', {
-      files: req.watoData, 
+      menu: req.watoData, 
       users: users, 
       login:true
     });

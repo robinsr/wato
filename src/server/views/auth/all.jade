@@ -20,7 +20,7 @@ block content
 							if val.destination == 'articles'
 								tr
 									td
-										a(href="/auth/article?file="+val.url)= val.title
+										a(href="/edit/article?file="+val.url)= val.title
 									td
 										a(href="/article/"+val.url) View
 									td= val.category

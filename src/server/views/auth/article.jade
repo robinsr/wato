@@ -8,17 +8,15 @@ block navDropdowns
 	li.dropdown
 		a.dropdown-toggle(data-toggle="dropdown",href="#") Articles
 		ul.dropdown-menu
-			for val in files
-				if val.destination == 'articles'
-					li: a(href="/auth/article?file="+val.url) #{val.title}
-			li: a(href="/auth/all") All Articles
+			for val in menu.articles
+				li: a(href="/edit/article?file="+val.url) #{val.title}
+			li: a(href="/edit/all") All Articles
 	li.dropdown
 		a.dropdown-toggle(data-toggle="dropdown",href="#") Drafts
 		ul.dropdown-menu
-			for val in files
-				if val.destination == 'drafts'
-					li: a(href="/auth/article?file="+val.url) #{val.title}
-			li: a(href="/auth/all") All Drafts
+			for val in menu.drafts
+				li: a(href="/edit/article?file="+val.url) #{val.title}
+			li: a(href="/edit/all") All Drafts
 	li.dropdown
 		a.dropdown-toggle(data-toggle="dropdown",href="#") Attach CSS
 		ul.dropdown-menu.keep-open(data-bind="foreach: cssFiles")

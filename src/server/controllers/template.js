@@ -5,7 +5,9 @@ exports.load = function (req, res, next, id) {
 }
 
 exports.indexPage = function(req,res){
-	return res.render('auth/template', req.watoData);
+	return res.render('auth/template', {
+		menu: req.watoData
+	});
 }
 
 exports.file = function(req,res){

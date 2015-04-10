@@ -35,7 +35,7 @@ module.exports = function (app, passport) {
   app.get('/article',                   article.list);
   app.get('/article/:article_name',     article.single);
   app.get('/api/article',               article.listJson);
-  app.get('/api/article/:article_name', article.singleJson);
+  app.get('/api/article/:article_id',   article.singleJson);
   app.get('/category/:category_name',   category.list);
 
   // login/create session

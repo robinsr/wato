@@ -78,6 +78,7 @@ var setTags = function (tags) {
   },
   destination: {
     type: String,
+    enum: ['articles', 'drafts', 'trash'],
     default: 'drafts'
   },
   cssFiles: {
@@ -238,8 +239,8 @@ ArticleSchema.statics = {
  
   load: function (criteria, cb) {
     this.findOne(criteria)
-      //.populate('user', 'name email username')
-      //.populate('comments.user')
+      .populate('createdBy', 'name username')
+      .populate('lastEditedBy', 'name username')
       .exec(function (err, article) {
         if (err) return cb(err);
         article.getMarkup(function (err, markup){
@@ -252,8 +253,8 @@ ArticleSchema.statics = {
   loadSafe: function (criteria, cb) {
     this.findOne(criteria)
       .select(safeFields.join(' '))
-      //.populate('user', 'name email username')
-      //.populate('comments.user')
+      .populate('createdBy', 'name username')
+      .populate('lastEditedBy', 'name username')
       .exec(cb);
   },
  
@@ -269,7 +270,9 @@ ArticleSchema.statics = {
     var criteria = options.criteria || {}
  
     this.find(criteria)
-      .populate('user', 'name username')
+      .select(options.select)
+      .populate('createdBy', 'name username')
+      .populate('lastEditedBy', 'name username')
       .sort({'publishDate': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)
@@ -281,7 +284,8 @@ ArticleSchema.statics = {
  
     this.find(criteria)
       .select(safeFields.join(' '))
-      //.populate('user', 'name username')
+      .populate('createdBy', 'name username')
+      .populate('lastEditedBy', 'name username')
       .sort({'publishDate': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)

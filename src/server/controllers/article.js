@@ -29,7 +29,15 @@ exports.loadById = function(req, res, next) {
 
 // GET /article/:article_name
 exports.single = function(req, res) {
-  return res.render('public/article', req.article);
+  req.article.getMarkup(function (err, markup) {
+    if (err) {
+      return next(err);
+    }
+
+    req.article.content = markup;
+
+    return res.render('public/article', req.article);
+  });
 }
 
 // GET /api/article/:article_id

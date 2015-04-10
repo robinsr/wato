@@ -31,10 +31,10 @@ describe('Article', function() {
     });
   });
 
-  describe('GET /api/article/:article_name', function () {
+  describe('GET /api/article/:article_id', function () {
     it('should return json of article', function (done) {
       this.agent
-        .get('/api/article/test')
+        .get('/api/article/' + this.article._id)
         .expect(200)
         .end(function (err, res) {
           should.not.exist(err);
