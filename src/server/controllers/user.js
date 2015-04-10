@@ -4,27 +4,6 @@ var async = require('async')
   , utils = require('./../lib/utils');
 
 
-// GET /edit/users - Loads the user management page
-exports.index = function(req, res, next) {
-  User.load({
-    criteria: {
-      permissions: {
-        $lte: req.session.permissions
-      }
-    }
-  }, function (err, users){
-		if (err) {
-			return next(err);
-		}
-
-		return res.render('auth/user', {
-      files: req.watoData, 
-      users: users, 
-      login:true
-    });
-  });
-}
-
 /**
  * Load
  */

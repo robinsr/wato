@@ -8,12 +8,17 @@ var routes = require(__dirname + '/../controllers')
 , auth = require('./middlewares/authorization')
 , resources = require('./middlewares/resources');
 
+// middlewares
 var articleAuth = auth.article.auth;
 var userAuth = auth.user.auth;
-
 var menuFileList = resources.getMenuFileList;
 
 module.exports = function (app, passport) {
+
+  var passportMiddleware = passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureFlash: 'Invalid email or password.'
+  });
 
   // params
   app.param('userId',         users.load);
@@ -27,21 +32,17 @@ module.exports = function (app, passport) {
   app.get('/',                        routes.index);
 
   // article & category routes 
+  app.get('/article',                   article.list);
   app.get('/article/:article_name',     article.single);
-  app.get('/allarticles',               article.all);
-  app.get('/api/article',               article.list);
+  app.get('/api/article',               article.listJson);
   app.get('/api/article/:article_name', article.singleJson);
   app.get('/category/:category_name',   category.list);
 
-    // login/create session
+  // login/create session
   app.get('/logout', auth.requiresLogin, users.logout);
-  app.post('/users/session',
-    passport.authenticate('local', {
-      failureRedirect: '/login',
-      failureFlash: 'Invalid email or password.'
-    }), users.session);
+  app.post('/users/session', passportMiddleware, users.session);
 
-    // user routes
+  // user routes
   app.post('/users', users.create);
   app.del( '/users/:userId', auth.requiresLogin, users.destroy);
 
@@ -51,7 +52,7 @@ module.exports = function (app, passport) {
   app.get( '/edit/all',      auth.requiresLogin, menuFileList, edit.all);
   app.get( '/edit/css',      auth.requiresLogin, menuFileList, edit.notAvailable);
   app.get( '/edit/template', auth.requiresLogin, menuFileList, edit.notAvailable);
-  app.get( '/edit/users',    auth.requiresLogin, menuFileList, users.index);
+  app.get( '/edit/users',    auth.requiresLogin, menuFileList, edit.users);
 
   // defines routes for get/posting/putting/deleting resources
   app.post('/article',                 auth.requiresLogin, article.create);
@@ -62,11 +63,8 @@ module.exports = function (app, passport) {
   app.post('/template',                auth.requiresLogin, template.post);
   app.put( '/template/:template_name', auth.requiresLogin, template.preview);
   app.get( '/__template',              auth.requiresLogin, article.templatePreview);
-  
-  /**
-   * Error handling
-   */
 
+  // Error handling
   app.use(function (err, req, res, next) {
 
     // treat as 404

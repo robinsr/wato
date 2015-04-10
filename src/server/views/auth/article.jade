@@ -103,11 +103,6 @@ block content
 						button.alert.close(data-bind="click: $root.dismiss") x
 						strong(data-bind="text:title+' '")
 						span(data-bind="text:message")
-				//-div#articledraft(data-bind="foreach: article.content")
-				//-	div.itemholder
-				//-		textarea.col-lg-7.center.item.inline.form-control(data-bind="value: text,css: { 'code-edit-p': type() == 'pre', 'code-edit-html': type() == 'HTML','text-edit-p': type() == 'p', 'text-edit-h2': type() == 'h2'}")
-				//-	button.btn.btn-primary(type="button",data-bind="click: $root.pop") Pop
-				//-	button.btn.btn-primary(type="button",data-bind="click: $root.clone") Clone
 				div#articledraft(style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",contenteditable="true",data-bind="markdown:article.content",data-init="false",data-enable-tab="true")
 
 	script(src="/javascripts/utils.js")

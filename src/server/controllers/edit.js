@@ -34,7 +34,7 @@ exports.article = function (req, res, next) {
 
 // GET /edit/all - shows all article page
 exports.all = function (req, res, next) {
-  Article.list(function (err, articles) {
+  Article.list({}, function (err, articles) {
     if (err) {
       return next(err);
     }
@@ -47,37 +47,27 @@ exports.all = function (req, res, next) {
   });
 }
 
-/**
- * POST /edit/createRoot
- * create a user bypassing auth middleware if no users exist
- */
-exports.createRoot = function (req, res, next) {
+// GET /edit/users - Loads the user management page
+exports.users = function (req, res, next) {
+  var options = {
+    criteria: {
+      permissions: {
+        $lte: req.user.permissions || 1
+      }
+    }
+  };
 
-	var options = { 
-		criteria: { 
-			permissions: 3
-		} 
-	};
+  User.list(options, function (err, users){
+    if (err) {
+      return next(err);
+    }
 
-	User.find(options, function (err, users) {
-		if (err) {
-			return next(err);
-		}
-
-		if (users.length) {
-			return next(new Error("Cannot create a root account if one already exists"));
-		}
-
-		User.create(req.body, function (err, result) {
-			if (err) {
-				return next(err);
-			}
-
-			req.session.user_id = result.user_id;
-			req.session.permissions = result.permissions;
-			return res.redirect('/edit/article');
-		});
-	});
+    return res.render('auth/user', {
+      files: req.watoData, 
+      users: users, 
+      login:true
+    });
+  });
 }
 
 exports.notAvailable = function (req, res) {

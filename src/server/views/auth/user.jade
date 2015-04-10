@@ -8,7 +8,7 @@ block content
 						thead
 							tr
 								th.col-lg-1 Username
-								th.col-lg-1 User ID
+								th.col-lg-1 Email
 								th Permissions level
 								th Save
 								th Change Pass
@@ -18,7 +18,7 @@ block content
 							for val in users
 								tr
 									td= val.name
-									td= val.user_id
+									td= val.email
 									td
 										select.form-control.input-sm(data-userid=''+val.user_id,data-action="permissions")
 											if val.permissions == 0
@@ -43,7 +43,7 @@ block content
 											input.form-control.input-sm.col-lg-3(type="text",data-userid=''+val.user_id,data-action="password")
 										td
 											button.btn.btn-sm.btn-default(data-userid=''+val.user_id,data-action="password")  Save									
-									td(data-userid=''+val.user_id)
+									td(data-userid=''+val._id)
 										span.glyphicon.glyphicon-trash
 					table.table
 						thead

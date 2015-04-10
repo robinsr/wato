@@ -14,13 +14,56 @@ describe('User', function() {
   
   test.mount();
 
-  before(function () {
+  before(function (done) {
     this.agent = supertest.agent(this.app);
+    helper.clearDb(done);
   });
 
-  describe('POST /users/sessions', function () {
-    it('Should log in a user', function (done) { 
-      done();
+  describe('GET /login', function () {
+    describe('Admin user does not exist', function () {
+      it('should render the welcome page, prompt to create admin', function (done) {
+        this.agent
+          .get('/login')
+          .expect(200)
+          .expect(/Create a admin account/i)
+          .end(done)
+      });
+    });
+
+    describe('Admin user exists', function () {
+      before(function (done) {
+        var user = new User({
+          email: 'adminUser@example.com',
+          name: 'Admin User',
+          username: 'admin',
+          password: 'foobar',
+          permissions: 3
+        });
+        user.save(done)
+      });
+
+      it('should render the regular login page', function (done) {
+        this.agent
+          .get('/login')
+          .expect(200)
+          .expect(/Login/i)
+          .end(done)
+        });
+    });
+  });
+
+  describe('POST /users/session', function () {
+    it('Should log in a user and get a session cookie', function (done) { 
+      this.agent
+        .post('/users/session')
+        .field('username', 'foobar')
+        .field('password', 'foobar')
+        .expect('Set-Cookie', /express:sess/)
+        .end(done)
+    });
+
+    after(function (done) {
+      this.agent.get('/logout').end(done);
     });
   });
 

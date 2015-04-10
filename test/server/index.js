@@ -24,18 +24,20 @@ module.exports.mount = function () {
           password: 'foobar',
           permissions: 3
         });
-        self.user.save(next)
+        self.user.save(next);
       },
       function (next) {
-        var article = new Article({
-          title: 'test',
+        self.article = new Article({
+          title: 'Test Article Title',
           url: 'test',
           content: 'test',
           destination: 'articles',
           category: 'test_category',
-          cssFiles: ['test.css']
+          cssFiles: ['test.css'],
+          createdBy: self.user,
+          lastEditedBy: self.user
         });
-        article.save(next)
+        self.article.save(next);
       }
       ], done);
   });

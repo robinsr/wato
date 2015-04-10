@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Article = mongoose.model('Article');
 var moment = require('moment');
+var async = require('async');
 var extend = require('util')._extend;
 
 /*
@@ -37,7 +38,7 @@ exports.singleJson = function (req, res) {
 }
       
 // GET /api/article - gets list of articles in JSON
-exports.list = function(req, res, next) {
+exports.listJson = function(req, res, next) {
   var options = {
     //TODO: Expand usable query param options
     criteria: {
@@ -56,22 +57,36 @@ exports.list = function(req, res, next) {
   });
 };
 
-// GET /allarticles
-exports.all = function(req, res, next) {
+// GET /article
+exports.list = function(req, res, next) {
+  var page = (req.param('page') > 0 ? req.param('page') : 1) - 1;
+  var perPage = 30
   var options = {
     criteria: {
       destination: 'articles'
     },
-    perPage: 999,
-    page: 0
+    perPage: perPage,
+    page: page
   };
 
-  Article.listSafe(options, function (err, articles) {
-    if (err) {
-      return next(err);
+  async.parallel({
+    articles: function (done) {
+      Article.listSafe(options, done);
+    },
+    count: function (done) {
+      Article.count(options.criteria, done);
     }
+  }, function (err, result) {
+      if (err) {
+        return next(err);
+      }
 
-    return res.send(articles);
+      return res.render('public/allarticles', { 
+        articles: result.articles, 
+        count: result.count,
+        page: page + 1,
+        pages: Math.ceil(result.count / perPage)
+    });
   });
 }
 
@@ -136,7 +151,7 @@ exports.preview = function (req, res, next) {
   });
 }
 
-// DELETE /article
+// DELETE /article/:article_id
 exports.del = function (req, res, next) {
   Article.remove({ _id: req.params.article_id }, function (err, article) {
     if (err) {

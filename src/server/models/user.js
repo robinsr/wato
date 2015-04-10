@@ -172,8 +172,23 @@ UserSchema.statics = {
    */
 
   load: function (options, cb) {
-    options.select = options.select || 'name username permissions';
+    options.select = options.select || 'name email username permissions';
     this.findOne(options.criteria)
+      .select(options.select)
+      .exec(cb);
+  },
+
+  /**
+   * List
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  list: function (options, cb) {
+    options.select = options.select || 'name email username permissions';
+    this.find(options.criteria)
       .select(options.select)
       .exec(cb);
   }

@@ -126,6 +126,7 @@ var setTags = function (tags) {
  */
 var safeFields = [
     'title',
+    'url',
     'content',
     'tags',
     'category',
