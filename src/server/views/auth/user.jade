@@ -4,74 +4,59 @@ block content
 	div.container.index_wrapper
 			div.row
 				div.col-lg-12
-					table.table
+					table.table#edituser
 						thead
 							tr
-								th.col-lg-1 Username
-								th.col-lg-1 Email
+								th Name
+								th Username
+								th Email
 								th Permissions level
 								th Save
 								th Change Pass
 								th Save
 								th.col-lg-1 delete
-						tbody
-							for val in users
-								tr
-									td= val.name
-									td= val.email
-									td
-										select.form-control.input-sm(data-userid=''+val.user_id,data-action="permissions")
-											if val.permissions == 0
-												option(value="0" selected) 0 - No Permissions 
-											else
-												option(value="0" selected) 0 - No Permissions 
-											if val.permissions == 1
-												option(value="1" selected) 1 - Read Access
-											else 
-												option(value="1") 1 - Read Access
-											if val.permissions == 2
-												option(value="2" selected) 2 - Read/Write Access
-											else
-												option(value="2") 2 - Read/Write Access
-											if val.permissions == 3
-												option(value="3" selected) 3 - Read/Write & Manager Users	
-											else
-												option(value="3") 3 - Read/Write & Manager Users
-										td
-											button.btn.btn-sm.btn-default(data-userid=''+val.user_id,data-action="permissions") Save
-										td
-											input.form-control.input-sm.col-lg-3(type="text",data-userid=''+val.user_id,data-action="password")
-										td
-											button.btn.btn-sm.btn-default(data-userid=''+val.user_id,data-action="password")  Save									
-									td(data-userid=''+val._id)
-										span.glyphicon.glyphicon-trash
-					table.table
+						tbody(data-bind="foreach: users")
+							tr
+								td(data-bind="text: name")
+								td(data-bind="text: username")
+								td(data-bind="text: email")
+								td
+									select.form-control.input-sm(data-bind="options: $root.permissionsOptions, optionsText: 'display', optionsValue: 'value', value: permissions")
+								td
+									button.btn.btn-sm.btn-default(data-bind="click: $root.saveUser") Save
+								td
+									input.form-control.input-sm.col-lg-3(data-bind="value: changePassField")
+								td
+									button.btn.btn-sm.btn-default(data-bind="click: $root.saveUser") Save									
+								td(data-bind="deleteUser: $data")
+									span.glyphicon.glyphicon-trash
+					table.table#newuser
+						caption Add User
 						thead
 							tr
-								th.col-lg-2 Add User
+								th Name
+								th UserName
+								th Email
+								th Password
 								th Permissions level
-								th New Pass
 								th Save
 								th.col-lg-1
 						tbody
 							tr
 								td
-									input.form-control.input-sm.col-lg-3#new_user_name(type="text",placeholder="UserName")
+									input.form-control.input-sm(type="text", placeholder="Name", data-bind="value: name")
 								td
-									select.form-control.input-sm#new_user_perm
-										option(value="0" selected) 0 - No Permissions 
-										option(value="1") 1 - Read Access
-										option(value="2") 2 - Read/Write Access
-										option(value="3") 3 - Read/Write & Manager Users
-									td
-										input.form-control.input-sm.col-lg-3#new_user_pass(type="text",placeholder="newpass")
-									td
-										button.btn.btn-sm.btn-default#new_user Save									
+									input.form-control.input-sm(type="text", placeholder="UserName", data-bind="value: username")
 								td
-							if error
-								tr
-									td
-										p.text-danger #{error}
+									input.form-control.input-sm(type="text", placeholder="Email", data-bind="value: email")
+								td
+									input.form-control.input-sm(type="text", placeholder="Password", data-bind="value: password")
+								td
+									select.form-control.input-sm(data-bind="options: $root.permissionsOptions, optionsText: 'display', optionsValue: 'value', value: permissions")
+								td
+									button.btn.btn-sm.btn-default(data-bind="click: save") Save							
+								td
+							tr(data-bind="if: errorMessage")
+								td(colspan=4, data-bind="text: errorMessage")
 block javascripts
-	script(src="/javascripts/utils.js")
-	script(src="/javascripts/manageusers.js")
+	script(src="/components/requirejs/require.js", data-main="/javascripts/pages/users.js")

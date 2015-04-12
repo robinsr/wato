@@ -38,3 +38,5 @@ html
 		include ./../includes/messages.jade
 		block content
 		block javascripts
+		script.
+			var _csrf = "#{csrf_token}"

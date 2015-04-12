@@ -14,14 +14,7 @@ block content
           if articles.length
             ul
               each article in articles
-                li
-                  strong
-                    a(href="/category/" + article.category)= article.category
-                  a(href='/article/'+article.url)= article.title
-                  p= article.previewText
-                  b   [ 
-                  a.readmore(href='/article/'+article.url) Read More...
-                  b  ]
+                include ./../includes/article
           if !articles
             p 
               strong 

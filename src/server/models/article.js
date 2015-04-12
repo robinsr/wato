@@ -100,9 +100,7 @@ var setTags = function (tags) {
     }
   }],
   tags: {
-    type: [],
-    get: getTags,
-    set: setTags
+    type: []
   },
   image: {
     cdnUri: String,
@@ -135,7 +133,7 @@ var safeFields = [
     'location',
     'json',
     'cssFiles'
-];
+].join(' ');
 /**
  * Adds a full url to retrieve this article
  */
@@ -252,7 +250,7 @@ ArticleSchema.statics = {
   },
   loadSafe: function (criteria, cb) {
     this.findOne(criteria)
-      .select(safeFields.join(' '))
+      .select(safeFields)
       .populate('createdBy', 'name username')
       .populate('lastEditedBy', 'name username')
       .exec(cb);
@@ -283,7 +281,7 @@ ArticleSchema.statics = {
     var criteria = options.criteria || {}
  
     this.find(criteria)
-      .select(safeFields.join(' '))
+      .select(safeFields)
       .populate('createdBy', 'name username')
       .populate('lastEditedBy', 'name username')
       .sort({'publishDate': -1}) // sort by date

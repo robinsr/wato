@@ -1,6 +1,7 @@
 var routes = require(__dirname + '/../controllers')
 , article = require(__dirname + '/../controllers/article')
 , category = require(__dirname + '/../controllers/category')
+, tags = require(__dirname + '/../controllers/tags')
 , css = require(__dirname + '/../controllers/css')
 , template = require(__dirname + '/../controllers/template')
 , edit = require(__dirname + '/../controllers/edit')
@@ -17,7 +18,7 @@ module.exports = function (app, passport) {
 
   var passportMiddleware = passport.authenticate('local', {
     failureRedirect: '/login',
-    failureFlash: 'Invalid email or password.'
+    failureFlash: true
   });
 
   // params
@@ -31,20 +32,30 @@ module.exports = function (app, passport) {
   // defines routes for readers
   app.get('/',                        routes.index);
 
-  // article & category routes 
+  // articles - rendered templates
   app.get('/article',                   article.list);
   app.get('/article/:article_name',     article.single);
+  
+  // articles - json
   app.get('/api/article',               article.listJson);
   app.get('/api/article/:article_id',   article.singleJson);
+  
+  // category
   app.get('/category/:category_name',   category.list);
 
+  // tags 
+  app.get('/tags/',                     tags.list);
+
   // login/create session
-  app.get('/logout', auth.requiresLogin, users.logout);
+  app.get('/logout',         auth.requiresLogin, users.logout);
   app.post('/users/session', passportMiddleware, users.session);
 
   // user routes
-  app.post('/users', users.create);
-  app.del( '/users/:userId', auth.requiresLogin, users.destroy);
+  app.post('/users',            users.create);
+  app.post('/users/createRoot', users.createRoot);
+  app.get( '/users',            auth.requiresLogin, users.list);
+  app.del( '/users/:userId',    auth.requiresLogin, users.destroy);
+  app.put( '/users/:userId',    auth.requiresLogin, users.update);
 
   // defines routes for author tools pages
   app.get( '/login',         edit.login); // shows login
@@ -76,7 +87,13 @@ module.exports = function (app, passport) {
 
     console.error(err.stack);
     // error page
-    res.status(500).render('public/503', { error: err });
+    res.status(err.code || 500)
+      .set({
+        'error-message' : err.message
+      })
+      .render('public/503', { 
+        error: err 
+      });
   });
 
   // assume 404 since no middleware responded

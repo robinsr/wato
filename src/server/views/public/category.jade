@@ -1,19 +1,31 @@
 extends layout
 
 block css
-    link(rel='stylesheet',href='/stylesheets/style.css')
-    link(rel='stylesheet',href='/stylesheets/fonts.css')
-    link(rel='stylesheet',href='/stylesheets/prettify.css')
+  link(rel='stylesheet',href='/stylesheets/style.css')
+  link(rel='stylesheet',href='/stylesheets/fonts.css')
+  link(rel='stylesheet',href='/stylesheets/prettify.css')
 
 block content
-    div.container
-        div.row
-            div.col-lg-12
-                article
-                    h2 Results for #{category}
-                    each val in list
-                        a(href='/article/'+val.url)= val.title
-                        p= val.previewtext
-                            b   [ 
-                            a.readmore(href='/article/'+val.url) Read More...
-                            b  ]
+  div.container
+    div.row
+      div.col-lg-12
+        article
+          if category
+            h2 Results for #{category}
+          if tags
+            h2 Results for: 
+              each tag in tags 
+                - var _t = tags.filter(function (t) { return t != tag });
+                span.label.label-primary= tag
+                  a(href='/tags/?tags=' + _t) &nbsp;&#10006; 
+                &nbsp;
+          ul
+            each article in articles
+              li
+                strong
+                  a(href="/category/" + article.category)= article.category
+                a(href='/article/'+article.url)= article.title
+                p= article.previewText
+                  b   [ 
+                  a.readmore(href='/article/'+article.url) Read More...
+                  b  ]

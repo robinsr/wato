@@ -1,11 +1,12 @@
 extends layout
 
 block css
-    link(rel='stylesheet',href='/stylesheets/style.css')
-    link(rel='stylesheet',href='/stylesheets/fonts.css')
+  link(rel='stylesheet',href='/stylesheets/style.css')
+  link(rel='stylesheet',href='/stylesheets/fonts.css')
 
 block content
+  div.container
     article
-        h2= 503
-        p Sorry, there was some sort of problem
-        pre= error
+      h2= 503
+      p Sorry, there was some sort of problem
+      pre= error

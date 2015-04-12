@@ -1,0 +1,14 @@
+li
+  p
+    strong
+      a(href="/category/" + article.category)= article.category
+    a(href='/article/'+article.url)= article.title
+    | &nbsp;
+    each tag in article.tags 
+      span.label.label-warning 
+        a(href="/tags/?tags=" + tag)= tag
+      | &nbsp;
+  p= article.previewText
+    b   [ 
+    a.readmore(href='/article/'+article.url) Read More...
+    b  ]

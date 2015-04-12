@@ -22,6 +22,6 @@ exports.load = function (req, res, next, id) {
 exports.list = function(req, res, next) {
 	return res.render('public/category', {
 		category: req.params.category_name,  
-		list: req.articles
+		articles: req.articles
 	});
 };

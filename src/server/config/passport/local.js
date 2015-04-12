@@ -29,6 +29,9 @@ module.exports = new LocalStrategy({
       if (!user.authenticate(password)) {
         return done(null, false, { message: 'Invalid password' });
       }
+      if (user.permissions === 0) {
+        return done(null, false,  { message: 'Your account is disabled'});
+      }
       return done(null, user);
     });
   }

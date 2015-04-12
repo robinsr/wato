@@ -33,6 +33,7 @@ module.exports.mount = function () {
           content: 'test',
           destination: 'articles',
           category: 'test_category',
+          tags: ['tag1', 'tag2'],
           cssFiles: ['test.css'],
           createdBy: self.user,
           lastEditedBy: self.user
