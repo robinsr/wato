@@ -1,19 +1,30 @@
+var path = require('path');
+var fs = require('fs');	
+
 /*
  * GET CSS.
  */
 
-var fs = require('fs');	
+exports.post = function(req, res, next) {
+  var uri = path.resolve(res.locals.cssPath, req.body.fileName);
 
-exports.indexPage = function(req,res){
-	res.send()
+	fs.writeFile(uri, req.body.content, function (err) {
+		if (err) {
+			return next(err);
+		}
+
+		res.status(200).send();
+	});
 }
 
-exports.post = function(req, res){
-	fs.writeFile('../public/stylesheets/'+req.body.fileName,req.body.contents,function(err){
-		if (err) {
-			res.status(500).send('Error saving CSS')
-		} else {
-			res.send('Saved CSS');
-		}
-	})
+exports.list = function (req, res, next) {
+  fs.readdir(res.locals.cssPath, function (err, files) {
+    if (err) {
+      return next(err);
+    }
+
+    res.status(200).json(files.map(function (file) {
+      return path.basename(file);
+    }));
+  });
 }

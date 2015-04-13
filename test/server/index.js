@@ -2,7 +2,7 @@
 * Common test dependencies
 */
 
-var app = require(__dirname + '/../../src/server/app').app;
+var app = require('./app').app;
 var async = require('async');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
@@ -30,7 +30,7 @@ module.exports.mount = function () {
         self.article = new Article({
           title: 'Test Article Title',
           url: 'test',
-          content: 'test',
+          content: '# test',
           destination: 'articles',
           category: 'test_category',
           tags: ['tag1', 'tag2'],

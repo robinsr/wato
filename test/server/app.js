@@ -1,5 +1,11 @@
-var app = require(__dirname + '/../../src/server/app').app;
-var port = process.env.PORT || 3000;
-app.listen(port);
+var app = require(__dirname + '/../../src/server/app');
+
+app.init({
+  title: 'Test App'
+}, {
+  cssPath: 'test/server/fixtures/css'
+});
+
+app.start();
 
 module.exports = app;

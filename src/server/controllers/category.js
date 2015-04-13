@@ -19,9 +19,17 @@ exports.load = function (req, res, next, id) {
 }
 
 // GET /category/:category_name
-exports.list = function(req, res, next) {
+exports.getByName = function(req, res, next) {
 	return res.render('public/category', {
 		category: req.params.category_name,  
 		articles: req.articles
 	});
 };
+
+// GET /category
+exports.list = function (req, res, next) {
+	Article.getCategories(function (err, categories) {
+		if (err) return next(err);
+		return res.status(200).json(categories);
+	})
+}

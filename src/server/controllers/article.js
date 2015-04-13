@@ -28,7 +28,11 @@ exports.loadById = function(req, res, next) {
 
 
 // GET /article/:article_name
-exports.single = function(req, res) {
+exports.single = function(req, res, next) {
+  if (req.article.destination != 'articles') {
+    return next(new Error('Article not found'));
+  }
+
   req.article.getMarkup(function (err, markup) {
     if (err) {
       return next(err);
@@ -40,8 +44,17 @@ exports.single = function(req, res) {
   });
 }
 
-// GET /api/article/:article_id
+// GET /api/article/content/:article_id
 exports.singleJson = function (req, res) {
+  req.article.getMarkup(function (err, markup){
+    if (err) return cb(err);
+    req.article.content = markup;
+    return res.send(req.article);
+  });
+}
+
+// GET /api/article/raw/:article_id
+exports.singleJsonRaw = function (req, res) {
   return res.send(req.article);
 }
       

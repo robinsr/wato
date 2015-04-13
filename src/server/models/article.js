@@ -124,15 +124,16 @@ var setTags = function (tags) {
  * safe fields
  */
 var safeFields = [
-    'title',
-    'url',
-    'content',
-    'tags',
     'category',
-    'previewText',
-    'location',
+    'content',
+    'cssFiles',
+    'destination',
     'json',
-    'cssFiles'
+    'location',
+    'previewText',
+    'tags',
+    'title',
+    'url'
 ].join(' ');
 /**
  * Adds a full url to retrieve this article
@@ -239,15 +240,9 @@ ArticleSchema.statics = {
     this.findOne(criteria)
       .populate('createdBy', 'name username')
       .populate('lastEditedBy', 'name username')
-      .exec(function (err, article) {
-        if (err) return cb(err);
-        article.getMarkup(function (err, markup){
-          if (err) return cb(err);
-          article.content = markup;
-          cb(null, article);
-        });
-      });
+      .exec(cb);
   },
+
   loadSafe: function (criteria, cb) {
     this.findOne(criteria)
       .select(safeFields)
@@ -292,14 +287,6 @@ ArticleSchema.statics = {
 
   getCategories: function (next) {
     this.find().distinct('category').exec(next);
-  },
-
-  /**
-   * Remove article
-   */
-  
-  article: function (url, cb) {
-    this.findOneAndRemove({ url: url}, cb);
   }
 }
  

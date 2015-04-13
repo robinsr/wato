@@ -44,19 +44,28 @@ fs.readdirSync(models_path).forEach(function(file) {
   if (~file.indexOf('.js')) require(models_path + '/' + file)
 })
 
-// Bootstrap passport config
-require('./config/passport')(passport, config);
-
-// express settings
-require('./config/express')(app, passport);
-
-// express routes
-require('./config/routes')(app, passport);
 
 
 // expose app
-exports.init = function (locals) {
+exports.init = function (locals, paths) {
   app.locals = locals;
+
+  for (var n in paths) {
+    var uri = path.resolve(config.appRoot, '..', paths[n]);
+    
+    app.locals[n] = uri
+    app.set(n, uri);
+  }
+  
+  // Bootstrap passport config
+  require('./config/passport')(passport, config);
+
+  // express settings
+  require('./config/express')(app, passport);
+
+  // express routes
+  require('./config/routes')(app, passport);
+
   return exports;
 }
 

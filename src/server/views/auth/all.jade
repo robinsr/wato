@@ -9,7 +9,6 @@ block content
 					thead
 						tr
 							th Name
-							th Link
 							th Category
 							th Publish Date
 							th Save Date
@@ -20,9 +19,9 @@ block content
 							if val.destination == 'articles'
 								tr
 									td
-										a(href="/edit/article?file="+val.url)= val.title
-									td
-										a(href="/article/"+val.url) View
+										a(href="/article/"+val.url)= val.title
+										| &nbsp;-&nbsp;
+										a(href="/edit/article?file="+val._id) Edit
 									td= val.category
 									td= val.publishDate
 									td= val.saveDate

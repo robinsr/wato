@@ -31,14 +31,28 @@ describe('Article', function() {
     });
   });
 
-  describe('GET /api/article/:article_id', function () {
-    it('should return json of article', function (done) {
+  describe('GET /api/article/content/:article_id', function () {
+    it('should return json of article with html', function (done) {
       this.agent
-        .get('/api/article/' + this.article._id)
+        .get('/api/article/content/' + this.article._id)
         .expect(200)
         .end(function (err, res) {
           should.not.exist(err);
-          res.text.should.match(/test/);
+          should.exist(res.body);
+          res.body.content.should.match(/<h1 id="test">test<\/h1>/);
+          done();
+        });
+    });
+  });
+
+  describe('GET /api/article/raw/:article_id', function () {
+    it('should return json of article with markdown', function (done) {
+      this.agent
+        .get('/api/article/raw/' + this.article._id)
+        .expect(200)
+        .end(function (err, res) {
+          should.not.exist(err);
+          res.text.should.match(/#\stest/);
           done();
         });
     });

@@ -58,14 +58,17 @@ module.exports = function(app, passport) {
 
   app.use(helpers(pkg.name));
 
+  console.log(app.get('cssPath'))
+
   // static files
   app.use('/components', express.static(config.appRoot + 'client/components'));
-  app.use('/stylesheets', express.static(config.appRoot + 'client/stylesheets'));
+  app.use('/stylesheets', express.static(app.get('cssPath')));
   app.use('/bootstrap', express.static(config.appRoot + 'client/bootstrap'));
   app.use('/fonts', express.static(config.appRoot + 'client/fonts'));
   app.use('/images', express.static(config.appRoot + 'client/images'));
   //TODO remove javascripts static route
   app.use('/javascripts', express.static(config.appRoot + 'client/javascripts'));
+  app.use('/edit/stylesheets', express.static(config.appRoot + 'client/stylesheets'));
 
   // CORS 
   app.all('/*', function(req, res, next) {

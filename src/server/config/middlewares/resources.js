@@ -36,7 +36,7 @@ exports.getMenuFileList = function(req, res, next){
 			
 				return done(null, files.map(function (fileName) {
 					return fileName.toString();
-				}).join(","));
+				}));
 			});
 		},
 		category: function (done) {
