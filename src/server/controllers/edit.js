@@ -1,10 +1,11 @@
-var async = require('async')
-	, moment = require('moment')
-	, fs = require('fs')
-	, mongoose = require('mongoose')
-	, User = mongoose.model('User')
-  , Article = mongoose.model('Article')
-  , extend = require('util')._extend;
+var async = require('async');
+var moment = require('moment');
+var fs = require('fs');
+var path = require('path');
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
+var Article = mongoose.model('Article');
+var extend = require('util')._extend;
 
 // GET /edit - shows login page
 exports.login = function(req, res, next) {
@@ -69,8 +70,31 @@ exports.users = function (req, res, next) {
     return res.render('auth/user', {
       menu: req.watoData, 
       users: users, 
-      login:true
+      login: true
     });
+  });
+}
+
+// GET /edit/templates - Loads template editor page
+exports.template = function (req, res, next) {
+  if (req.query.file) {
+    // replace with app.get('viewsPath');
+    var uri = path.resolve(__dirname, '..', 'views/public', req.query.file);
+
+    return fs.readFile(uri, function (err, fileContents) {
+      if (err) return next(err);
+
+      res.render('auth/template', {
+        login: true,
+        menu: req.watoData,
+        fileContents: fileContents
+      });
+    })
+  }
+
+  return res.render('auth/template', {
+    login: true,
+    menu: req.watoData
   });
 }
 

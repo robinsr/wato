@@ -3,7 +3,7 @@ define(function (require) {
   var _ = require('lodash');
   var ko = require('ko');
   var FileModel = require('models/file');
-  var utils = require('utils');
+  var utils = require('lib/utils');
 
 
   /**
@@ -25,7 +25,6 @@ define(function (require) {
 
     // Update the file models as the app model changes
     modelArray.subscribe(function (val) {
-      console.log(val)
       _.forEach(self.files(), function (file) {
         if (val.indexOf(file.filename()) > -1) {
           file.attached(true)
@@ -69,9 +68,7 @@ define(function (require) {
           }
 
           self.files(_.map(data, function (file) {
-            console.log(modelArray())
             var attached = (modelArray().indexOf(file) > -1);
-            console.log(attached)
             return new FileModel(file, attached)
           }));
         });

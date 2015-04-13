@@ -1,6 +1,6 @@
 define(function (require) {
   var ko = require('ko');
-  var utils = require('utils');
+  var utils = require('lib/utils');
   var _ = require('lodash');
 
   var Article = function () {

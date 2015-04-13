@@ -4,9 +4,8 @@ block navDropdowns
 	li.dropdown
 		a.dropdown-toggle(data-toggle="dropdown",href="#") Templates
 		ul.dropdown-menu
-			for val in views
-				if (val != 'auth')
-					li: a(href="/auth/template?file="+val) #{val}
+			for file in menu.views
+				li: a(href="/edit/template?file="+file) #{file}
 
 block navParams
 	div.container.params(data-bind="showParams:showParams")
@@ -18,12 +17,12 @@ block navParams
 		div.row
 			div.col-lg-4
 				div.article-params
-					p(contenteditable="true",data-bind="markdown:template.filename")	
+					p(contenteditable="true", data-bind="contentEditable: filename")
 			div.col-lg-4
 				div.article-params
-					select.form-control.input-sm(data-bind="value: template.previewFile")
-						for val in files
-							option(value=""+val.url)= val.title
+					select.form-control.input-sm(data-bind="value: previewFile")
+						for view in menu.views
+							option(value=view)= view
 		div.row
 			div.col-lg-4
 				h3 filename
@@ -32,47 +31,40 @@ block navParams
 		div.row
 			div.col-lg-4
 				div.article-params
-					p(contenteditable="true",data-bind="markdown:template.filename")	
+					p(contenteditable="true",data-bind="contentEditable:template.filename")
 			div.col-lg-4
 				div.article-params
 					select.form-control.input-sm(data-bind="value: template.previewFile")
-						for val in files
-							option(value=""+val.url)= val.title
+						for article in menu.articles
+							option(value=article._id)= article.title
 
 
 block navButtons
-	li: a(href="#",data-bind="click:preview") Preview
-	li: a(href="#",data-bind="click:save") Save
+	li: a(href="#",data-bind="click: preview") Preview
+	li: a(href="#",data-bind="click: save") Save
 
 block content
 	div.container.index_wrapper
 		div.row
 			div.col-lg-2.col-lg-offset-4
 				p.text-center
-					button.btn.btn-success.btn-block.btn-sm(data-bind="click:clickShowParams",type="button") 
+					button.btn.btn-success.btn-block.btn-sm(data-bind="click: clickShowParams",type="button") 
 						span(data-bind="ifnot: showParams") Show Params
 						span(data-bind="if: showParams") Hide Params
 			div.col-lg-2
 				p.text-center
-					button.btn.btn-warning.btn-block.btn-sm(data-bind="click:clickShowHints",type="button") 
+					button.btn.btn-warning.btn-block.btn-sm(data-bind="click: clickShowHints",type="button") 
 						span(data-bind="ifnot: showHints") Show Hints
 						span(data-bind="if: showHints") Hide Hints
 		div.row
 			div#draftcolumn.col-lg-12
-				div(data-bind="foreach: alert")
-					div.col-lg-12.alert(data-bind="css: {'alert-danger': type == 'error','alert-success': type == 'success','alert-warning': type == 'warning'}")
-						button.alert.close(data-bind="click: $root.dismiss") x
-						strong(data-bind="text:title+' '")
-						span(data-bind="text:message")
-				
-				div#articledraft(style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",contenteditable="true",data-bind="markdown:template.content",data-init="false")
+				include ./../includes/notifications
+				div#articledraft(
+					style="background-color: #fff; padding: 4px; font-family:Courier, monospace; border: 1px solid #999; white-space: pre;",
+					contenteditable="true",
+					data-bind="contentEditable: content",
+					data-init="false"
+				)= fileContents
 	
 block javascripts
-	script(src="/javascripts/utils.js")
-	script(src="/javascripts/handlers.js")
-	script(src="/javascripts/template.js")
-	!= "<script>"
-	!= "var _cssFiles = [" + css + "];"
-	!= "var _templates = [" + templates + "];"
-	!= "var _category = [" + category + "];"
-	!= "</script>"
+	script(src="/components/requirejs/require.js", data-main="/javascripts/pages/template.js")

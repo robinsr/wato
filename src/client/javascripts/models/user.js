@@ -1,6 +1,6 @@
 define(function (common) {
   var ko = require('ko');
-  var utils = require('utils');
+  var utils = require('lib/utils');
 
 
   var User = function (options) {

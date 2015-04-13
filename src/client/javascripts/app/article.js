@@ -1,7 +1,7 @@
 define(function (require) {
   var $ = require('jquery')
   var ko = require('ko');
-  var bindings = require('bindings');
+  var bindings = require('lib/bindings');
   
   // Shared app model
   var AppModel = require('models/article');

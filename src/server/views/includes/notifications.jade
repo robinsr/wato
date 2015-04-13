@@ -1,0 +1,5 @@
+div#notifications(data-bind="foreach: notifications")
+  div.col-lg-12.alert(data-bind="notificationType: type")
+    button.alert.close(data-bind="click: $parent.dismiss") x
+    strong(data-bind="text: title", style="padding-right: 15px;")
+    span(data-bind="text: message")

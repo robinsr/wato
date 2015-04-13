@@ -43,7 +43,7 @@ exports.getMenuFileList = function(req, res, next){
 			Article.getCategories(done);
 		},
 		views: function (done) {
-			var dir = config.appRoot + '/server/views/';
+			var dir = config.appRoot + '/server/views/public/';
 			fs.readdir(dir, function (err, files) {
 				if (err) return cb(err);
 

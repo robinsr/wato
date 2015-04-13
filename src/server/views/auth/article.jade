@@ -1,9 +1,5 @@
 extends layout
 
-block headerTags
-	script(src="/javascripts/knockout.js")
-	script(src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.3.5/knockout.mapping.js")
-
 block navDropdowns
 	li.dropdown
 		a.dropdown-toggle(data-toggle="dropdown",href="#") Articles
@@ -141,11 +137,7 @@ block content
 						span(data-bind="if: showParams") Hide Params
 		div.row
 			div#draftcolumn.col-lg-12
-				div#notifications(data-bind="foreach: notifications")
-					div.col-lg-12.alert(data-bind="notificationType: type")
-						button.alert.close(data-bind="click: $parent.dismiss") x
-						strong(data-bind="text: title", style="padding-right: 15px;")
-						span(data-bind="text: message")
+				include ./../includes/notifications
 				div#articledraft(
 					style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",
 					contenteditable="true",

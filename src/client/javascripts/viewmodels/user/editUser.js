@@ -3,7 +3,7 @@ define(function (require) {
   var _ = require('lodash');
   var ko = require('ko');
   var UserModel = require('models/user');
-  var utils = require('utils');
+  var utils = require('lib/utils');
 
   var EditUserVM = function () {
     var self = this;

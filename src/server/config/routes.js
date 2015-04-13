@@ -64,7 +64,7 @@ module.exports = function (app, passport) {
   app.get( '/edit/article',  auth.requiresLogin, menuFileList, edit.article);
   app.get( '/edit/all',      auth.requiresLogin, menuFileList, edit.all);
   app.get( '/edit/css',      auth.requiresLogin, menuFileList, edit.notAvailable);
-  app.get( '/edit/template', auth.requiresLogin, menuFileList, edit.notAvailable);
+  app.get( '/edit/template', auth.requiresLogin, menuFileList, edit.template);
   app.get( '/edit/users',    auth.requiresLogin, menuFileList, edit.users);
 
   // defines routes for get/posting/putting/deleting resources

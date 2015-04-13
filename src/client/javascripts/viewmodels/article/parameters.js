@@ -1,7 +1,7 @@
 define(function (require) {
   var ko = require('ko');
   var _ = require('lodash');
-  var utils = require('utils');
+  var utils = require('lib/utils');
 
   var ParametersVM = function (model) {
     var self = this;
