@@ -6,6 +6,9 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Article = mongoose.model('Article');
 var extend = require('util')._extend;
+var config = require('./../config/config')
+
+var viewsPath = path.resolve(config.appRoot, 'server/views/auth');
 
 // GET /edit - shows login page
 exports.login = function(req, res, next) {
@@ -15,20 +18,20 @@ exports.login = function(req, res, next) {
 		}
 
 		if (!count) {
-			return res.render('auth/welcome');
+			return res.render(viewsPath + '/welcome');
 		}
 
     if (req.isAuthenticated()) {
       return res.redirect('/edit/article');
     }
 
-    return res.render('auth/index');
+    return res.render(viewsPath + '/index');
 	});
 }
 
 // GET /edit/article - shows article edit page
 exports.article = function (req, res, next) {
-  return res.render('auth/article', {
+  return res.render(viewsPath + '/article', {
     login: true,
     article_editor: true,
     menu: req.watoData,
@@ -43,7 +46,7 @@ exports.all = function (req, res, next) {
       return next(err);
     }
 
-    return res.render('auth/all', {
+    return res.render(viewsPath + '/all', {
       menu: req.watoData,
       files: articles,
       login: true,
@@ -67,7 +70,7 @@ exports.users = function (req, res, next) {
       return next(err);
     }
 
-    return res.render('auth/user', {
+    return res.render(viewsPath + '/user', {
       menu: req.watoData, 
       users: users, 
       login: true
@@ -79,12 +82,13 @@ exports.users = function (req, res, next) {
 exports.template = function (req, res, next) {
   if (req.query.file) {
     // replace with app.get('viewsPath');
-    var uri = path.resolve(__dirname, '..', 'views/public', req.query.file);
+    var uri = path.resolve(res.locals.viewsPath, req.query.file);
 
     return fs.readFile(uri, function (err, fileContents) {
       if (err) return next(err);
 
-      res.render('auth/template', {
+      res.render(viewsPath + '/template', {
+        title: 'Template Editor',
         login: true,
         menu: req.watoData,
         fileContents: fileContents
@@ -92,12 +96,12 @@ exports.template = function (req, res, next) {
     })
   }
 
-  return res.render('auth/template', {
+  return res.render(viewsPath + '/template', {
     login: true,
     menu: req.watoData
   });
 }
 
 exports.notAvailable = function (req, res) {
-	return res.render('auth/notavailable', {login: true});
+	return res.render(viewsPath + '/notavailable', {login: true});
 }

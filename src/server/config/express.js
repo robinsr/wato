@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
 
   // all environments
   app.set('port', process.env.PORT || 3000);
-  app.set('views', config.appRoot + '/server/views/');
+  //app.set('views', config.appRoot + '/server/views/');
   app.set('view engine', 'jade');
   app.use(bodyParser.urlencoded());
   app.use(bodyParser.json());

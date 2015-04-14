@@ -40,7 +40,7 @@ exports.single = function(req, res, next) {
 
     req.article.content = markup;
 
-    return res.render('public/article', req.article);
+    return res.render(res.locals.viewsPath + '/article', req.article);
   });
 }
 
@@ -102,7 +102,7 @@ exports.list = function(req, res, next) {
         return next(err);
       }
 
-      return res.render('public/allarticles', { 
+      return res.render(res.locals.viewsPath + '/allarticles', { 
         articles: result.articles, 
         count: result.count,
         page: page + 1,
@@ -179,20 +179,5 @@ exports.del = function (req, res, next) {
       return next(err);
     }
     return res.status(200).send("Article Deleted")
-  });
-}
-
-// GET /__template (special route for previewing a template with the data from a specific article)
-exports.templatePreview = function (req, res, next){
-  Article.load({url: req.query.previewFile}, function (err, article) {
-    if (err) {
-      return next(err);
-    }
-
-    if (!article) {
-      return next(Error('Could not find article for preview'));
-    }
-
-    return res.render('public/__preview', result);
   });
 }

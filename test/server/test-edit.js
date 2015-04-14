@@ -108,11 +108,11 @@ describe('Edit', function() {
     });
 
     describe('GET /edit/template', function () {
-      it('Should render the "not avalable" page', function (done) {
+      it('Should render the tempalte editor page', function (done) {
         this.agent
           .get('/edit/template')
           .expect(200)
-          .expect(/not available/)
+          .expect(/Template Editor/)
           .end(done);
       });
     });

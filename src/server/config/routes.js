@@ -26,7 +26,6 @@ module.exports = function (app, passport) {
   app.param('article_name',   article.loadByName);
   app.param('article_id',     article.loadById)
   app.param('category_name',  category.load);
-  app.param('template_name',  template.load);
 
 
   // defines routes for readers
@@ -73,10 +72,10 @@ module.exports = function (app, passport) {
   app.del( '/article/:article_id',     auth.requiresLogin, articleAuth, article.del);
   app.get( '/css',                     auth.requiresLogin, css.list);
   app.post('/css',                     auth.requiresLogin, css.post);
-  app.get( '/template/:template_name', auth.requiresLogin, template.file);
   app.post('/template',                auth.requiresLogin, template.post);
-  app.put( '/template/:template_name', auth.requiresLogin, template.preview);
-  app.get( '/__template',              auth.requiresLogin, article.templatePreview);
+  app.get( '/template/',               auth.requiresLogin, template.list);
+  app.post('/template/preview',        auth.requiresLogin, template.postPreview);
+  app.get( '/template/preview',        auth.requiresLogin, template.getPreview);
 
   // Error handling
   app.use(function (err, req, res, next) {

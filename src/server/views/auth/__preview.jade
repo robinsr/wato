@@ -1,0 +1,19 @@
+extends layout
+
+block css
+	each val in cssFiles
+		link(rel='stylesheet', href='/stylesheets/'+val)
+	
+
+block headerTags
+	!= headerTags
+
+block content
+	article
+		div.container
+			if hideTitle == false
+				h2= title
+			!= content
+			if publishDate
+				small Published on #{publishDate}
+

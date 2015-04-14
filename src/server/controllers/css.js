@@ -6,7 +6,7 @@ var fs = require('fs');
  */
 
 exports.post = function(req, res, next) {
-  var uri = path.resolve(res.locals.cssPath, req.body.fileName);
+  var uri = path.resolve(res.locals.cssPath, req.body.filename);
 
 	fs.writeFile(uri, req.body.content, function (err) {
 		if (err) {

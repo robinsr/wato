@@ -139,11 +139,10 @@ block content
 			div#draftcolumn.col-lg-12
 				include ./../includes/notifications
 				div#articledraft(
-					style="background-color:#fff;padding: 4px;font-family:Courier, monospace;border:1px solid #999;white-space:pre;",
+					style="border: 1px solid #999;",
 					contenteditable="true",
-					data-bind="contentEditable: content",
-					data-init="false",
-					data-enable-tab="true"
+					data-bind="codeMirror: content",
+					data-code-mirror-mode="markdown"
 				)
 
 	script(src="/components/requirejs/require.js", data-main="/javascripts/pages/article.js")

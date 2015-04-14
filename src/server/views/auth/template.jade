@@ -8,33 +8,19 @@ block navDropdowns
 				li: a(href="/edit/template?file="+file) #{file}
 
 block navParams
-	div.container.params(data-bind="showParams:showParams")
+	div.container#params(data-bind="css: { 'open': showParams, 'closed' : !showParams() }")
 		div.row
-			div.col-lg-4
+			div.col-sm-4
 				h3 filename
-			div.col-lg-4
+			div.col-sm-4
 				h3 preview file
 		div.row
-			div.col-lg-4
+			div.col-sm-4
 				div.article-params
-					p(contenteditable="true", data-bind="contentEditable: filename")
-			div.col-lg-4
+					p(contenteditable="true",data-bind="contentEditable: filename")
+			div.col-sm-4
 				div.article-params
 					select.form-control.input-sm(data-bind="value: previewFile")
-						for view in menu.views
-							option(value=view)= view
-		div.row
-			div.col-lg-4
-				h3 filename
-			div.col-lg-4
-				h3 preview file
-		div.row
-			div.col-lg-4
-				div.article-params
-					p(contenteditable="true",data-bind="contentEditable:template.filename")
-			div.col-lg-4
-				div.article-params
-					select.form-control.input-sm(data-bind="value: template.previewFile")
 						for article in menu.articles
 							option(value=article._id)= article.title
 
@@ -46,23 +32,19 @@ block navButtons
 block content
 	div.container.index_wrapper
 		div.row
-			div.col-lg-2.col-lg-offset-4
-				p.text-center
-					button.btn.btn-success.btn-block.btn-sm(data-bind="click: clickShowParams",type="button") 
+			div.col-lg-2.col-lg-offset-5
+				p.text-center#toggle-params
+					button.btn.btn-success.btn-block.btn-sm(data-bind="click: toggleParams", type="button") 
 						span(data-bind="ifnot: showParams") Show Params
 						span(data-bind="if: showParams") Hide Params
-			div.col-lg-2
-				p.text-center
-					button.btn.btn-warning.btn-block.btn-sm(data-bind="click: clickShowHints",type="button") 
-						span(data-bind="ifnot: showHints") Show Hints
-						span(data-bind="if: showHints") Hide Hints
 		div.row
 			div#draftcolumn.col-lg-12
 				include ./../includes/notifications
 				div#articledraft(
-					style="background-color: #fff; padding: 4px; font-family:Courier, monospace; border: 1px solid #999; white-space: pre;",
+					style="border: 1px solid #000;",
 					contenteditable="true",
-					data-bind="contentEditable: content",
+					data-bind="codeMirror: content",
+					data-code-mirror-mode="jade",
 					data-init="false"
 				)= fileContents
 	

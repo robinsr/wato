@@ -1,6 +1,44 @@
 define(function (require) {
   var $ = require('jquery');
   var ko = require('ko');
+  var codeMirror = require('codemirror!jade|markdown');
+
+  ko.bindingHandlers.codeMirror = {
+    init: function(elem, val) {
+      var value = val();
+      var $elem = $(elem);
+      var initialValue = $elem.text();
+      $elem.empty();
+
+      value(initialValue);
+
+      var codeArea = new codeMirror(elem, {
+        value: initialValue,
+        mode: $elem.data('code-mirror-mode'),
+        lineNumbers: true,
+        lineWrapping: true,
+        viewportMargin: Infinity
+      });
+
+      codeArea.on('focus', function () {
+        $elem.data("focus", true);
+      })
+
+      codeArea.on('blur', function (ev) {
+        $elem.data("focus", false);
+        value(ev.doc.getValue());
+      });
+
+      codeArea.on('keydown', function (ev) {
+        value(ev.doc.getValue())
+      });
+
+      value.subscribe(function (val) {
+        if ($elem.data('focus')) return;
+        codeArea.doc.setValue(val)
+      })
+    }
+  }
 
   ko.bindingHandlers.deleteUser = {
     init: function (elem, val, all, vm, root) {
@@ -80,7 +118,6 @@ define(function (require) {
       // shim for 'tab' key (would lose focus otherwise)
       $(elem).on('keydown',function(e){
         if (e.keyCode == 9 && $(elem).data('enableTab') == true){
-          console.log('tab')
           e.preventDefault();
           var sel, range, html;
           if (window.getSelection) {
@@ -98,9 +135,9 @@ define(function (require) {
     },
     update: function(elem, val) {
       var value = val();
-      if ($(elem).data("focus") == false && value()){
-        elem.innerText = value();
-      }
+      var $elem = $(elem);
+      if ($elem.data("focus")) return;
+      $elem.text(value());
     }
   }
 

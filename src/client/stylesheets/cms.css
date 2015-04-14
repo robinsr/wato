@@ -238,3 +238,7 @@ p.label-trash {
     background-image: url("../../resources/img/glyphicons-halflings.png");
     background-repeat: no-repeat;
 }
+.CodeMirror {
+    width: 100%;
+    height: auto !important;
+}

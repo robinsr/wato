@@ -20,7 +20,7 @@ exports.load = function (req, res, next, id) {
 
 // GET /category/:category_name
 exports.getByName = function(req, res, next) {
-	return res.render('public/category', {
+	return res.render(res.locals.viewsPath + '/category', {
 		category: req.params.category_name,  
 		articles: req.articles
 	});

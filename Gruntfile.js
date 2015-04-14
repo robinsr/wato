@@ -10,7 +10,8 @@ module.exports = function(grunt) {
       },
       app: {
         src: [
-          'src/server/publicviews/**/*.jade'
+          'src/server/views/auth/**/*.jade',
+          'src/server/views/includess/**/*.jade'
         ],
         ignorePath: /\.\.\/\.\.\/client/
       }

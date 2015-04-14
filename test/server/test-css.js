@@ -36,7 +36,7 @@ describe('CSS', function() {
       this.agent
         .post('/css')
         .send({
-          fileName: 'sample.css',
+          filename: 'sample.css',
           content: 'Updated content'
         })
         .expect(200)
