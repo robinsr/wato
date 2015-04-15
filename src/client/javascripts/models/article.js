@@ -54,8 +54,22 @@ define(function (require) {
     }
 
     self.preview = function () {
-      console.log('article previewing');
-    }
+      var url = '/preview/article';
+      var saveData = JSON.stringify(_.pick(ko.toJS(self), [
+        '_id', 'category', 'content', 'cssFiles', 'destination',
+        'headertags', 'hideTitle', 'previewText', 'tags', 'title', 'url'
+      ]));
+
+      utils.issue(url, saveData, 'POST', function (err, status) {
+        if (err) return self.notifications.push({
+          type: 'error',
+          title: 'Error',
+          message: err
+        });
+
+        window.open(url);
+      });
+    };
 
     /**
      * loadArticle

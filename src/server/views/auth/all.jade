@@ -33,7 +33,6 @@ block content
 					thead
 						tr
 							th Name
-							th Link
 							th Category
 							th Publish Date
 							th Save Date
@@ -43,8 +42,10 @@ block content
 						for val in files
 							if val.destination == 'drafts'
 								tr
-									td: a(href="/auth/article?file="+val.url)= val.title
-									td: a(href="/article/"+val.url) Preview
+									td
+										a(href="/article/"+val.url)= val.title
+										| &nbsp;-&nbsp;
+										a(href="/edit/article?file="+val._id) Edit
 									td= val.category
 									td= val.publishDate
 									td= val.saveDate
@@ -56,7 +57,6 @@ block content
 					thead
 						tr
 							th Name
-							th Link
 							th Category
 							th Publish Date
 							th Save Date
@@ -66,8 +66,10 @@ block content
 						for val in files
 							if val.destination == 'trash'
 								tr
-									td: a(href="/auth/article?file="+val.url)= val.title
-									td: a() Preview
+									td
+										a(href="/article/"+val.url)= val.title
+										| &nbsp;-&nbsp;
+										a(href="/edit/article?file="+val._id) Edit
 									td= val.category
 									td= val.publishDate
 									td= val.saveDate

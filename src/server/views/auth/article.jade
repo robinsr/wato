@@ -24,14 +24,14 @@ block navDropdowns
 block navParams
 	div.container#params(data-bind="css: { 'open': showParams, 'closed' : !showParams() }")
 		div.row
-			div.col-lg-3
+			div.col-xs-12.col-sm-6.col-md-3
 				h3 Title
 				div.article-params
 					p(contenteditable="true",
 						data-bind="contentEditable: title",
 						tabindex="1"
 					) New Article
-			div.col-lg-3
+			div.col-xs-12.col-sm-6.col-md-3
 				h3 Url
 				div.article-params
 					p(
@@ -39,7 +39,7 @@ block navParams
 						data-bind="contentEditable: url",
 						tabindex="2"
 					) newarticle
-			div.col-lg-3
+			div.col-xs-12.col-sm-6.col-md-3
 				h3 Save Destination
 				div.article-params
 					select.form-control.input-sm(
@@ -49,7 +49,7 @@ block navParams
 						option(value="articles") Articles
 						option(value="drafts") Drafts
 						option(value="trash") Trash
-			div.col-lg-3
+			div.col-xs-12.col-sm-6.col-md-3
 				h3 Publish Date
 				div.article-params
 					p(
@@ -58,7 +58,7 @@ block navParams
 						tabindex="4"
 					)= today			
 		div.row
-			div.col-lg-6
+			div.col-xs-12.col-sm-6
 				h3 Tags
 				div.article-params
 					div.params-holder(data-bind="foreach: tags")
@@ -78,7 +78,7 @@ block navParams
 							tabindex="5"
 						) New Tag
 						
-			div.col-lg-6
+			div.col-xs-12.col-sm-6
 				h3 Category
 				div.article-params
 					div.params-holder(data-bind="foreach: allCategories")
@@ -127,8 +127,8 @@ block navButtons
 block content
 	div.container.index_wrapper
 		div.row
-			div.col-lg-2.col-lg-offset-5
-				p.text-center#toggle-params
+			div.col-xs-12
+				p.text-center#toggle-params(style="width: 200px; margin: 12px auto;")
 					button.btn.btn-success.btn-block.btn-sm(
 						data-bind="click: toggleParams",
 						type="button"

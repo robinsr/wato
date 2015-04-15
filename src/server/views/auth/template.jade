@@ -10,20 +10,16 @@ block navDropdowns
 block navParams
 	div.container#params(data-bind="css: { 'open': showParams, 'closed' : !showParams() }")
 		div.row
-			div.col-sm-4
-				h3 filename
-			div.col-sm-4
-				h3 preview file
-		div.row
-			div.col-sm-4
+			div.col-xs-12.col-sm-6
+				h3 Filename
 				div.article-params
 					p(contenteditable="true",data-bind="contentEditable: filename")
-			div.col-sm-4
+			div.col-xs-12.col-sm-6
+				h3 Preview File
 				div.article-params
 					select.form-control.input-sm(data-bind="value: previewFile")
 						for article in menu.articles
 							option(value=article._id)= article.title
-
 
 block navButtons
 	li: a(href="#",data-bind="click: preview") Preview
@@ -32,8 +28,8 @@ block navButtons
 block content
 	div.container.index_wrapper
 		div.row
-			div.col-lg-2.col-lg-offset-5
-				p.text-center#toggle-params
+			div.col-xs-12
+				p.text-center#toggle-params(style="width: 200px; margin: 12px auto;")
 					button.btn.btn-success.btn-block.btn-sm(data-bind="click: toggleParams", type="button") 
 						span(data-bind="ifnot: showParams") Show Params
 						span(data-bind="if: showParams") Hide Params

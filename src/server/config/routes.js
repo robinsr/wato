@@ -68,6 +68,8 @@ module.exports = function (app, passport) {
 
   // defines routes for get/posting/putting/deleting resources
   app.post('/article',                 auth.requiresLogin, article.create);
+  app.post('/preview/article',         auth.requiresLogin, article.postPreview);
+  app.get( '/preview/article',         auth.requiresLogin, article.getPreview);
   app.put( '/article/:article_id',     auth.requiresLogin, article.update);
   app.del( '/article/:article_id',     auth.requiresLogin, articleAuth, article.del);
   app.get( '/css',                     auth.requiresLogin, css.list);
@@ -93,14 +95,14 @@ module.exports = function (app, passport) {
       .set({
         'error-message' : err.message
       })
-      .render('public/503', { 
+      .render(res.locals.viewsPath + '/503', { 
         error: err 
       });
   });
 
   // assume 404 since no middleware responded
   app.use(function (req, res, next) {
-    res.status(404).render('public/404', {
+    res.status(404).render(res.locals.viewsPath + '/404', {
       url: req.originalUrl,
       error: 'Not found'
     });

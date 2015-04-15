@@ -78,7 +78,7 @@ var setTags = function (tags) {
   },
   destination: {
     type: String,
-    enum: ['articles', 'drafts', 'trash'],
+    enum: ['articles', 'drafts', 'trash', 'preview'],
     default: 'drafts'
   },
   cssFiles: {

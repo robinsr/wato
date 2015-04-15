@@ -146,9 +146,8 @@ exports.update = function (req, res, next){
   });
 };
 
-// PUT /article
-exports.preview = function (req, res, next) {
-  
+// POST /article/preview
+exports.postPreview = function (req, res, next) {
   // Prepare request body to save
   delete req.body._id;
   req.body.url = "__preview";
@@ -157,17 +156,33 @@ exports.preview = function (req, res, next) {
 
   Article.load({ url: "__preview" }, function (err, article) {
     if (err) {
-      return next(new Error("Error generating preview"));
+      return next(err);
     }
 
-    article = article || {}; // if no article found
+    article = article || new Article();
     extend(article, req.body);
 
     article.save(function (err) {
       if (err) {
-        return next(new Error("Error generating preview"));
+        return next(err);
       }
       return res.send(200, "Preview ready");
+    });
+  });
+}
+
+exports.getPreview = function (req, res, next) {
+  Article.load({ url: '__preview' }, function (err, article) {
+    if (err) return next(err);
+
+    if (!article)  return next(new Error('Article not found'));
+
+    article.getMarkup(function (err, markup) {
+      if (err) return next(err);
+
+      article.content = markup;
+
+      return res.render(res.locals.viewsPath + '/article', article);
     });
   });
 }
