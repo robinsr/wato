@@ -26,7 +26,7 @@ Share your coding insights with the internets.
 6. `touch myBlog/init.js`. Add the following:
 
 ```javascript
-var wato = require('wato');
+var wato = require('WatoCMS');
 
 wato.init({
   title: "My Blog",
@@ -65,7 +65,7 @@ Every view has access to the properties you list in `init.js` (`title` and `loca
         * `url`: Article url
         * `title`: Article title
 * article
-	* A single article object
+	* A single article object (see above)
 * allarticles
 	* `articles`: Array of article objects
 	* `count`: Number of articles 
