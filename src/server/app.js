@@ -52,6 +52,8 @@ exports.init = function (locals, paths) {
 
   for (var n in paths) {
     var uri = path.resolve(config.appRoot, '..', paths[n]);
+
+    console.log(n + ': ' + uri);
     
     app.locals[n] = uri
     app.set(n, uri);
