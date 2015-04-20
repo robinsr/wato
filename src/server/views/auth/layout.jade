@@ -4,7 +4,7 @@ html
 		meta(name="viewport",content="width=device-width, initial-scale=1.0")
 		title=title
 		link(rel="stylesheet",href="/components/bootstrap/dist/css/bootstrap.min.css")
-		link(rel="stylesheet",href="/edit/stylesheets/cms.css")
+		link(rel="stylesheet",href="/edit/stylesheets/wato.css")
 		script(src="/components/jquery/dist/jquery.min.js")
 		script(src="/components/bootstrap/dist/js/bootstrap.min.js")
 		block css
@@ -36,7 +36,8 @@ html
 			nav.navbar.navbar-fixed-top(style="z-index:0;position:relative;")
 				block navParams
 		include ./../includes/messages.jade
-		block content
+		div.content-wrap
+			block content
 		block javascripts
 		script.
 			var _csrf = "#{csrf_token}"

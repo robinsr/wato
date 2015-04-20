@@ -45,5 +45,6 @@
     "nodemon": "^1.2.1",
     "should": "^4.0.4",
     "superagent": "^0.18.2"
-  }
+  },
+  "main": "src/server/app"
 }

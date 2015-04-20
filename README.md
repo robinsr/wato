@@ -1,63 +1,114 @@
 WatoCMS
 =======
 
-To Install (warning ubuntu instructions ahead)
+Share your coding insights with the internets.
 
-## Step One: Node
+## Install
 
-	sudo apt-get install nodejs
-	sudo apt-get install npm
+### Dependencies
 
-## Step Two: Mongo
+1. [Node](https://nodejs.org/download/)
+2. [MongoDB](http://docs.mongodb.org/manual/installation/) - You can install your own or use a service such as [MongoLab](https://mongolab.com/)
 
-	sudo apt-get install mongodb
-	sudo service mongodb start
-	mongo
-	> use wato
-	> db.users.insert({
-		name:"root",
-		pass:"whatever",
-		permissions:3,
-		user_id:1
-		});
+### Setup
 
-## Step Three: Nginx
+1. `mkdir myBlog && cd myBlog`
+2. `npm init` (follow instructions)
+3. `npm install --save robinsr/wato` (Install directly from github)
 
-	sudo apt-get install nginx
-	sudo service nginx start
-	cd /etc/nginx/sites-enabled
-	mv default <yoursitesname>
-	sudo vi <yoursitesname>
+### Config
 
-copy and paste this:
+1. `mkdir myBlog/resources`
+2. `mkdir myBlog/resources/views`
+3. `mkdir myBlog/resources/styles`
+4. `touch myBlog/resources/views/index.jade`
+5. `touch myBlog/resources/styles/style.css`
+6. `touch myBlog/init.js`. Add the following:
 
-	upstream app_wato {
-    	server 127.0.0.1:8126;
-	} 
-	server { 
-        listen 0.0.0.0:80;
-        server_name <yoursitesname>.com <yoursitesname>;
-        location / { 
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
-            proxy_set_header X-NginX-Proxy true;
-            proxy_pass http://app_wato; 
-            proxy_redirect off;
-        }
-	}
+```
+var wato = require('wato');
 
-then
-	
-	sudo service nginx restart
+wato.init({
+  title: "My Blog",
+  location: "http://www.myblog.com"
+}, {
+  cssPath: 'resources/styles',
+  viewsPath: 'resources/views'
+})
+.start();
+```
 
-## Step Four: WatoCMS
+### Views
 
-	cd /wherever/you/feel/like
-	git clone http://github.com/robinsr/WatoCMS_express
-	cd WatoCMS_express
-	npm install
-	forever start app.js
+Wato will look for the following views:
 
-aaaaaand your done
+* index
+* article
+* allarticles
+* category
+* 404
+* 503
+
+You can organize your views however you like (such as using a `layout` file or an `includes/` directory with various partial views)
+
+Every view has access to the properties you list in `init.js` (`title` and `location` in the example). Specific views also have the following variables:
+
+* index
+	* `articles`: array of article objects with the following properties:
+        * `_id`: Unique ID
+        * `tags`: Array of tags
+        * `cssFiles`: Array of css files
+        * `destination`: Enum ('articles', 'drafts', 'trash')
+        * `previewText`: Sample of article content
+        * `category`: Category name
+        * `content`: Article content (string:html)
+        * `url`: Article url
+        * `title`: Article title
+* article
+	* A single article object
+* allarticles
+	* `articles`: Array of article objects
+	* `count`: Number of articles 
+	* `page`: Current page number
+	* `pages`: Total number of pages
+* category
+	* `category`: String category name
+	* `articles`: Array of article objects
+* 404
+	* `url`: URL string that resulted in the 404
+* 503
+	* `error`: Error string
+
+### CSS
+
+You can organize your css at the path specificed with `cssPath` however you see fit, wato requires no particular way of doing things.
+
+### Run
+
+Running wato requires setting some environment variables:
+
+1. `export COOKIE_SECRET=<your secret>`
+2. `export MONGO_URI=<mongo uri>`
+
+Run the init file
+
+1. `node init.js`
+
+## Using Wato
+
+Navigate to `/edit`, you will be redirected to the login page if you are not logged in. If this is the first time wato has been run, you will be prompted to create a root user with the highest level permissions. Once created, you will be redirected to the article editor page. Wato's editor tools include the following
+
+* `/edit/article`: Edit the content/settings of an article
+* `/edit/template`: Edit the contents of your templates
+* `/edit/css`: Edit the contents of your css files
+* `/edit/all`: Lists articles, drafts, and trashed articles
+* `/edit/users`: Manage users
+
+### Creating articles
+
+Navigate to `/edit/article`. You will see 
+
+
+
+
 

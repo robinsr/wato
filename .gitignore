@@ -1,3 +1,5 @@
 node_modules/
 src/client/components/
 **/*.log
+**/.sass-cache
+**/*.map

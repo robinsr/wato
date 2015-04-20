@@ -1,0 +1,249 @@
+.content-wrap {
+  height: 100%; }
+  .content-wrap ::-webkit-scrollbar {
+    width: 0.5em;
+    height: 0.5em; }
+  .content-wrap ::-webkit-scrollbar-thumb {
+    background: #eee; }
+  .content-wrap ::-webkit-scrollbar-track {
+    background: #f6f6f6; }
+
+.inline {
+  display: inline; }
+
+.dropdown-menu .checkbox {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: normal; }
+
+p.label-trash {
+  cursor: pointer;
+  background-position: -456px 2px;
+  display: inline-block;
+  height: 14px;
+  margin-top: 1px;
+  line-height: 11px;
+  vertical-align: text-top;
+  background-image: url("../../resources/img/glyphicons-halflings.png");
+  background-repeat: no-repeat; }
+
+.short-form {
+  margin: 0; }
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto; }
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px; }
+
+.form-signin .checkbox {
+  font-weight: normal; }
+
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.form-signin .form-control:focus {
+  z-index: 2; }
+
+.form-signin .top-input {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+.form-signin .middle-input {
+  margin-bottom: -1px;
+  border-radius: 0; }
+
+.form-signin .bottom-input {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }
+
+#debug_modal, #settings_modal {
+  width: 760px;
+  margin-left: -380px; }
+
+#settings_modal {
+  width: 860px;
+  margin-left: -430px; }
+
+body {
+  background-repeat: repeat;
+  /*overflow-y:scroll;*/
+  overflow-x: hidden; }
+
+#properties_div, #draftcolumn, #image_upload_div, #header_tags_div {
+  background-repeat: repeat;
+  border-radius: 6px;
+  padding-bottom: 1px; }
+
+.center {
+  margin: 0 0 0 20px; }
+
+.bottom_space {
+  margin-bottom: 12px; }
+
+#page_container {
+  margin-top: 24px; }
+
+#articledraft, #controlsdiv {
+  /*margin: 12px 46px 12px 46px;*/ }
+
+#controlsdiv {
+  text-align: center; }
+
+.thumb {
+  height: 75px; }
+
+.librarydivhide {
+  height: 34px;
+  overflow: hidden; }
+
+.librarydiv button:after {
+  content: "Hide Library"; }
+
+.librarydivhide button:after {
+  content: "Show Library" !important; }
+
+.code-edit-p {
+  font-family: Monaco, "Courier New", monospace; }
+
+.code-edit-html {
+  font-family: Monaco, "Courier New", monospace; }
+
+.code-edit-p:hover {
+  background-image: url(cbg.jpg); }
+
+.code-edit-html:hover {
+  background-image: url(hbg.jpg); }
+
+.text-edit-h2:hover {
+  background-image: url(h2bg.jpg); }
+
+.text-edit-p:hover {
+  background-image: url(pbg.jpg); }
+
+.item:hover {
+  background-position: bottom right;
+  background-repeat: no-repeat; }
+
+#navbar_save_button {
+  float: right; }
+
+.dropspace, #navbar_save_button {
+  margin: 0;
+  padding: 2px 35px 2px 14px;
+  -webkit-transition: all .2s ease;
+  -moz-transition: all .2s ease;
+  -ms-transition: all .2s ease;
+  -o-transition: all .2s ease;
+  transition: all .2s ease; }
+
+.full_opacity {
+  opacity: 1 !important; }
+
+.partial_opacity {
+  opacity: 0.4 !important; }
+
+.itemholder:hover {
+  background-color: #aaa; }
+
+.itemholder {
+  -webkit-transition: all .2s ease-in-out !important;
+  border-radius: 6px;
+  padding-top: 1px;
+  padding-left: 1px;
+  margin: 2px 0; }
+
+.dragme {
+  margin-left: 200px;
+  opacity: 0;
+  color: #999;
+  font-size: 14pt; }
+
+.itemholder:hover .dragme {
+  opacity: 1 !important; }
+
+.itemholder > textarea, .itemholder button {
+  margin-left: 2px; }
+
+.index_wrapper {
+  border-radius: 6px;
+  background-repeat: repeat;
+  padding-left: 6px;
+  padding-top: 16px; }
+
+div.article-params {
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  background-color: #333;
+  padding-bottom: 6px; }
+
+div.article-params p {
+  color: #fff;
+  vertical-align: middle;
+  margin: 0; }
+
+div.article-params select, div.article-params date {
+  background-color: #333;
+  color: #fff;
+  border-color: transparent;
+  height: 20px;
+  padding-top: 0;
+  font-size: 15px;
+  border-radius: 0px;
+  border: none;
+  padding-bottom: 0px; }
+
+div.article-params select:focus {
+  border-color: #333;
+  outline: none; }
+
+div.params-holder {
+  min-height: 24px; }
+
+div#params {
+  opacity: 0;
+  min-height: 200px;
+  background-color: #eee;
+  margin-top: -350px;
+  -webkit-transition: margin-top 500ms ease-out, opacity 500ms ease-out; }
+
+div#params.open {
+  opacity: 1;
+  margin-top: 51px; }
+
+@media (max-width: 992px) {
+  div#params {
+    margin-top: -750px; } }
+.dropdown-menu .checkbox {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: normal; }
+
+p.label-trash {
+  cursor: pointer;
+  background-position: -456px 2px;
+  display: inline-block;
+  height: 14px;
+  margin-top: 1px;
+  line-height: 11px;
+  vertical-align: text-top;
+  background-image: url("../../resources/img/glyphicons-halflings.png");
+  background-repeat: no-repeat; }
+
+.CodeMirror {
+  width: 100%;
+  height: auto !important; }
+
+/*# sourceMappingURL=wato.css.map */

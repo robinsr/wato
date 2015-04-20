@@ -4,5 +4,5 @@
  */
 
 module.exports = {
-  db: process.env.MONGOLAB_URI || 'mongodb://localhost/noobjs_dev',
+  db: process.env.MONGO_URI || 'mongodb://localhost/noobjs_dev',
 };

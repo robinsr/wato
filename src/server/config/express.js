@@ -18,6 +18,8 @@ var morgan = require('morgan');
 var config = require('./config');
 var pkg = require(config.appRoot + '../package.json');
 
+var COOKIE_SECRET = process.env.COOKIE_SECRET || 'secret';
+
 
 module.exports = function(app, passport) {
   // development only
@@ -39,7 +41,7 @@ module.exports = function(app, passport) {
   });
   // CookieParser should be above session
   app.use(cookieParser());
-  app.use(cookieSession({ secret: 'secret' }));
+  app.use(cookieSession({ secret: COOKIE_SECRET }));
   app.use(session({
     resave: true,
     saveUninitialized: true,
@@ -57,8 +59,6 @@ module.exports = function(app, passport) {
   app.use(flash());
 
   app.use(helpers(pkg.name));
-
-  console.log(app.get('cssPath'))
 
   // static files
   app.use('/components', express.static(config.appRoot + 'client/components'));
