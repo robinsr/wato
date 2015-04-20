@@ -25,7 +25,7 @@ Share your coding insights with the internets.
 5. `touch myBlog/resources/styles/style.css`
 6. `touch myBlog/init.js`. Add the following:
 
-```
+```javascript
 var wato = require('wato');
 
 wato.init({
