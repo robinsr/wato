@@ -12,9 +12,8 @@ var markedOptions = {
     breaks: true,
     pedantic: false,
     smartLists: true,
-    langPrefix: 'language-',
-    highlight: function(code,lang) {
-      return code
+    highlight: function(code, lang) {
+      return require('highlight.js').highlightAuto(code).value;
     }
   }
  

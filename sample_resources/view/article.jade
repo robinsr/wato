@@ -1,6 +1,7 @@
 extends layout
 
 block css
+	link(rel="stylesheet", href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/monokai_sublime.min.css")
 	each val in cssFiles
 		link(rel='stylesheet', href='/stylesheets/'+val)
 	

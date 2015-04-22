@@ -51,7 +51,7 @@ exports.init = function (locals, paths) {
   app.locals = locals;
 
   for (var n in paths) {
-    var uri = path.resolve(config.appRoot, '../../..', paths[n]);
+    var uri = path.resolve(__dirname, '../..', paths[n]);
 
     console.log(n + ': ' + uri);
     
