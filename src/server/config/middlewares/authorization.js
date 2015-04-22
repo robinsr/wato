@@ -26,6 +26,9 @@ exports.article = {
  */
 exports.user = {
   auth: function (req, res, next){
+    if (req.user.permissions < 3) {
+      return next(new Error('You do not have sufficient permissions to edit users'));
+    }
     next();
   }
 }

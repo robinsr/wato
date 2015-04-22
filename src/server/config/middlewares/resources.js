@@ -45,7 +45,7 @@ exports.getMenuFileList = function(req, res, next){
 		views: function (done) {
 			var dir = res.locals.viewsPath;
 			fs.readdir(dir, function (err, files) {
-				if (err) return cb(err);
+				if (err) return done(err);
 
 				return done(null, files.map(function (fileName) {
 					return path.basename(fileName);

@@ -6,7 +6,8 @@ block content
       div.col-lg-12
         h1 Welcome
         h2 Create a admin account
-        form.form-signin#form(method="post",action="/users")
+        form.form-signin#form(method="post",action="/users/createRoot")
+          input(type="hidden", name="_csrf", value=csrf_token)
           input(type="hidden", name="permissions", value="3")
           input.form-control.top-input#name(type="text",placeholder="name",name="name",autofocus)
           input.form-control.middle-input#pass(type="text",placeholder="username",name="username")

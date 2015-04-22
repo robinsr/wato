@@ -45,18 +45,18 @@ module.exports = function (app, passport) {
   app.get('/api/category',              category.list);
 
   // tags 
-  app.get('/tags/',                     tags.list);
+  app.get('/tags/', tags.list);
 
   // login/create session
   app.get('/logout',         auth.requiresLogin, users.logout);
   app.post('/users/session', passportMiddleware, users.session);
 
   // user routes
-  app.post('/users',            users.create);
-  app.post('/users/createRoot', users.createRoot);
-  app.get( '/users',            auth.requiresLogin, users.list);
-  app.del( '/users/:userId',    auth.requiresLogin, users.destroy);
-  app.put( '/users/:userId',    auth.requiresLogin, users.update);
+  app.post('/users',                                userAuth, users.create);
+  app.post('/users/createRoot',                               users.createRoot);
+  app.get( '/users',            auth.requiresLogin,           users.list);
+  app.del( '/users/:userId',    auth.requiresLogin, userAuth, users.destroy);
+  app.put( '/users/:userId',    auth.requiresLogin, userAuth, users.update);
 
   // defines routes for author tools pages
   app.get( '/login',         edit.login); // shows login

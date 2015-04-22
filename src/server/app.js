@@ -50,8 +50,12 @@ fs.readdirSync(models_path).forEach(function(file) {
 exports.init = function (locals, paths) {
   app.locals = locals;
 
+  var basePath = locals.appRoot || path.resolve(__dirname, '../../../../');
+
+  console.log('basePath:' + basePath);
+  
   for (var n in paths) {
-    var uri = path.resolve(__dirname, '../..', paths[n]);
+    var uri = path.resolve(basePath, paths[n]);
 
     console.log(n + ': ' + uri);
     

@@ -30,7 +30,8 @@ var wato = require('WatoCMS');
 
 wato.init({
   title: "My Blog",
-  location: "http://www.myblog.com"
+  location: "http://www.myblog.com",
+  appRoot: __dirname
 }, {
   cssPath: 'resources/styles',
   viewsPath: 'resources/views'
@@ -81,7 +82,7 @@ Every view has access to the properties you list in `init.js` (`title` and `loca
 
 ### CSS
 
-You can organize your css at the path specificed with `cssPath` however you see fit, wato requires no particular way of doing things.
+You can organize your css at the path specified with `cssPath` however you see fit, wato requires no particular way of doing things.
 
 ### Run
 
@@ -92,11 +93,13 @@ Running wato requires setting some environment variables:
 
 Run the init file
 
-1. `node init.js`
+1. `nodemon init.js -e js,jade,css`
+
+**NOTE** In order to pick up changes made to templates and stylesheets, you must use nodemon and specify the file extensions to watch
 
 ## Using Wato
 
-Navigate to `/edit`, you will be redirected to the login page if you are not logged in. If this is the first time wato has been run, you will be prompted to create a root user with the highest level permissions. Once created, you will be redirected to the article editor page. Wato's editor tools include the following
+Navigate to `/login`, if this is the first time wato has been run, you will be prompted to create a root user with the highest level permissions. Once created, you will be redirected to the article editor page. Wato's editor tools include the following
 
 * `/edit/article`: Edit the content/settings of an article
 * `/edit/template`: Edit the contents of your templates

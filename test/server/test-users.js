@@ -68,6 +68,10 @@ describe('User', function() {
   });
 
   describe('POST /users/createRoot', function () {
+    before(function (done) {
+      helper.clearDb(done);
+    });
+
     it('Should create a user, login, and redirect', function (done) {
       this.agent
         .post('/users/createRoot')
@@ -95,7 +99,7 @@ describe('User', function() {
   describe('POST /users', function () {
     it('should create a user', function (done) {
       this.agent
-        .post('/users/createRoot')
+        .post('/users')
         .send({
           email: 'test-post-create@example.com',
           name: 'Foo bar 1',
@@ -103,8 +107,7 @@ describe('User', function() {
           password: 'foobar1',
           permissions: 0
         })
-        .expect(302)
-        .expect('Location', '/edit/article')
+        .expect(200)
         .end(function (err) {
           should.not.exist(err);
 

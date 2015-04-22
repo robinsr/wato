@@ -36,13 +36,13 @@ block content
 		div.row
 			div#draftcolumn.col-lg-12
 				include ./../includes/notifications
-				div#articledraft(
-					style="border: 1px solid #000;",
-					contenteditable="true",
-					data-bind="codeMirror: content",
-					data-code-mirror-mode="jade",
-					data-init="false"
-				)= fileContents
+			div#articledraft(
+				style="border: 1px solid #000;",
+				contenteditable="true",
+				data-bind="codeMirror: content",
+				data-code-mirror-mode="jade",
+				data-init="false"
+			)= fileContents
 	
 block javascripts
 	script(src="/components/requirejs/require.js", data-main="/javascripts/pages/template.js")

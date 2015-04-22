@@ -44,10 +44,6 @@ exports.list = function (req, res, next) {
 
 // POST /users
 exports.create = function (req, res, next) {
-  if (req.user.permissions < 3) {
-    return next(new Error('You do not have sufficient permissions to create users'));
-  }
-
   var user = new User(req.body);
   
   user.save(function (err) {
@@ -60,32 +56,39 @@ exports.create = function (req, res, next) {
 }
 
 // POST /users/createRoot - creates initial user
-exports.createRoot = function (req, res) {
-  var user = new User(req.body);
-
-  // root user has level 3 permissions
-  user.permissions = 3;
-
-  user.save(function (err) {
+exports.createRoot = function (req, res, next) {
+  User.count({ permissions: 3 }, function (err, count) {
     if (err) {
-      req.flash('error', utils.errors(err.errors));
-      return res.redirect('/login');
+      return next(err);
     }
 
-    // manually login the user once successfully signed up
-    req.logIn(user, function(err) {
-      if (err) req.flash('info', 'Sorry! We are not able to log you in!');
-      return res.redirect('/edit/article');
+    if (count > 0) {
+      return next(new Error('Root user already exists'));
+    }
+
+
+    var user = new User(req.body);
+
+    // root user has level 3 permissions
+    user.permissions = 3;
+
+    user.save(function (err) {
+      if (err) {
+        req.flash('error', utils.errors(err.errors));
+        return res.redirect('/login');
+      }
+
+      // manually login the user once successfully signed up
+      req.logIn(user, function(err) {
+        if (err) req.flash('info', 'Sorry! We are not able to log you in!');
+        return res.redirect('/edit/article');
+      });
     });
   });
 };
 
 // PUT /article/:article_id
 exports.update = function (req, res, next){
-  if (req.user.permissions < 3) {
-    return next(new Error('You do not have sufficient permissions to edit users'));
-  }
-
   var user = req.profile;
 
   user = extend(user, req.body);
