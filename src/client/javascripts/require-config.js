@@ -8,11 +8,11 @@ requirejs.config({
   },
   cm: {
     // baseUrl to CodeMirror dir
-    baseUrl: '../components/codemirror/',
+    baseUrl: '../components/CodeMirror/',
     // path to CodeMirror lib
     path: 'lib/codemirror',
     // path to CodeMirror css file
-    css: '../components/codemirror/lib/codemirror.css',
+    css: '../components/CodeMirror/lib/codemirror.css',
     modes: {
       // modes dir structure
       path: 'mode/{mode}/{mode}'
