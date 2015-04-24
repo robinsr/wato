@@ -36,7 +36,9 @@ define(function (require) {
       value.subscribe(function (val) {
         if ($elem.data('focus')) return;
         codeArea.doc.setValue(val)
-      })
+      });
+
+      codeArea.refresh();
     }
   }
 
