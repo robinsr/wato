@@ -58,7 +58,7 @@ exports.singleJsonRaw = function (req, res) {
   return res.send(req.article);
 }
       
-// GET /api/article - gets list of articles in JSON
+// GET /api/article/content - gets list of articles in JSON
 exports.listJson = function(req, res, next) {
   var options = {
     //TODO: Expand usable query param options
@@ -77,6 +77,25 @@ exports.listJson = function(req, res, next) {
     return res.send(articles);
   });
 };
+
+// GET /api/article/raw - gets list of articles in JSON
+exports.listJsonRaw = function(req, res, next) {
+  var options = {
+    //TODO: Expand usable query param options
+    criteria: {},
+    perPage: req.query.limit || 1000,
+    page: req.query.page || 0
+  };
+
+  Article.list(options, function (err, articles) {
+    if (err) {
+      return next(err);
+    }
+
+    return res.send(articles);
+  });
+};
+
 
 // GET /article
 exports.list = function(req, res, next) {

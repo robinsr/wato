@@ -36,9 +36,10 @@ module.exports = function (app, passport) {
   app.get('/article/:article_name',     article.single);
   
   // articles - json
-  app.get('/api/article',                       article.listJson);
-  app.get('/api/article/content/:article_id',   article.singleJson);
-  app.get('/api/article/raw/:article_id',       article.singleJsonRaw);
+  app.get('/api/article/content',                                   article.listJson);
+  app.get('/api/article/raw',                   auth.requiresLogin, article.listJsonRaw);
+  app.get('/api/article/content/:article_id',                       article.singleJson);
+  app.get('/api/article/raw/:article_id',       auth.requiresLogin, article.singleJsonRaw);
   
   // category
   app.get('/category/:category_name',   category.getByName);
@@ -62,7 +63,7 @@ module.exports = function (app, passport) {
   app.get( '/login',         edit.login); // shows login
   app.get( '/edit/article',  auth.requiresLogin, menuFileList, edit.article);
   app.get( '/edit/all',      auth.requiresLogin, menuFileList, edit.all);
-  app.get( '/edit/css',      auth.requiresLogin, menuFileList, edit.notAvailable);
+  app.get( '/edit/css',      auth.requiresLogin, menuFileList, edit.css);
   app.get( '/edit/template', auth.requiresLogin, menuFileList, edit.template);
   app.get( '/edit/users',    auth.requiresLogin, menuFileList, edit.users);
 

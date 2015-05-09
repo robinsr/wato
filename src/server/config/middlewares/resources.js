@@ -30,8 +30,7 @@ exports.getMenuFileList = function(req, res, next){
 			Article.list({ criteria: {destination:'drafts'}, select:'title url', perPage: 10} , done);
 		},
 		css: function (done) {
-			var dir = config.appRoot + '/client/stylesheets';
-			fs.readdir(dir, function (err, files){
+			fs.readdir(res.locals.cssPath, function (err, files){
 				if (err) return done(err);
 			
 				return done(null, files.map(function (fileName) {

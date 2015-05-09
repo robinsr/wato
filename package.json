@@ -21,6 +21,7 @@
     "forever": "*",
     "highlight.js": "^8.5.0",
     "jade": "*",
+    "lodash": "^3.7.0",
     "marked": "~0.2.9",
     "method-override": "^2.3.2",
     "moment": "*",

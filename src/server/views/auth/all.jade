@@ -4,6 +4,7 @@ block content
 	div.container.index_wrapper
 		div.row
 			div.col-lg-12
+				include ./../includes/notifications
 				pre Articles
 				table.table.table-condensed
 					thead
@@ -11,23 +12,10 @@ block content
 							th Name
 							th Category
 							th Publish Date
-							th Save Date
 							th Last edited by
-							th Delete
-					tbody
-						for val in files
-							if val.destination == 'articles'
-								tr
-									td
-										a(href="/article/"+val.url)= val.title
-										| &nbsp;-&nbsp;
-										a(href="/edit/article?file="+val._id) Edit
-									td= val.category
-									td= val.publishDate
-									td= val.saveDate
-									td= val.lastEditedBy.name
-									td(data-filename=''+val._id)
-										span.glyphicon.glyphicon-trash
+							th Move
+					tbody(data-bind="template: { name: 'list-item-template', foreach: articles } ")
+								
 				pre Drafts
 				table.table.table-condensed
 					thead
@@ -35,23 +23,10 @@ block content
 							th Name
 							th Category
 							th Publish Date
-							th Save Date
 							th Last edited by
-							th Delete
-					tbody
-						for val in files
-							if val.destination == 'drafts'
-								tr
-									td
-										a(href="/article/"+val.url)= val.title
-										| &nbsp;-&nbsp;
-										a(href="/edit/article?file="+val._id) Edit
-									td= val.category
-									td= val.publishDate
-									td= val.saveDate
-									td= val.lastEditedBy.name
-									td(data-filename=''+val._id)
-										span.glyphicon.glyphicon-trash
+							th Move
+					tbody(data-bind="template: { name: 'list-item-template', foreach: drafts } ")
+
 				pre Trash
 				table.table.table-condensed
 					thead
@@ -59,22 +34,20 @@ block content
 							th Name
 							th Category
 							th Publish Date
-							th Save Date
 							th Last edited by
-							th Delete
-					tbody
-						for val in files
-							if val.destination == 'trash'
-								tr
-									td
-										a(href="/article/"+val.url)= val.title
-										| &nbsp;-&nbsp;
-										a(href="/edit/article?file="+val._id) Edit
-									td= val.category
-									td= val.publishDate
-									td= val.saveDate
-									td= val.lastEditedBy.name
-									td(data-filename=''+val._id)
-										span.glyphicon.glyphicon-trash
-	script(src="/javascripts/utils.js")
-	script(src="/javascripts/allarticles.js")
+							th Move
+					tbody(data-bind="template: { name: 'list-item-template', foreach: trash } ")
+
+	script(type="text/html", id="list-item-template")
+		tr
+			td
+				a(data-bind="attr: { href: '/article/' + url() }, text: title")
+				| &nbsp;-&nbsp;
+				a(data-bind="attr: { href: '/edit/article?file=' + _id() }") Edit
+			td(data-bind="text: category")
+			td(data-bind="text: publishDate")
+			td(data-bind="text: lastEditedBy().name")
+			td
+				select(class="form-control input-sm", data-bind="options: $root.moveOptions, value: destination")
+
+	script(src="/components/requirejs/require.js", data-main="/javascripts/pages/all.js")

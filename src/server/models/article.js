@@ -5,6 +5,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var marked = require('marked');
+var async = require('async');
 
 var markedOptions = {
     gfm: true,
@@ -281,7 +282,19 @@ ArticleSchema.statics = {
       .sort({'publishDate': -1}) // sort by date
       .limit(options.perPage)
       .skip(options.perPage * options.page)
-      .exec(cb);
+      .exec(function (err, articles) {
+        if (err) return cb(err);
+
+        async.each(articles, function (article, nextArticle) {
+          article.getMarkup(function (err, markup) {
+            if (err) return nextArticle(err);
+            article.content = markup;
+            nextArticle(null);
+          });
+        }, function (err) {
+          cb(err, articles);
+        });
+      });
   },
 
   getCategories: function (next) {

@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var async = require('async');
 var moment = require('moment');
 var fs = require('fs');
@@ -80,28 +81,45 @@ exports.users = function (req, res, next) {
 
 // GET /edit/templates - Loads template editor page
 exports.template = function (req, res, next) {
-  if (req.query.file) {
-    // replace with app.get('viewsPath');
-    var uri = path.resolve(res.locals.viewsPath, req.query.file);
+  var templateData = {
+    login: true,
+    menu: _.pick(req.watoData, ['views', 'articles'])
+  };
 
-    return fs.readFile(uri, function (err, fileContents) {
-      if (err) return next(err);
-
-      res.render(viewsPath + '/template', {
-        title: 'Template Editor',
-        login: true,
-        menu: req.watoData,
-        fileContents: fileContents
-      });
-    })
+  if (!req.query.file) {
+    return res.render(viewsPath + '/template', templateData);
   }
 
-  return res.render(viewsPath + '/template', {
-    login: true,
-    menu: req.watoData
+  var uri = path.resolve(res.locals.viewsPath, req.query.file);
+
+  fs.readFile(uri, function (err, fileContents) {
+    if (err) return next(err);
+
+    res.render(viewsPath + '/template', _.extend(templateData, {
+      fileContents: fileContents
+    }));
   });
 }
 
-exports.notAvailable = function (req, res) {
-	return res.render(viewsPath + '/notavailable', {login: true});
+// GET /edit/css
+exports.css = function (req, res, next) {
+  var templateData = {
+    title: 'CSS Editor',
+    login: true,
+    menu: _.pick(req.watoData, ['css', 'articles'])
+  }
+
+  if (!req.query.file) {
+    return res.render(viewsPath + '/template', templateData);
+  }
+
+  var uri = path.resolve(res.locals.cssPath, req.query.file);
+
+  fs.readFile(uri, function (err, fileContents) {
+    if (err) return next(err);
+
+    res.render(viewsPath + '/template', _.extend( templateData, {
+      fileContents: fileContents
+    }));
+  });
 }

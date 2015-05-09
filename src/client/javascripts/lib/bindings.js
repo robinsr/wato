@@ -1,7 +1,7 @@
 define(function (require) {
   var $ = require('jquery');
   var ko = require('ko');
-  var codeMirror = require('codemirror!jade|markdown');
+  var codeMirror = require('codemirror!jade|markdown|css');
 
   ko.bindingHandlers.codeMirror = {
     init: function(elem, val) {

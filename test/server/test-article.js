@@ -18,73 +18,72 @@ describe('Article', function() {
     this.agent = supertest.agent(this.app);
   });
 
-  describe('GET /api/article/', function () {
-    it('should list articles in JSON', function (done) {
-      this.agent
-        .get('/api/article/')
-        .expect(200)
-        .end(function (err, res) {
-          should.not.exist(err);
-          res.text.should.match(/test/);
-          done();
-        });
-    });
-  });
-
-  describe('GET /api/article/content/:article_id', function () {
-    it('should return json of article with html', function (done) {
-      this.agent
-        .get('/api/article/content/' + this.article._id)
-        .expect(200)
-        .end(function (err, res) {
-          should.not.exist(err);
-          should.exist(res.body);
-          res.body.content.should.match(/<h1 id="test">test<\/h1>/);
-          done();
-        });
-    });
-  });
-
-  describe('GET /api/article/raw/:article_id', function () {
-    it('should return json of article with markdown', function (done) {
-      this.agent
-        .get('/api/article/raw/' + this.article._id)
-        .expect(200)
-        .end(function (err, res) {
-          should.not.exist(err);
-          res.text.should.match(/#\stest/);
-          done();
-        });
-    });
-  });
-
-  describe('/GET /article', function () {
-    it('should return a rendered article list', function (done) {
-      this.agent
-        .get('/article')
-        .expect(200)
-        .expect(/Test Article Title/)
-        .end(done);
-    })
-  })
-
-  describe('GET /article/:article_name', function () {
-    it('should return rendered article', function (done) {
-      this.agent
-        .get('/article/test')
-        .expect(200)
-        .end(function (err, res) {
-          should.not.exist(err);
-          res.text.should.match(/test/);
-          done();
-        });
-    });
-  });
-
   describe('Not logged in', function () {
     before(function () {
       articleId =  this.article._id;
     });
+
+    describe('/GET /article', function () {
+      it('should return a rendered article list', function (done) {
+        this.agent
+          .get('/article')
+          .expect(200)
+          .expect(/Test Article Title/)
+          .end(done);
+      });
+    });
+
+    describe('GET /article/:article_name', function () {
+      it('should return rendered article', function (done) {
+        this.agent
+          .get('/article/test')
+          .expect(200)
+          .expect(/<h1 id="test">test<\/h1>/)
+          .end(done);
+      });
+    });
+
+    describe('GET /api/article/content', function () {
+      it('should list articles in JSON', function (done) {
+        this.agent
+          .get('/api/article/content/')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .expect(/<h1 id=\\"test\\">test<\/h1>/)
+          .end(done);
+      });
+    });
+
+    describe('GET /api/article/raw', function () {
+      it('should redirect to login', function (done) {
+        this.agent
+          .get('/api/article/raw/')
+          .expect(302)
+          .expect('Location', '/login')
+          .end(done);
+      });
+    });
+
+    describe('GET /api/article/content/:article_id', function () {
+      it('should return json of article with html', function (done) {
+        this.agent
+          .get('/api/article/content/' + this.article._id)
+          .expect(200)
+          .expect(/<h1 id=\\"test\\">test<\/h1>/)
+          .end(done);
+      });
+    });
+
+    describe('GET /api/article/raw/:article_id', function () {
+      it('should redirect to login', function (done) {
+        this.agent
+          .get('/api/article/raw/' + this.article._id)
+          .expect(302)
+          .expect('Location', '/login')
+          .end(done);
+      });
+    });
+
     describe('POST /article', function () {
       it('should redirect to login page', function (done) {
         this.agent
@@ -122,6 +121,26 @@ describe('Article', function() {
         .field('username', 'foobar')
         .field('password', 'foobar')
         .end(done)
+    });
+
+    describe('GET /api/article/raw', function () {
+      it('should return json array of articles with markdown', function (done) {
+        this.agent
+          .get('/api/article/raw/')
+          .expect(200)
+          .expect(/#\stest/)
+          .end(done);
+      });
+    });
+
+    describe('GET /api/article/raw/:article_id', function () {
+      it('should return json of article with markdown', function (done) {
+        this.agent
+          .get('/api/article/raw/' + this.article._id)
+          .expect(200)
+          .expect(/#\stest/)
+          .end(done);
+      });
     });
 
     describe('POST /article', function () {

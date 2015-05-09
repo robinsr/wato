@@ -1,11 +1,18 @@
 extends layout
 
 block navDropdowns
-	li.dropdown
-		a.dropdown-toggle(data-toggle="dropdown",href="#") Templates
-		ul.dropdown-menu
-			for file in menu.views
-				li: a(href="/edit/template?file="+file) #{file}
+	if menu.views
+		li.dropdown
+			a.dropdown-toggle(data-toggle="dropdown",href="#") Templates
+			ul.dropdown-menu
+				for file in menu.views
+					li: a(href="/edit/template?file="+file) #{file}
+	if menu.css
+		li.dropdown
+			a.dropdown-toggle(data-toggle="dropdown",href="#") CSS Files
+			ul.dropdown-menu
+				for file in menu.css
+					li: a(href="/edit/css?file="+file) #{file}
 
 block navParams
 	div.container#params(data-bind="css: { 'open': showParams, 'closed' : !showParams() }")
@@ -36,11 +43,12 @@ block content
 		div.row
 			div#draftcolumn.col-lg-12
 				include ./../includes/notifications
+			- var codeMirrorMode = menu.views ? "jade" : "css"
 			div#articledraft(
 				style="border: 1px solid #000;",
 				contenteditable="true",
 				data-bind="codeMirror: content",
-				data-code-mirror-mode="jade",
+				data-code-mirror-mode=codeMirrorMode,
 				data-init="false"
 			)= fileContents
 	

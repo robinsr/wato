@@ -98,11 +98,11 @@ describe('Edit', function() {
     });
 
     describe('GET /edit/css', function () {
-      it('Should render the "not avalable" page', function (done) {
+      it('Should render the css editor page', function (done) {
         this.agent
           .get('/edit/css')
           .expect(200)
-          .expect(/not available/)
+          .expect(/CSS Editor/)
           .end(done);
       });
     });
